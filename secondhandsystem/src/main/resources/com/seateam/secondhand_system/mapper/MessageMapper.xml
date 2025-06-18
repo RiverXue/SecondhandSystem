@@ -18,4 +18,11 @@
         id,goods_id,user_id,content,reply_content,reply_time,
         create_time
     </sql>
+
+    <!-- 更新留言回复 -->
+    <update id="updateReply">
+        update message
+        set reply_content = #{replyContent}, reply_time = #{replyTime}
+        where id = #{id}
+    </update>
 </mapper>

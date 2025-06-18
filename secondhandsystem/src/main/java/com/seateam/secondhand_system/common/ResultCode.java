@@ -1,6 +1,7 @@
 package com.seateam.secondhand_system.common;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 
 /**
  * 统一响应状态码枚举
@@ -18,6 +19,7 @@ public enum ResultCode {
     SERVER_ERROR(500, "服务器内部错误");
 
     private final int code;
+    @Getter
     private final String message;
 
     ResultCode(int code, String message) {
@@ -33,7 +35,4 @@ public enum ResultCode {
         return code;
     }
 
-    public String getMessage() {
-        return message;
-    }
 }

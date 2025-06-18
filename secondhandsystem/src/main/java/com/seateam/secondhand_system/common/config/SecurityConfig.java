@@ -39,11 +39,22 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * 密码编码器
+     *
+     * @return {@link PasswordEncoder}
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 认证管理器
+     *
+     * @param config 配置
+     * @return {@link AuthenticationManager}
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

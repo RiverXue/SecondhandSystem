@@ -5,12 +5,17 @@
 <mapper namespace="com.seateam.secondhand_system.mapper.FavoriteMapper">
 
     <resultMap id="BaseResultMap" type="com.seateam.secondhand_system.entity.Favorite">
-            <id property="id" column="id" />
-            <result property="userId" column="user_id" />
-            <result property="goodsId" column="goods_id" />
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="goodsId" column="goods_id"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,user_id,goods_id
     </sql>
+    <select id="selectByUserIdAndGoodsId" resultType="com.seateam.secondhand_system.entity.Favorite">
+        SELECT <include refid="Base_Column_List"/>
+        FROM favorite
+        WHERE user_id = #{userId} AND goods_id = #{goodsId}
+    </select>
 </mapper>

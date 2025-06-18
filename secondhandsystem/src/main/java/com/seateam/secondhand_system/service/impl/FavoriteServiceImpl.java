@@ -14,9 +14,11 @@ import com.seateam.secondhand_system.service.FavoriteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 /**
  * @author HK
@@ -105,8 +107,15 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite>
                 .map(Favorite::getGoodsId)
                 .toList();
 
-        // 查询商品详情
-        List<Goods> goodsList = goodsMapper.selectBatchIds(goodsIds);
+        // 查询商品详情（仅包含在售商品）
+        List<Goods> goodsList;
+        if (!goodsIds.isEmpty()) {
+            QueryWrapper<Goods> goodsQuery = new QueryWrapper<>();
+            goodsQuery.in("id", goodsIds).eq("status", 0);
+            goodsList = goodsMapper.selectList(goodsQuery);
+        } else {
+            goodsList = Collections.emptyList();
+        }
 
         Map<String, Object> data = new HashMap<>();
         data.put("total", favoritePage.getTotal());

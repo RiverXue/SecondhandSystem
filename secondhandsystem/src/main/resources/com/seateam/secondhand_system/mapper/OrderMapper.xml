@@ -18,4 +18,18 @@
         id,buyer_id,seller_id,goods_id,price,status,
         create_time
     </sql>
+
+    <!-- 创建订单 -->
+    <insert id="insertOrder">
+        INSERT INTO `order` (buyer_id, seller_id, goods_id, price, status, create_time)
+        VALUES (#{buyerId}, #{sellerId}, #{goodsId}, #{price}, 0, CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 根据买家ID查询订单列表 -->
+    <select id="selectByBuyerId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM `order`
+        WHERE buyer_id = #{buyerId}
+        ORDER BY create_time DESC
+    </select>
 </mapper>

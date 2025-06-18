@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.seateam.secondhand_system.mapper.MessageMapper">
 
-    <resultMap id="BaseResultMap" type="com.seateam.secondhand_system.entity.Message">
-            <id property="id" column="id" />
-            <result property="goodsId" column="goods_id" />
-            <result property="userId" column="user_id" />
-            <result property="content" column="content" />
-            <result property="replyContent" column="reply_content" />
-            <result property="replyTime" column="reply_time" />
-            <result property="createTime" column="create_time" />
-    </resultMap>
-
-    <sql id="Base_Column_List">
-        id,goods_id,user_id,content,reply_content,reply_time,
-        create_time
-    </sql>
+    <!-- 根据商品ID查询留言列表 -->
+    <select id="selectByGoodsId" resultType="com.seateam.secondhand_system.entity.Message">
+        SELECT id, goods_id, user_id, content, reply_content, reply_time, create_time
+        FROM message
+        WHERE goods_id = #{goodsId}
+        ORDER BY create_time DESC
+    </select>
 
     <!-- 更新留言回复 -->
     <update id="updateReply">
-        update message
-        set reply_content = #{replyContent}, reply_time = #{replyTime}
-        where id = #{id}
+        UPDATE message
+        SET reply_content = #{replyContent},
+            reply_time = #{replyTime}
+        WHERE id = #{messageId}
     </update>
+
 </mapper>

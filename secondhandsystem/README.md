@@ -205,14 +205,14 @@ Secondhand_Frontend
 
 ### 1. 用户模块
 
-| 方法   | 路径                   | 描述             |
-|------|----------------------|----------------|
-| POST | `/api/user/register` | 用户注册           |
-| POST | `/api/user/login`    | 用户登录，返回JWT     |
-| GET  | `/api/user/info`     | 获取当前用户信息（需JWT） |
-| POST | `/api/user/update`   | 更新用户信息（昵称、头像等） |
-| POST | `/api/user/refresh-token` | 刷新访问令牌 |
-| POST | `/api/logout` | 用户登出 |
+| 方法   | 路径                        | 描述             |
+|------|---------------------------|----------------|
+| POST | `/api/user/register`      | 用户注册           |
+| POST | `/api/user/login`         | 用户登录，返回JWT     |
+| GET  | `/api/user/info`          | 获取当前用户信息（需JWT） |
+| POST | `/api/user/update`        | 更新用户信息（昵称、头像等） |
+| POST | `/api/user/refresh-token` | 刷新访问令牌         |
+| POST | `/api/logout`             | 用户登出           |
 
 ### 2. 商品模块
 
@@ -319,12 +319,12 @@ npm run dev
 
 ---
 
-## 八、API文档（Swagger）
+## 八、API文档（Openapi）
 
 > 访问地址：
 
 ```
-http://localhost:8080/swagger-ui/index.html
+http://localhost:7272/doc.html
 ```
 
 ---

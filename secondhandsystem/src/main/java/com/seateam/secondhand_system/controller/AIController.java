@@ -1,25 +1,21 @@
 package com.seateam.secondhand_system.controller;
 
-import com.seateam.secondhand_system.ai.DeepSeekService;
-import com.seateam.secondhand_system.common.Result;
-import jakarta.annotation.Resource;
+import com.seateam.secondhand_system.service.AiService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/ai")
-public class AIController {
+@RequiredArgsConstructor
+public class AiController {
 
-    @Resource
-    private DeepSeekService deepSeekService;
+    private final AiService aiService;
 
     @PostMapping("/chat")
-    public Result chat(@RequestParam String message) {
-        String reply = deepSeekService.chat(message);
-        return Result.success().put("reply", reply);
-    }
-
-    @GetMapping("/chat/stream")
-    public Object chatStream(@RequestParam String message) {
-        return deepSeekService.chatFlux(message);
+    public String chat(@RequestBody Map<String, String> request) {
+        String userMessage = request.get("message");
+        return aiService.chat(userMessage);
     }
 }

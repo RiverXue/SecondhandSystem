@@ -4,7 +4,7 @@ server:
 spring:
   ai:
     deepseek:
-      api-key: sk-50add0881c8441c382ab9b82a7d7dc26
+      api-key:
       endpoint: "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
   datasource:
     url: jdbc:mysql://localhost:3306/secondhand?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
@@ -18,7 +18,7 @@ spring:
       host: localhost
 #  ai:
 #    deepseek:
-#      api-key: sk-50add0881c8441c382ab9b82a7d7dc26
+#      api-key: *************
 #      base-url: "https://api.deepseek.com"
 #      chat:
 #        options:
@@ -34,5 +34,5 @@ jwt:
   secret: ${JWT_SECRET:secondhand_system_jwt_secret_key_2025}
   expiration: 86400000
 #dashscope:
-#  api-key: sk-50add0881c8441c382ab9b82a7d7dc26
+#  api-key: ***********
 

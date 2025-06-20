@@ -32,8 +32,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     /**
      * 日志记录器
      */
-    
-     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     // 数据库操作接口
     @Autowired
     private UserMapper userMapper;
@@ -92,7 +92,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user.setPassword(encodedPassword);
 
         // 4. 设置默认角色和创建时间
-        user.setRole("user");
+        if (user.getRole() == null) {
+            user.setRole("user");
+        }
         user.setCreateTime(new Date());
 
         // 5. 保存用户

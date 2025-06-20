@@ -20,7 +20,7 @@
     </sql>
 
     <!-- 创建订单 -->
-    <insert id="insertOrder">
+    <insert id="insertOrder" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `order` (buyer_id, seller_id, goods_id, price, status, create_time)
         VALUES (#{buyerId}, #{sellerId}, #{goodsId}, #{price}, 0, CURRENT_TIMESTAMP)
     </insert>

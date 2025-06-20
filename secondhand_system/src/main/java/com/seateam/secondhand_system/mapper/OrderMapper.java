@@ -13,7 +13,15 @@ import java.util.List;
  * @Entity com.seateam.secondhand_system.entity.Order
  */
 public interface OrderMapper extends BaseMapper<Order> {
+
     List<Order> selectByBuyerId(@Param("buyerId") Long buyerId);
+
+    /**
+     * 创建订单
+     * @param order 订单信息
+     * @return 影响行数
+     */
+    int insertOrder(Order order);
 }
 
 

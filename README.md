@@ -75,7 +75,7 @@
 ### 后端（`Secondhand_System`）
 
 ```
-Secondhand_System
+secondhand_system
 │  pom.xml
 └───src/main
     ├── java/com/seateam/secondhand_system/
@@ -328,12 +328,6 @@ http://localhost:7272/doc.html
 ```
 
 ---
-
-## 九、项目预览效果（示意）
-
-| 首页（含AI聊天入口） | AI智能聊天窗口示例 | 商品详情 | 用户中心 |
-|-------------|------------|------|------|
-|             |            |      |      |
 
 ## 作者信息
 

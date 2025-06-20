@@ -74,7 +74,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order>
         order.setStatus(0); // 0-未付款
 
         // 保存订单
-        int rows = orderMapper.insert(order);
+        int rows = orderMapper.insertOrder(order);
         if (rows <= 0) {
             return Result.error("订单创建失败");
         }

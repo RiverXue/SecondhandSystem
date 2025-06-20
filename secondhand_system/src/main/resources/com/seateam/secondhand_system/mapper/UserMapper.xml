@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seateam.secondhand_system.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.seateam.secondhand_system.entity.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="avatar" property="avatar"/>
+        <result column="phone" property="phone"/>
+        <result column="role" property="role"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <!-- 查询单个 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        select id, username, password, avatar, phone, role, create_time
+        from user
+        where id = #{id}
+    </select>
+
+    <!-- 查询根据用户名 -->
+    <select id="selectByUsername" resultMap="BaseResultMap">
+        select id, username, password, avatar, phone, role, create_time
+        from user
+        where username = #{username}
+    </select>
+
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.seateam.secondhand_system.entity.User">
+        insert into user (username, password, avatar, phone, role, create_time)
+        values (#{username}, #{password}, #{avatar}, #{phone}, #{role}, #{createTime})
+    </insert>
+
+    <!-- 更新 -->
+    <update id="updateById" parameterType="com.seateam.secondhand_system.entity.User">
+        update user
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="role != null">role = #{role},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除 -->
+    <delete id="deleteById">
+        delete from user where id = #{id}
+    </delete>
+
+</mapper>

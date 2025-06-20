@@ -28,7 +28,7 @@
     </properties>
 
     <modules>
-        <module>secondhandsystem</module>
+        <module>secondhand_system</module>
     </modules>
 
     <dependencies>

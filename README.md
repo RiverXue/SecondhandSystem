@@ -60,64 +60,56 @@
 
 - AI对话接口支持多轮对话，提升交互体验
 
-### 5. 后台管理模块
-
-- 用户管理
-
-- 商品管理（违规商品下架）
-
-- 举报处理
 
 ---
 
-## 四、项目目录结构（模板）
+## 四、项目目录结构
 
-### 后端（`Secondhand_System`）
+### 后端（`secondhand_backend`）
 
 ```
-secondhand_system
+secondhand_backend
+│  .gitignore
 │  pom.xml
-└───src/main
-    ├── java/com/seateam/secondhand_system/
-    |   |—— common  # 公共类
-    |   |   └──── config  # # 安全配置（JWT/Security/CORS）、Swagger配置
-    |   |   └──── exception  # 异常类
-    |   |   └──── utils  # 工具类（JWT工具、OSS工具类）
-    |   |   └──── sql    # sql脚本   
-    │   ├── ai/                 # AI智能服务模块（模拟DeepSeek）
-    │   ├── controller/         # REST API 控制器（含AI对话接口）
-    │   ├── entity/             # 实体类（与数据库表映射）
-    │   ├── mapper/             # MyBatis-Plus 映射接口
-    │   ├── service/            # 业务逻辑接口
-    │   ├── service/impl/       # 业务逻辑实现（含AI推荐实现）
-    │   └── SecondhandSystemApplication.java # 启动类
-    └───resources/
-        ├── application.yml     # 配置文件
-        ├── mapper/*.xml        # MyBatis XML文件
-        └── static/             # 静态资源
+└── src\
+    └── main\
+        ├── java/com/seateam/secondhand_system/
+        │   ├── common  # 公共类
+        │   ├── controller/  # REST API 控制器
+        │   ├── entity/  # 实体类
+        │   ├── mapper/  # MyBatis-Plus 映射接口
+        │   ├── service/  # 业务逻辑接口及实现
+        │   └── SecondhandSystemApplication.java # 启动类
+        └── resources/
+            ├── application.yml  # 配置文件
+            ├── mapper/*.xml  # MyBatis XML文件
+            └── static/  # 静态资源
 ```
 
-### 前端（`Secondhand_Frontend`）
+### 前端（`secondhand_frontend`）
 
 ```
-Secondhand_Frontend
+secondhand_frontend
+│  .env
+│  .gitignore
+│  index.html
+│  package-lock.json
 │  package.json
-└───src
-    ├── api/                  # Axios封装与接口请求（含AI对话API）
-    ├── assets/               # 静态资源（图片、样式等）
-    ├── components/           # 公共组件（含AI聊天窗口组件）
-    ├── pages/                # 路由页面组件
-    │   ├── Home.vue          # 首页（含AI聊天入口）
-    │   ├── GoodsDetail.vue   # 商品详情
-    │   ├── Publish.vue       # 发布商品
-    │   ├── Login.vue         # 登录注册
-    │   └── UserCenter.vue    # 用户中心
-    ├── router/               # Vue Router 路由配置
-    ├── store/                # Pinia 状态管理（含AI聊天状态）
-    └── App.vue
+├── public\
+│  └── vite.svg
+└── src\
+    ├── App.vue
+    ├── api\  # Axios封装与接口请求
+    ├── assets\  # 静态资源
+    ├── components\  # 公共组件
+    ├── main.ts
+    ├── pages\  # 路由页面组件
+    ├── router\  # Vue Router 路由配置
+    ├── store\  # Pinia 状态管理
+    ├── style.css
+    ├── views\  # 视图组件
+    └── vite-env.d.ts
 ```
-
----
 
 ## 五、数据库设计
 
@@ -289,7 +281,42 @@ Secondhand_Frontend
 
 ---
 
-## 七、运行与开发说明
+## 七、前端实现详情
+
+### 1. 状态管理
+
+项目使用 Pinia 进行状态管理，主要 store 文件包括：
+
+- `store/user.ts`: 用户相关状态管理（登录、个人信息等）
+- `store/goods.ts`: 商品相关状态管理（商品列表、详情等）
+- `store/favorite.ts`: 收藏相关状态管理
+- `store/message.ts`: 留言相关状态管理
+- `store/order.ts`: 订单相关状态管理
+
+### 2. 核心页面组件
+
+- `views/Home.vue`: 首页，展示商品列表及搜索功能
+- `views/GoodsDetail.vue`: 商品详情页
+- `views/Publish.vue`: 商品发布页
+- `views/Login.vue`: 登录注册页
+- `views/UserCenter.vue`: 用户中心，包含我的发布、收藏、订单等
+- `views/Favorites.vue`: 我的收藏页面
+
+### 3. API 请求
+
+所有 API 请求封装在 `src/api/` 目录下，主要包括：
+
+- `api/user.ts`: 用户相关接口
+- `api/goods.ts`: 商品相关接口
+- `api/favorite.ts`: 收藏相关接口
+- `api/message.ts`: 留言相关接口
+- `api/order.ts`: 订单相关接口
+
+### 4. 路由配置
+
+路由配置在 `src/router/` 目录下，采用 Vue Router 进行路由管理，实现了页面间的导航和权限控制。
+
+## 八、运行与开发说明
 
 ### 后端启动
 

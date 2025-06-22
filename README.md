@@ -295,12 +295,12 @@ Secondhand_Frontend
 
 1. 配置 `application.yml`（数据库、Redis、OSS、AI服务模拟参数）
 
-2. 导入 `doc/sql/second_hand_market.sql` 初始化数据库
+2. 导入 `common/sql/init.sql` 初始化数据库
 
 3. 启动 Spring Boot 项目：
 
 ```bash
-cd second-hand-backend
+cd secondhand_backend
 mvn clean package
 java -jar target/second-hand-market-1.0.jar
 ```

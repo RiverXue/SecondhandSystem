@@ -1,0 +1,81 @@
+:root {
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light only;
+  color: #333333;
+  background-color: #f5f5f5;
+
+  --primary-orange: #FF6B00;
+  --primary-blue: #1677FF;
+  --light-gray: #f5f5f5;
+  --medium-gray: #e5e5e5;
+  --dark-gray: #888888;
+}
+
+a {
+  font-weight: 500;
+  color: var(--primary-blue);
+  text-decoration: none;
+}
+a:hover {
+  color: #0E62D0;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--light-gray);
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 4px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--primary-orange);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+button:hover {
+  background-color: #F56700;
+  border-color: transparent;
+}
+button:focus,
+button:focus-visible {
+  outline: 2px solid rgba(255, 107, 0, 0.3);
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #333333;
+    background-color: #f5f5f5;
+  }
+  a:hover {
+    color: #0E62D0;
+  }
+  button {
+    background-color: var(--primary-orange);
+  }
+}

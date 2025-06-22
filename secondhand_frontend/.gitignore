@@ -1,0 +1,68 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# 依赖目录
+node_modules/
+
+# 编译输出目录
+dist/
+dist-ssr/
+.nuxt/
+.output/
+
+# 本地环境配置
+.env.local
+.env.development.local
+.env.production.local
+
+# 测试报告
+coverage/
+.jest/
+
+# 编辑器/IDE 配置
+.idea/
+.vscode/
+
+
+# 临时文件
+.temp
+temp/
+
+# 类型检查缓存
+*.tsbuildinfo
+
+# 打包工具缓存
+.cache/
+.pnp/
+.pnp.js
+
+# Vue CLI 插件缓存
+plugins-cache/
+
+# 可选：如果你使用Docker
+.docker/
+.dockerignore
+
+# 可选：如果你使用pnpm
+.pnpm-store/

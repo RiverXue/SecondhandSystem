@@ -4,8 +4,8 @@ import {useUserStore} from '../store/user'
 import router from '../router'
 
 const request = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
-    timeout: 5000
+    baseURL: import.meta.env.VITE_APP_API_URL || '/api',
+    timeout: 50000
 })
 
 // 请求拦截器
@@ -42,7 +42,7 @@ request.interceptors.response.use(
             console.log('403错误详情:', error.response);
             console.log('403响应数据:', error.response.data);
             console.log('请求URL:', originalRequest.url);
-            
+
             // 避免logout请求本身触发403时的无限循环
             if (!originalRequest.url.includes('/logout')) {
                 await userStore.logout();

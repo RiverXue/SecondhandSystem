@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -20,7 +22,12 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Goods {
+public class Goods implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+
     /**
      * 主键，自增
      */
@@ -58,6 +65,16 @@ public class Goods {
     private Integer status;
 
     /**
+     * 商品主图URL
+     */
+    private String image;
+
+    /**
+     * 商品多图URL，JSON格式数组
+     */
+    private String images;
+
+    /**
      * 发布时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -82,6 +99,8 @@ public class Goods {
                 && (this.getPrice() == null ? other.getPrice() == null : this.getPrice().equals(other.getPrice()))
                 && (this.getCategory() == null ? other.getCategory() == null : this.getCategory().equals(other.getCategory()))
                 && (this.getStatus() == null ? other.getStatus() == null : this.getStatus().equals(other.getStatus()))
+                && (this.getImage() == null ? other.getImage() == null : this.getImage().equals(other.getImage()))
+                && (this.getImages() == null ? other.getImages() == null : this.getImages().equals(other.getImages()))
                 && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()));
     }
 
@@ -96,6 +115,8 @@ public class Goods {
         result = prime * result + ((getPrice() == null) ? 0 : getPrice().hashCode());
         result = prime * result + ((getCategory() == null) ? 0 : getCategory().hashCode());
         result = prime * result + ((getStatus() == null) ? 0 : getStatus().hashCode());
+        result = prime * result + ((getImage() == null) ? 0 : getImage().hashCode());
+        result = prime * result + ((getImages() == null) ? 0 : getImages().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         return result;
     }
@@ -112,6 +133,8 @@ public class Goods {
                 ", price=" + price +
                 ", category=" + category +
                 ", status=" + status +
+                ", image=" + image +
+                ", images=" + images +
                 ", createTime=" + createTime +
                 "]";
         return sb;

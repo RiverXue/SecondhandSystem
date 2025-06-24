@@ -1,21 +1,21 @@
 <template>
   <div class="order-list-container">
     <h2 class="page-title">我的订单</h2>
-    <div class="loading" v-if="orderStore.loading">加载中...</div>
-    <div class="empty-tip" v-else-if="!orderStore.loading && orderStore.orders.length === 0">
+    <div v-if="orderStore.loading" class="loading">加载中...</div>
+    <div v-else-if="!orderStore.loading && orderStore.orders.length === 0" class="empty-tip">
       <p>您还没有任何订单</p>
-      <router-link to="/" class="go-shopping-btn">去购物</router-link>
+      <router-link class="go-shopping-btn" to="/">去购物</router-link>
     </div>
-    <div class="orders-list" v-else>
-      <div class="order-item" v-for="order in orderStore.orders" :key="order.id">
+    <div v-else class="orders-list">
+      <div v-for="order in orderStore.orders" :key="order.id" class="order-item">
         <div class="order-header">
           <span class="order-number">订单编号: {{ order.orderNo }}</span>
           <span class="order-date">{{ formatDate(order.createTime) }}</span>
-          <span class="order-status" :class="getStatusClass(order.status)">{{ formatStatus(order.status) }}</span>
+          <span :class="getStatusClass(order.status)" class="order-status">{{ formatStatus(order.status) }}</span>
         </div>
         <div class="order-goods">
           <router-link :to="order.goodsId != null ? `/goods/detail/${order.goodsId}` : '#'" class="goods-link">
-            <img :src="order.image" alt="{{ order.title }}" class="goods-img">
+            <img :src="getImageUrl(order.image) || defaultGoodsImage" alt="{{ order.title }}" class="goods-img">
             <div class="goods-info">
               <h3 class="goods-title">{{ order.title }}</h3>
               <p class="goods-price">{{ order.price?.toFixed(2) || '0.00' }}</p>
@@ -30,10 +30,19 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { onMounted } from 'vue';
-import { useOrderStore } from '../store/order';
-import { ElMessage } from 'element-plus';
+<script lang="ts" setup>
+import {onMounted} from 'vue';
+import {useOrderStore} from '../store/order';
+import {ElMessage} from 'element-plus';
+import defaultGoodsImage from '../assets/codelogo.png';
+
+const getImageUrl = (imagePath: string | undefined) => {
+  if (!imagePath || typeof imagePath !== 'string') {
+    return defaultGoodsImage;
+  }
+  const normalizedPath = imagePath.replace(/\\/g, '/');
+  return `/uploads/${normalizedPath}`;
+};
 
 const orderStore = useOrderStore();
 
@@ -51,25 +60,37 @@ onMounted(async () => {
 
 // 格式化订单状态
 const formatStatus = (status: number) => {
-  switch(status) {
-    case 0: return '待付款';
-    case 1: return '已付款';
-    case 2: return '已发货';
-    case 3: return '已完成';
-    case 4: return '已取消';
-    default: return '未知状态';
+  switch (status) {
+    case 0:
+      return '待付款';
+    case 1:
+      return '已付款';
+    case 2:
+      return '已发货';
+    case 3:
+      return '已完成';
+    case 4:
+      return '已取消';
+    default:
+      return '未知状态';
   }
 };
 
 // 获取订单状态样式
 const getStatusClass = (status: number) => {
   switch (status) {
-    case 0: return 'status-pending';
-    case 1: return 'status-paid';
-    case 2: return 'status-shipped';
-    case 3: return 'status-completed';
-    case 4: return 'status-canceled';
-    default: return '';
+    case 0:
+      return 'status-pending';
+    case 1:
+      return 'status-paid';
+    case 2:
+      return 'status-shipped';
+    case 3:
+      return 'status-completed';
+    case 4:
+      return 'status-canceled';
+    default:
+      return '';
   }
 };
 
@@ -147,18 +168,22 @@ const formatDate = (dateString: string) => {
   color: #ff9800;
   background-color: #fff8e1;
 }
+
 .status-paid {
   color: #2196f3;
   background-color: #e3f2fd;
 }
+
 .status-shipped {
   color: #4caf50;
   background-color: #e8f5e9;
 }
+
 .status-completed {
   color: #9c27b0;
   background-color: #f3e5f5;
 }
+
 .status-canceled {
   color: #f44336;
   background-color: #ffebee;

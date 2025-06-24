@@ -4,6 +4,10 @@
       <div class="search-bar">
         <el-input v-model="searchKeyword" class="search-input" placeholder="搜索你想要的宝贝..."></el-input>
         <el-button class="search-btn" @click="handleSearch">搜索</el-button>
+        <el-button class="ai-chat-btn" @click="handleShowAiChat">
+          <Message />
+          AI助手
+        </el-button>
       </div>
     </div>
 
@@ -11,7 +15,7 @@
       <el-card v-for="goods in goodsStore.goodsList" :key="goods.id" class="goods-card">
         <router-link :to="`/goods/detail/${goods.id}`" class="goods-link">
           <div class="goods-image">
-            <img :src="goods.image || '/default-goods.jpg'" alt="{{ goods.title }}" class="goods-img">
+            <img :src="getImageUrl(goods.image) || defaultGoodsImage" alt="{{ goods.title }}" class="goods-img">
           </div>
           <div class="goods-info">
             <h3 class="goods-title">{{ goods.title }}</h3>
@@ -29,6 +33,9 @@
       </el-card>
     </div>
 
+    <AiChat v-model:visible="showAiChat" />
+<pre>showAiChat value: {{ showAiChat }}</pre>
+
     <div class="pagination">
       <el-pagination
           v-model:current-page="currentPage"
@@ -45,13 +52,17 @@
 import {onMounted, ref} from 'vue';
 import {useGoodsStore} from '../store/goods';
 import {useUserStore} from '../store/user';
-import {Star, StarFilled} from '@element-plus/icons-vue';
+import {Star, StarFilled, Message} from '@element-plus/icons-vue';
+import AiChat from '../components/AiChat.vue';
+
+import defaultGoodsImage from '../assets/codelogo.png';
 
 const goodsStore = useGoodsStore();
 const userStore = useUserStore();
 const searchKeyword = ref('');
 const currentPage = ref(1);
 const pageSize = ref(10);
+const showAiChat = ref(false);
 
 onMounted(async () => {
   await userStore.fetchUserInfo();
@@ -92,6 +103,40 @@ const handlePageChange = async (page: number) => {
   } else {
     await fetchGoods();
   }
+};
+
+const getImageUrl = (imagePath: string | undefined) => {
+  console.log('生成图片URL，输入路径:', imagePath);
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL;
+  
+  if (!imagePath || typeof imagePath !== 'string') {
+    console.log('无效的图片路径，使用默认图片');
+    return defaultGoodsImage;
+  }
+  
+  // 如果路径已经是完整URL，直接返回
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    console.log('使用完整URL图片路径:', imagePath);
+    return imagePath;
+  }
+  
+  // 如果路径已经包含/uploads/，直接使用baseUrl拼接
+  if (imagePath.startsWith('/uploads/')) {
+    const result = `${baseUrl}${imagePath}`;
+    console.log('使用已包含/uploads/的路径:', result);
+    return result;
+  }
+  
+  const normalizedPath = imagePath.replace(/\\/g, '/');
+  const result = `${baseUrl}/uploads/${normalizedPath}`;
+  console.log('生成图片URL:', result);
+  
+  return result;
+};
+
+const handleShowAiChat = () => {
+  showAiChat.value = true;
+  console.log('AI助手按钮被点击，showAiChat:', showAiChat.value);
 };
 
 const toggleFavorite = async (goodsId: number) => {
@@ -136,6 +181,12 @@ const toggleFavorite = async (goodsId: number) => {
 
 .search-btn {
   background-color: var(--primary-orange);
+  color: white;
+  width: 100px;
+}
+
+.ai-chat-btn {
+  background-color: #409EFF;
   color: white;
   width: 100px;
 }

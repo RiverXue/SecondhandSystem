@@ -5,6 +5,9 @@ import com.seateam.secondhand_system.entity.Goods;
 import com.seateam.secondhand_system.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/goods")
@@ -14,9 +17,23 @@ public class GoodsController {
     private GoodsService goodsService;
 
     /**
-     * 发布商品
+     * 发布商品（支持图片上传）
      */
-    @PostMapping("/publish")
+    @PostMapping(value = "/publish", consumes = "multipart/form-data")
+    public Result publishGoods(
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("price") BigDecimal price,
+            @RequestParam("category") String category,
+            @RequestParam(value = "mainImage", required = false) MultipartFile mainImage,
+            @RequestParam(value = "images", required = false) MultipartFile[] images) {
+        return goodsService.publishGoodsWithImages(title, description, price, category, mainImage, images);
+    }
+
+    /**
+     * 发布商品（纯数据接口，用于不需要上传图片的场景）
+     */
+    @PostMapping(value = "/publish", consumes = "application/json")
     public Result publishGoods(@RequestBody Goods goods) {
         return goodsService.publishGoods(goods);
     }

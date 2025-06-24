@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import {useGoodsStore} from '../store/goods';
 import {useUserStore} from '../store/user';
 import {useFavoriteStore} from '../store/favorite';
 import {useOrderStore} from '../store/order';
 import MessageBoard from '../components/MessageBoard.vue';
-import {ElMessage} from 'element-plus';
-import {ElCarousel, ElCarouselItem, ElImageViewer, ElIcon, ElBadge } from 'element-plus';
-import { Star, StarFilled } from '@element-plus/icons-vue';
+import {ElCarousel, ElCarouselItem, ElIcon, ElImageViewer, ElMessage} from 'element-plus';
+import {Star, StarFilled} from '@element-plus/icons-vue';
+import defaultGoodsImage from '../assets/codelogo.png';
 
+const baseUrl = import.meta.env.VITE_APP_BASE_URL || '';
 
 const route = useRoute();
 const router = useRouter();
@@ -18,7 +19,9 @@ const userStore = useUserStore();
 const favoriteStore = useFavoriteStore();
 const orderStore = useOrderStore();
 const currentGoods = ref<any>(null);
-const isFavorite = ref(false);
+// const isFavorite = ref(false);
+const isFavorite = computed(() => currentGoods.value && favoriteStore.favorites.some(f => f.goodsId === currentGoods.value.id));
+
 
 onMounted(async () => {
   const goodsId = Number(route.params.id);
@@ -33,16 +36,27 @@ onMounted(async () => {
 const fetchGoodsDetail = async (goodsId: number) => {
   try {
     await goodsStore.fetchGoodsDetail(goodsId);
-    currentGoods.value = goodsStore.currentGoods;
+    currentGoods.value = parseGoodsImages(goodsStore.currentGoods);
+    // 确保至少有一张默认图片
+    if (!currentGoods.value.images || currentGoods.value.images.length === 0) {
+      currentGoods.value.images = currentGoods.value.image ? [currentGoods.value.image] : [];
+    }
   } catch (error) {
     console.error('获取商品详情失败:', error);
+    // 错误状态下显示默认图片
+    currentGoods.value = {
+      images: [],
+      title: '商品加载失败',
+      price: 0,
+      description: '无法加载商品详情，请稍后重试'
+    }
   }
 };
 
 const checkFavoriteStatus = async (goodsId: number) => {
   try {
     await favoriteStore.getFavoriteList();
-    isFavorite.value = favoriteStore.favorites.some((item: any) => item.goodsId === goodsId);
+    // 计算属性会自动响应favoriteStore.favorites变化
   } catch (error) {
     console.error('检查收藏状态失败:', error);
   }
@@ -61,7 +75,7 @@ const toggleFavorite = async () => {
     } else {
       await favoriteStore.addFavorite(goodsId);
     }
-    isFavorite.value = !isFavorite.value;
+    // 无需手动更新，计算属性会自动响应store变化
   } catch (error) {
     console.error('切换收藏状态失败:', error);
   }
@@ -100,7 +114,75 @@ const showImagePreview = (img: string) => {
 const formatDate = (dateString: string) => {
   if (!dateString) return '';
   const date = new Date(dateString);
-  return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+  return date.toLocaleDateString('zh-CN', {year: 'numeric', month: 'long', day: 'numeric'});
+};
+
+// 解析商品图片数据
+// 处理主图和多图数据，确保始终返回图片数组
+const parseGoodsImages = (goods: any) => {
+  // 如果没有图片数据，初始化空数组
+  if (!goods) return {images: []};
+
+  // 处理多图数据
+  if (goods.images) {
+    try {
+      // 尝试解析JSON格式的多图数据
+      const parsedImages = JSON.parse(goods.images);
+      goods.images = Array.isArray(parsedImages) ? parsedImages : [];
+    } catch (e) {
+      console.error('解析多图数据失败', e);
+      goods.images = [];
+    }
+  } else {
+    goods.images = [];
+  }
+
+  // 如果有多图数据，直接使用
+  if (goods.images.length > 0) {
+    return goods;
+  }
+
+  // 如果没有多图数据但有主图，将主图包装成数组
+  if (goods.image) {
+    goods.images = [goods.image];
+    // 兼容可能的字符串数组格式
+    if (typeof goods.images[0] === 'string' && goods.images[0].startsWith('[')) {
+      try {
+        goods.images = JSON.parse(goods.images[0]);
+      } catch (e) {
+        console.error('解析主图数据失败', e);
+      }
+    }
+  }
+
+  return goods;
+};
+// 在获取商品详情的地方调用解析函数
+const getImageUrl = (imagePath: string | undefined) => {
+  console.log('生成图片URL，输入路径:', imagePath);
+
+  if (!imagePath || typeof imagePath !== 'string') {
+    console.log('无效的图片路径，使用默认图片');
+    return defaultGoodsImage;
+  }
+
+  // 如果路径是前端资产或完整URL，直接返回
+  if (imagePath.startsWith('/src/assets/') || imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    console.log('使用前端资产或完整URL图片路径:', imagePath);
+    return imagePath;
+  }
+
+  // 如果路径已经包含/uploads/，直接使用
+  if (imagePath.startsWith('/uploads/')) {
+    console.log('使用已包含/uploads/的路径:', imagePath);
+    return imagePath;
+  }
+
+  const normalizedPath = imagePath.replace(/\\/g, '/');
+  const result = `${baseUrl}/uploads/${normalizedPath}`;
+  console.log('生成图片URL:', result);
+
+  return result;
 };
 </script>
 
@@ -110,40 +192,64 @@ const formatDate = (dateString: string) => {
       <div class="goods-detail">
         <!-- 商品图片轮播 -->
         <div class="goods-images">
-          <el-carousel height="400px" :loop="true" indicator-position="outside">
-            <el-carousel-item v-for="(img, index) in currentGoods?.images || [currentGoods?.image]" :key="index">
-              <img :src="img || '/default-goods.jpg'" alt="{{ currentGoods?.title }}" class="main-image" @click="showImagePreview(img)">
+          <el-carousel :loop="true" height="400px" indicator-position="outside">
+            <el-carousel-item
+                v-for="(img, index) in (currentGoods?.images?.length ? currentGoods.images : (currentGoods?.image ? [currentGoods.image] : []))"
+                :key="index || 'main'">
+              <img :src="getImageUrl(img)" alt="商品图片" class="carousel-img"
+                   @click="showImagePreview(getImageUrl(img))">
             </el-carousel-item>
+            <!--            <el-carousel-item v-if="!currentGoods?.images?.length && !currentGoods?.image">-->
+            <!--              <img :src="defaultGoodsImage" alt="默认商品图片" class="carousel-img"-->
+            <!--                   @click="showImagePreview(defaultGoodsImage)">-->
+            <!--            </el-carousel-item>-->
+            <el-carousel-item v-if="!currentGoods?.images?.length && !currentGoods?.image">
+              <div class="carousel-img-wrapper">
+                <img :src="defaultGoodsImage" alt="默认商品图片" class="carousel-img"
+                     @click="showImagePreview(defaultGoodsImage)">
+              </div>
+            </el-carousel-item>
+
+
           </el-carousel>
           <!-- 缩略图预览 -->
-          <div class="thumbnails" v-if="currentGoods?.images?.length > 1">
-            <div v-for="(img, index) in currentGoods?.images" :key="index" class="thumbnail-item" :class="{active: activeThumbnail === index}" @click="activeThumbnail = index">
-              <img :src="img" alt="缩略图{{ index + 1 }}">
+          <div v-if="currentGoods?.images?.length > 1" class="thumbnails">
+            <div v-for="(img, index) in currentGoods?.images" :key="index" :class="{active: activeThumbnail === index}"
+                 class="thumbnail-item" @click="activeThumbnail = index">
+              <img :src="getImageUrl(img)" alt="缩略图{{ index + 1 }}">
             </div>
           </div>
         </div>
 
         <!-- 商品信息 -->
         <div class="goods-info">
-          <div class="status-badge" v-if="currentGoods?.status === 'sold'">{{ currentGoods?.status === 'sold' ? '已售出' : '可购买' }}</div>
+          <div v-if="currentGoods?.status === 'sold'" class="status-badge">
+            <!--            {{ currentGoods?.status === 'sold' ? '已售出' : '可购买' }}-->
+            {{ currentGoods?.status === 1 ? '已售出' : '可购买' }}
+          </div>
           <h1 class="goods-title">{{ currentGoods?.title || '加载中...' }}</h1>
+          <div v-if="!currentGoods" class="loading-placeholder">加载商品数据中...</div>
           <div class="price-section">
             <span class="current-price">¥{{ currentGoods?.price?.toFixed(2) || '0.00' }}</span>
-            <span class="original-price" v-if="currentGoods?.originalPrice">¥{{ currentGoods?.originalPrice.toFixed(2) }}</span>
+            <span v-if="currentGoods?.originalPrice" class="original-price">¥{{
+                currentGoods?.originalPrice.toFixed(2)
+              }}</span>
           </div>
 
           <div class="goods-meta">
-            <div class="meta-item">
-              <span class="label">新旧程度：</span>
-              <span class="value">{{ currentGoods?.condition || '未填写' }}</span>
-            </div>
+            <!--            <div class="meta-item">-->
+            <!--              <span class="label">新旧程度：</span>-->
+            <!--              <span class="value">{{ currentGoods?.condition || '未填写' }}</span>-->
+            <!--            </div>-->
             <div class="meta-item">
               <span class="label">发布时间：</span>
-              <span class="value">{{ formatDate(currentGoods?.createTime) }}</span>
+              <span class="value">{{
+                  currentGoods?.createTime ? formatDate(currentGoods.createTime) : '未知时间'
+                }}</span>
             </div>
             <div class="meta-item">
               <span class="label">卖家：</span>
-              <span class="value">{{ currentGoods?.sellerName || '未知卖家' }}</span>
+              <span class="value">{{ currentGoods?.userId || '未知卖家' }}</span>
             </div>
           </div>
 
@@ -153,12 +259,15 @@ const formatDate = (dateString: string) => {
           </div>
 
           <div class="goods-actions">
-            <button class="favorite-btn" @click="toggleFavorite" :class="{active: isFavorite}">
-              <el-icon :size="18"><StarFilled v-if="isFavorite"/><Star v-else/></el-icon>
+            <button :class="{active: isFavorite}" class="favorite-btn" @click="toggleFavorite">
+              <el-icon :size="18">
+                <StarFilled v-if="isFavorite"/>
+                <Star v-else/>
+              </el-icon>
               {{ isFavorite ? '已收藏' : '收藏' }}
             </button>
-            <button class="order-btn" @click="createOrder" :disabled="currentGoods?.status === 'sold'">
-              {{ currentGoods?.status === 'sold' ? '已售出' : '立即购买' }}
+            <button :disabled="currentGoods?.status === 1" class="order-btn" @click="createOrder">
+              {{ currentGoods?.status === 1 ? '已售出' : '立即购买' }}
             </button>
           </div>
         </div>
@@ -166,19 +275,34 @@ const formatDate = (dateString: string) => {
     </el-card>
 
     <!-- 留言板区域 -->
-    <MessageBoard v-if="currentGoods" :goods-id="currentGoods.id" />
+    <MessageBoard v-if="currentGoods" :goods-id="currentGoods.id"/>
 
     <!-- 图片预览 -->
     <el-image-viewer v-if="showViewer" :url-list="[currentImage]" @close="showViewer = false"/>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .goods-detail-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
+
+.carousel-img-wrapper {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 
 .detail-card {
   padding: 20px;
@@ -197,10 +321,16 @@ const formatDate = (dateString: string) => {
 }
 
 .main-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 100%;
+  height: 400px;
+  background-color: #f5f5f5;
+
   object-fit: contain;
-  cursor: zoom-in;
+  cursor: zoom-in; //
+  margin: 0 auto; /* 水平居中 */
 }
 
 .thumbnails {
@@ -224,8 +354,10 @@ const formatDate = (dateString: string) => {
 
 .thumbnail-item img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  margin: 0 auto; /* 水平居中 */
 }
 
 .goods-info {

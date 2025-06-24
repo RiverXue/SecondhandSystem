@@ -62,6 +62,7 @@ public class AiServiceImpl implements AiService {
 
         // 3. 先搜索商品
         Result goodsResult = goodsService.searchGoods(request.getMessage(), 1, 10);  // 搜索前10条相关商品
+        System.out.println("商品搜索结果: " + goodsResult);  // 打印搜索结果
         Map<String, Object> dataMap = goodsResult.getData();  // 提取搜索结果数据
         List<Goods> recommendedGoods = new ArrayList<>();  // 用于存储推荐商品列表
         if (dataMap != null && dataMap.get("list") != null) {  // 检查搜索结果是否存在商品列表
@@ -71,9 +72,12 @@ public class AiServiceImpl implements AiService {
         // 4. 判断是否有商品
         if (recommendedGoods != null && !recommendedGoods.isEmpty()) {  // 检查是否有推荐商品
             // 搜索到商品，直接返回，不调用AI
+
             return Result.success()  // 返回成功结果
                     .put("reply", "为您推荐以下商品：") // 自定义提示语
-                    .put("recommendedGoods", recommendedGoods);  // 返回推荐商品列表
+                    .put("recommendedGoods", recommendedGoods)  // 返回推荐商品列表
+                    .put("sessionId", request.getSessionId());
+
         }
 
         // 5. 若无商品，再调用AI
@@ -89,9 +93,11 @@ public class AiServiceImpl implements AiService {
         aiChatMapper.insert(newChat);  // 插入新的对话记录到数据库
 
         // 7. 返回AI回复，无推荐商品
+        System.out.println("AI回复内容: " + aiResponse);
         return Result.success()  // 返回成功结果
                 .put("reply", aiResponse)  // 返回AI回复
-                .put("recommendedGoods", recommendedGoods); // 返回推荐商品列表
+                .put("recommendedGoods", recommendedGoods) // 返回推荐商品列表
+                .put("sessionId", request.getSessionId());
     }
 
 }

@@ -28,6 +28,8 @@ public class AiController {
      */
     @PostMapping("/chat")
     public Result chat(@RequestBody AiChatRequest request) {
+
+        System.out.println("前端正在发送ai请求" + request);
         return aiService.chat(request);
     }
 }

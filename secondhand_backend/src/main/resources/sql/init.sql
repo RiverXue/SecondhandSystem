@@ -23,6 +23,8 @@ CREATE TABLE `goods`
     `price`       DECIMAL(10, 2) NOT NULL COMMENT '商品价格',
     `category`    VARCHAR(50) COMMENT '商品分类',
     `status`      TINYINT  DEFAULT 0 COMMENT '状态（0-在售，1-已售）',
+    `image`       VARCHAR(255) DEFAULT NULL COMMENT '商品主图URL',
+    `images`      TEXT DEFAULT NULL COMMENT '商品多图URL，JSON格式数组',
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE = InnoDB

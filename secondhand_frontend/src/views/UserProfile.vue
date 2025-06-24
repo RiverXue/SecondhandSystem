@@ -28,14 +28,16 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { onMounted } from 'vue';
-import { useUserStore } from '../store/user';
-import { useRouter } from 'vue-router';
+<script lang="ts" setup>
+import {onMounted} from 'vue';
+import {useUserStore} from '../store/user';
+import {useRouter} from 'vue-router';
+import defaultAvatarlogo from '../assets/codelogo.png';
 
 const userStore = useUserStore();
 const router = useRouter();
-const defaultAvatar = 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png';
+// const defaultAvatar = 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png';
+const defaultAvatar = defaultAvatarlogo;
 
 // 页面加载时获取用户信息
 onMounted(async () => {

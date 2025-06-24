@@ -1,67 +1,69 @@
 <template>
   <div class="message-board-container">
-    <!-- 留言板头部 -->
-    <div class="message-board-header">
-      <h2 class="board-title">商品留言区</h2>
-      <div class="board-stats">
-        <span class="stats-item">{{ totalMessages }} 条留言</span>
-        <el-divider direction="vertical" class="divider" />
-        <el-select v-model="sortOption" size="small" @change="handleSortChange">
-          <el-option label="最新优先" value="newest" />
-          <el-option label="最早优先" value="oldest" />
-        </el-select>
-      </div>
-    </div>
-
-    <!-- 留言输入区域 -->
-    <MessageInput
-      v-if="userStore.accessToken"
-      :goods-id="goodsId"
-      @message-sent="handleMessageSent"
-    />
-    <LoginPrompt v-else />
-
-    <!-- 留言列表区域 -->
-    <div class="message-list-container">
-      <el-skeleton v-if="messageStore.loading && !messageStore.messages.length" :count="3" />
-      <ErrorState v-if="messageStore.error" :message="messageStore.error" @retry="loadMessages" />
-      <EmptyState v-if="!messageStore.loading && !messageStore.messages.length && !messageStore.error" />
-
-      <div class="message-list" v-else>
-        <MessageItem
-          v-for="message in sortedMessages"
-          :key="message.id"
-          :message="message"
-          :is-seller="userStore.userInfo?.isSeller || false"
-          @reply-sent="handleReplySent"
-        />
+    <el-card class="detail-card"> <!-- 新增el-card包裹，和商品详情页一致 -->
+      <!-- 留言板头部 -->
+      <div class="message-board-header">
+        <h2 class="board-title">商品留言区</h2>
+        <div class="board-stats">
+          <span class="stats-item">{{ totalMessages }} 条留言</span>
+          <el-divider class="divider" direction="vertical"/>
+          <el-select v-model="sortOption" size="small" @change="handleSortChange">
+            <el-option label="最新优先" value="newest"/>
+            <el-option label="最早优先" value="oldest"/>
+          </el-select>
+        </div>
       </div>
 
-      <!-- 分页加载 -->
-      <div class="load-more-container" v-if="!messageStore.loading && messageStore.hasMore">
-        <el-button
-          size="small"
-          :loading="loadingMore"
-          @click="loadMoreMessages"
-          class="load-more-btn"
-        >
-          加载更多
-        </el-button>
+      <!-- 留言输入区域 -->
+      <MessageInput
+          v-if="userStore.accessToken"
+          :goods-id="goodsId"
+          @message-sent="handleMessageSent"
+      />
+      <LoginPrompt v-else/>
+
+      <!-- 留言列表区域 -->
+      <div class="message-list-container">
+        <el-skeleton v-if="messageStore.loading && !messageStore.messages.length" :count="3"/>
+        <ErrorState v-if="messageStore.error" :message="messageStore.error" @retry="loadMessages"/>
+        <EmptyState v-if="!messageStore.loading && !messageStore.messages.length && !messageStore.error"/>
+
+        <div v-else class="message-list">
+          <MessageItem
+              v-for="message in sortedMessages"
+              :key="message.id"
+              :is-seller="userStore.userInfo?.isSeller || false"
+              :message="message"
+              @reply-sent="handleReplySent"
+          />
+        </div>
+
+        <!-- 分页加载 -->
+        <div v-if="!messageStore.loading && messageStore.hasMore" class="load-more-container">
+          <el-button
+              :loading="loadingMore"
+              class="load-more-btn"
+              size="small"
+              @click="loadMoreMessages"
+          >
+            加载更多
+          </el-button>
+        </div>
       </div>
-    </div>
+    </el-card>
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useMessageStore } from '../store/message';
-import { useUserStore } from '../store/user';
+<script lang="ts" setup>
+import {computed, onMounted, ref} from 'vue';
+import {useMessageStore} from '../store/message';
+import {useUserStore} from '../store/user';
 import MessageInput from './MessageInput.vue';
 import MessageItem from './MessageItem.vue';
 import LoginPrompt from './LoginPrompt.vue';
 import EmptyState from './EmptyState.vue';
 import ErrorState from './ErrorState.vue';
-import { ElMessage, ElDivider, ElSelect, ElOption, ElButton } from 'element-plus';
+import {ElButton, ElDivider, ElMessage, ElOption, ElSelect} from 'element-plus';
 
 // 定义组件参数
 const props = defineProps<{
@@ -140,16 +142,21 @@ const handleReplySent = (messageId: number) => {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .message-board-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+  padding: 20px 0; // 改为20上下，左右不管，由el-card控制
 }
+
+.detail-card {
+  padding: 20px; // 和商品详情页完全一致
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
 
 .message-board-header {
   display: flex;

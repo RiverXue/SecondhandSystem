@@ -9,7 +9,7 @@
     <div v-else class="favorites-list">
       <div v-for="goods in favoriteStore.favorites" :key="goods.id" class="favorite-item">
         <router-link :to="`/goods/detail/${goods.id}`" class="item-link">
-          <img :src="goods.image" alt="{{ goods.title }}" class="goods-img">
+          <img :src="getImageUrl(goods.image) || defaultGoodsImage" alt="{{ goods.title }}" class="goods-img">
           <div class="goods-info">
             <h3 class="goods-title">{{ goods.title }}</h3>
             <p class="goods-price">{{ goods.price.toFixed(2) }}</p>
@@ -30,8 +30,17 @@
 <script lang="ts" setup>
 import {onMounted} from 'vue';
 import {useFavoriteStore} from '../store/favorite';
+import defaultGoodsImage from '../assets/codelogo.png';
 
 const favoriteStore = useFavoriteStore();
+
+const getImageUrl = (imagePath: string | undefined) => {
+  if (!imagePath || typeof imagePath !== 'string') {
+    return defaultGoodsImage;
+  }
+  const normalizedPath = imagePath.replace(/\\/g, '/');
+  return `/uploads/${normalizedPath}`;
+};
 
 // 页面加载时获取收藏列表
 onMounted(() => {

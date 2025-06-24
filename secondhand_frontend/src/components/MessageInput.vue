@@ -66,6 +66,7 @@ const submitMessage = async () => {
   display: flex;
   gap: 12px;
   margin-bottom: 25px;
+  position: relative;
 }
 
 .user-avatar {
@@ -74,12 +75,13 @@ const submitMessage = async () => {
 
 .input-wrapper {
   flex: 1;
+  width: calc(100% + 30px);
+  margin-right: -30px;
 }
 
 .message-input {
   width: 100%;
   min-height: 100px;
-  padding: 12px 15px;
   border: 1px solid #e5e6eb;
   border-radius: 8px;
   resize: none;
@@ -104,5 +106,12 @@ const submitMessage = async () => {
 .char-count {
   font-size: 12px;
   color: #86909c;
+}
+
+@media (max-width: 768px) {
+  .input-wrapper {
+    width: 100%;
+    margin-right: 0;
+  }
 }
 </style>

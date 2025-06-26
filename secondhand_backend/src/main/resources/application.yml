@@ -20,8 +20,9 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  resources:
-    static-locations: file:${upload.path},classpath:/static/
+  web:
+    resources:
+      static-locations: file:${upload.path},classpath:/static/
 #  ai:
 #    deepseek:
 #      api-key: *************

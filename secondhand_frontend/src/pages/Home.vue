@@ -5,7 +5,7 @@
         <el-input v-model="searchKeyword" class="search-input" placeholder="搜索你想要的宝贝..."></el-input>
         <el-button class="search-btn" @click="handleSearch">搜索</el-button>
         <el-button class="ai-chat-btn" @click="handleShowAiChat">
-          <Message />
+          <Message/>
           AI助手
         </el-button>
       </div>
@@ -33,8 +33,7 @@
       </el-card>
     </div>
 
-    <AiChat v-model:visible="showAiChat" />
-<pre>showAiChat value: {{ showAiChat }}</pre>
+    <AiChat v-model:visible="showAiChat"/>
 
     <div class="pagination">
       <el-pagination
@@ -46,13 +45,16 @@
       ></el-pagination>
     </div>
   </div>
+
+  <pre> Disgined by RiverX </pre>
+
 </template>
 
 <script lang="ts" setup>
 import {onMounted, ref} from 'vue';
 import {useGoodsStore} from '../store/goods';
 import {useUserStore} from '../store/user';
-import {Star, StarFilled, Message} from '@element-plus/icons-vue';
+import {Message, Star, StarFilled} from '@element-plus/icons-vue';
 import AiChat from '../components/AiChat.vue';
 
 import defaultGoodsImage from '../assets/codelogo.png';
@@ -108,29 +110,29 @@ const handlePageChange = async (page: number) => {
 const getImageUrl = (imagePath: string | undefined) => {
   console.log('生成图片URL，输入路径:', imagePath);
   const baseUrl = import.meta.env.VITE_APP_BASE_URL;
-  
+
   if (!imagePath || typeof imagePath !== 'string') {
     console.log('无效的图片路径，使用默认图片');
     return defaultGoodsImage;
   }
-  
+
   // 如果路径已经是完整URL，直接返回
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     console.log('使用完整URL图片路径:', imagePath);
     return imagePath;
   }
-  
+
   // 如果路径已经包含/uploads/，直接使用baseUrl拼接
   if (imagePath.startsWith('/uploads/')) {
     const result = `${baseUrl}${imagePath}`;
     console.log('使用已包含/uploads/的路径:', result);
     return result;
   }
-  
+
   const normalizedPath = imagePath.replace(/\\/g, '/');
   const result = `${baseUrl}/uploads/${normalizedPath}`;
   console.log('生成图片URL:', result);
-  
+
   return result;
 };
 

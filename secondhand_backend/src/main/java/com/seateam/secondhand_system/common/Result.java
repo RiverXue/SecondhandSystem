@@ -1,7 +1,6 @@
 package com.seateam.secondhand_system.common;
 
 import lombok.Data;
-import com.seateam.secondhand_system.common.ResultCode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,8 @@ public class Result {
     private Map<String, Object> data = new HashMap<>(); // 返回数据
 
     // 私有构造方法
-    private Result() {}
+    private Result() {
+    }
 
     // 成功静态方法
     public static Result success() {
@@ -70,4 +70,11 @@ public class Result {
         this.data.put(key, value);
         return this;
     }
+
+    // 新增：链式设置 data 的方法
+    public Result data(Object value) {
+        this.data.put("data", value);
+        return this;
+    }
+
 }

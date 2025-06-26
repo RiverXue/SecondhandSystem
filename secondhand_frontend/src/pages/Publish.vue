@@ -77,8 +77,8 @@
               <div class="upload-file-item">
                 <img
                     :alt="file.name"
-                    :onerror="() => file.url = '/default-goods.jpg'"
-                    :src="file.url || '/default-goods.jpg'"
+                    :onerror="() => file.url = defaultGoodsImage"
+                    :src="file.url || defaultGoodsImage"
                     class="upload-image"
                 />
                 <div v-if="file.progress > 0 && file.progress < 100" class="upload-progress">
@@ -113,6 +113,8 @@ import {ElButton, ElForm, ElIcon, ElMessage, ElUpload} from 'element-plus';
 import {UploadFilled} from '@element-plus/icons-vue';
 import {useUserStore} from '../store/user';
 import {publishGoods} from '../api/goods';
+import defaultGoodsImage from '../assets/codelogo.png';
+
 
 const router = useRouter();
 const userStore = useUserStore();

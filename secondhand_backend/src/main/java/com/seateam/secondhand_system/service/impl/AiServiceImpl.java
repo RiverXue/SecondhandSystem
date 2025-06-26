@@ -69,35 +69,63 @@ public class AiServiceImpl implements AiService {
             recommendedGoods = (List<Goods>) dataMap.get("list");  // 提取商品列表
         }
 
-        // 4. 判断是否有商品
-        if (recommendedGoods != null && !recommendedGoods.isEmpty()) {  // 检查是否有推荐商品
-            // 搜索到商品，直接返回，不调用AI
+//        // 4. 判断是否有商品
+//        if (recommendedGoods != null && !recommendedGoods.isEmpty()) {  // 检查是否有推荐商品
+//            // 搜索到商品，直接返回，不调用AI
+//
+//            return Result.success()  // 返回成功结果
+//                    .put("reply", "为您推荐以下商品：") // 自定义提示语
+//                    .put("recommendedGoods", recommendedGoods)  // 返回推荐商品列表
+//                    .put("sessionId", request.getSessionId());
+//
+//        }
+//
+//        // 5. 若无商品，再调用AI
+//        String aiResponse = deepSeekApiClient.chat(messages);  // 调用DeepSeek API获取AI回复
+//
+//        // 6. 保存对话记录
+//        AiChat newChat = new AiChat();  // 创建新的对话记录对象
+//        newChat.setUserId(request.getUserId());  // 设置用户ID
+//        newChat.setSessionId(request.getSessionId());  // 设置会话ID
+//        newChat.setMessage(request.getMessage());  // 设置用户消息
+//        newChat.setResponse(aiResponse);  // 设置AI回复
+//        newChat.setCreateTime(new Date());  // 设置创建时间
+//        aiChatMapper.insert(newChat);  // 插入新的对话记录到数据库
+//
+//        // 7. 返回AI回复，无推荐商品
+//        System.out.println("AI回复内容: " + aiResponse);
+//        return Result.success()  // 返回成功结果
+//                .put("reply", aiResponse)  // 返回AI回复
+//                .put("recommendedGoods", recommendedGoods) // 返回推荐商品列表
+//                .put("sessionId", request.getSessionId());
+//    }
+        // 4. 构建统一响应数据结构
+        Map<String, Object> responseData = new java.util.HashMap<>();
+        responseData.put("sessionId", request.getSessionId());
 
-            return Result.success()  // 返回成功结果
-                    .put("reply", "为您推荐以下商品：") // 自定义提示语
-                    .put("recommendedGoods", recommendedGoods)  // 返回推荐商品列表
-                    .put("sessionId", request.getSessionId());
-
+        // 5. 如果有商品推荐，优先返回推荐商品
+        if (!recommendedGoods.isEmpty()) {
+            responseData.put("reply", "为您推荐以下商品：");
+            responseData.put("list", recommendedGoods);
+            return Result.success().data(responseData);
         }
 
-        // 5. 若无商品，再调用AI
-        String aiResponse = deepSeekApiClient.chat(messages);  // 调用DeepSeek API获取AI回复
+        // 6. 调用AI获取回复
+        String aiResponse = deepSeekApiClient.chat(messages);
+        responseData.put("reply", aiResponse);
+        responseData.put("list", recommendedGoods); // 为空数组
 
-        // 6. 保存对话记录
-        AiChat newChat = new AiChat();  // 创建新的对话记录对象
-        newChat.setUserId(request.getUserId());  // 设置用户ID
-        newChat.setSessionId(request.getSessionId());  // 设置会话ID
-        newChat.setMessage(request.getMessage());  // 设置用户消息
-        newChat.setResponse(aiResponse);  // 设置AI回复
-        newChat.setCreateTime(new Date());  // 设置创建时间
-        aiChatMapper.insert(newChat);  // 插入新的对话记录到数据库
+        // 7. 保存对话记录
+        AiChat newChat = new AiChat();
+        newChat.setUserId(request.getUserId());
+        newChat.setSessionId(request.getSessionId());
+        newChat.setMessage(request.getMessage());
+        newChat.setResponse(aiResponse);
+        newChat.setCreateTime(new Date());
+        aiChatMapper.insert(newChat);
 
-        // 7. 返回AI回复，无推荐商品
         System.out.println("AI回复内容: " + aiResponse);
-        return Result.success()  // 返回成功结果
-                .put("reply", aiResponse)  // 返回AI回复
-                .put("recommendedGoods", recommendedGoods) // 返回推荐商品列表
-                .put("sessionId", request.getSessionId());
+        return Result.success().data(responseData);
     }
 
 }

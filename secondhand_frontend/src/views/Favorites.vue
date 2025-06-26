@@ -38,8 +38,17 @@ const getImageUrl = (imagePath: string | undefined) => {
   if (!imagePath || typeof imagePath !== 'string') {
     return defaultGoodsImage;
   }
+  // 如果已经是完整URL则直接使用
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  // 如果路径已经包含/uploads/，直接使用
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
   const normalizedPath = imagePath.replace(/\\/g, '/');
-  return `/uploads/${normalizedPath}`;
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL || '';
+  return `${baseUrl}/uploads/${normalizedPath}`;
 };
 
 // 页面加载时获取收藏列表

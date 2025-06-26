@@ -1,6 +1,10 @@
 <template>
   <div class="order-list-container">
     <h2 class="page-title">我的订单</h2>
+    <div class="total-amount">
+      <span class="total-label">订单总价: </span>
+      <span class="total-price">{{ totalPrice.toFixed(2) }}</span>
+    </div>
     <div v-if="orderStore.loading" class="loading">加载中...</div>
     <div v-else-if="!orderStore.loading && orderStore.orders.length === 0" class="empty-tip">
       <p>您还没有任何订单</p>
@@ -23,7 +27,7 @@
           </router-link>
         </div>
         <div class="order-total">
-          <span>订单总价: <span class="total-price">{{ order.totalPrice?.toFixed(2) || '0.00' }}</span></span>
+          <!--          <span>订单总价: <span class="total-price">{{ order.totalPrice?.toFixed(2) || '0.00' }}</span></span>-->
         </div>
       </div>
     </div>
@@ -31,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted} from 'vue';
+import {computed, onMounted} from 'vue';
 import {useOrderStore} from '../store/order';
 import {ElMessage} from 'element-plus';
 import defaultGoodsImage from '../assets/codelogo.png';
@@ -40,11 +44,29 @@ const getImageUrl = (imagePath: string | undefined) => {
   if (!imagePath || typeof imagePath !== 'string') {
     return defaultGoodsImage;
   }
+  // 如果已经是完整URL则直接使用
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  // 如果路径已经包含/uploads/，直接使用
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
   const normalizedPath = imagePath.replace(/\\/g, '/');
-  return `/uploads/${normalizedPath}`;
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL || '';
+  return `${baseUrl}/uploads/${normalizedPath}`;
 };
 
 const orderStore = useOrderStore();
+
+// const totalPrice = computed(() => {
+//   return orderStore.orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
+// });
+const totalPrice = computed(() => {
+  return orderStore.orders.reduce((sum, order) => {
+    return sum + (order.price || 0);
+  }, 0);
+});
 
 onMounted(async () => {
   try {
@@ -62,17 +84,18 @@ onMounted(async () => {
 const formatStatus = (status: number) => {
   switch (status) {
     case 0:
-      return '待付款';
+      // return '待付款';
+      return '已下单';
     case 1:
       return '已付款';
-    case 2:
-      return '已发货';
-    case 3:
-      return '已完成';
-    case 4:
-      return '已取消';
-    default:
-      return '未知状态';
+      // case 2:
+      //   return '已发货';
+      // case 3:
+      //   return '已完成';
+      // case 4:
+      //   return '已取消';
+      // default:
+      //   return '未知状态';
   }
 };
 
@@ -193,6 +216,28 @@ const formatDate = (dateString: string) => {
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 12px;
+}
+
+.total-amount {
+  margin: 15px 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ff4d4f;
+}
+
+.total-amount {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  text-align: right;
+  font-size: 18px;
+}
+
+.total-price {
+  color: #ff4d4f;
+  font-weight: bold;
+  margin-left: 8px;
 }
 
 .status-pending {

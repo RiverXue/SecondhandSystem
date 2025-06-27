@@ -405,58 +405,39 @@ AI推荐功能采用混合推荐策略：
 
 ### 4. 应用初始化配置
 
-应用入口文件 `src/main.ts` 负责初始化 Vue 应用并集成核心依赖：
-
-import './style.css'
-import App from './App.vue'
-import 'element-plus/dist/index.css'
-import ElementPlus from 'element-plus'
-import router from './router/index'
-import { createPinia } from "pinia"
-
-// 创建应用实例
-const app = createApp(App)
-
-// 集成核心插件
-app.use(ElementPlus)  // UI组件库
-app.use(router)       // 路由系统
-app.use(createPinia())// 状态管理
-
-// 挂载应用
-app.mount('#app')
-
-```
+应用入口文件 `src/main.ts` 负责初始化 Vue 应用并集成核心依赖
 
 ### 5. 路由配置
 
 路由配置在 `src/router/index.ts` 文件中，采用 Vue Router 进行路由管理，实现了页面间的导航和权限控制。主要路由定义如下：
 
-| 路径                | 组件                  | 说明                 | 权限要求       |
-|---------------------|-----------------------|----------------------|----------------|
-| `/`                 | `pages/Home.vue`      | 首页                 | 无需登录       |
-| `/login`            | `pages/Login.vue`     | 登录页               | 无需登录       |
-| `/register`         | `pages/Register.vue`  | 注册页               | 无需登录       |
-| `/user-center`      | `pages/UserCenter.vue`| 用户中心主页         | 需要登录       |
-| `/goods/detail/:id` | `pages/GoodsDetail.vue`| 商品详情页           | 需要登录       |
-| `/publish`          | `pages/Publish.vue`   | 商品发布页           | 需要登录       |
-| `/user/profile`     | `views/UserProfile.vue`| 用户资料页           | 需要登录       |
-| `/favorites`        | `views/Favorites.vue` | 我的收藏页           | 需要登录       |
-| `/orders`           | `views/OrderList.vue` | 我的订单页           | 需要登录       |
+| 路径                  | 组件                      | 说明     | 权限要求 |
+|---------------------|-------------------------|--------|------|
+| `/`                 | `pages/Home.vue`        | 首页     | 无需登录 |
+| `/login`            | `pages/Login.vue`       | 登录页    | 无需登录 |
+| `/register`         | `pages/Register.vue`    | 注册页    | 无需登录 |
+| `/user-center`      | `pages/UserCenter.vue`  | 用户中心主页 | 需要登录 |
+| `/goods/detail/:id` | `pages/GoodsDetail.vue` | 商品详情页  | 需要登录 |
+| `/publish`          | `pages/Publish.vue`     | 商品发布页  | 需要登录 |
+| `/user/profile`     | `views/UserProfile.vue` | 用户资料页  | 需要登录 |
+| `/favorites`        | `views/Favorites.vue`   | 我的收藏页  | 需要登录 |
+| `/orders`           | `views/OrderList.vue`   | 我的订单页  | 需要登录 |
 
 **路由守卫实现**：系统通过全局路由守卫控制页面访问权限，未登录用户访问需要授权的页面时会自动重定向到登录页。核心逻辑如下：
+
 ```typescript
 // 路由守卫实现
 router.beforeEach((to, _from, next) => {
-  const token = localStorage.getItem('accessToken')
-  // 不需要登录的页面
-  const publicPages = ['/login', '/register']
-  const requiresAuth = !publicPages.includes(to.path)
+    const token = localStorage.getItem('accessToken')
+    // 不需要登录的页面
+    const publicPages = ['/login', '/register']
+    const requiresAuth = !publicPages.includes(to.path)
 
-  if (requiresAuth && !token) {
-    next('/login')
-  } else {
-    next()
-  }
+    if (requiresAuth && !token) {
+        next('/login')
+    } else {
+        next()
+    }
 })
 ```
 

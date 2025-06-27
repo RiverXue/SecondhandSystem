@@ -4,7 +4,7 @@
     <div v-if="favoriteStore.loading" class="loading">加载中...</div>
     <div v-else-if="!favoriteStore.loading && favoriteStore.favorites.length === 0" class="empty-tip">
       <p>您还没有收藏任何商品</p>
-      <router-link class="go-shopping-btn" to="/home">去逛逛</router-link>
+      <router-link class="go-shopping-btn" to="/">去逛逛</router-link>
     </div>
     <div v-else class="favorites-list">
       <div v-for="goods in favoriteStore.favorites" :key="goods.id" class="favorite-item">
@@ -18,7 +18,7 @@
         <button
             :disabled="favoriteStore.loading"
             class="remove-btn"
-            @click="removeFavorite(goods.goodsId)"
+            @click="removeFavorite(goods.id)"
         >
           {{ favoriteStore.loading ? '取消中...' : '取消收藏' }}
         </button>
@@ -31,6 +31,9 @@
 import {onMounted} from 'vue';
 import {useFavoriteStore} from '../store/favorite';
 import defaultGoodsImage from '../assets/codelogo.png';
+import {useUserStore} from "../store/user.ts";
+import {ElMessage} from "element-plus";
+import router from "../router";
 
 const favoriteStore = useFavoriteStore();
 
@@ -53,7 +56,23 @@ const getImageUrl = (imagePath: string | undefined) => {
 
 // 页面加载时获取收藏列表
 onMounted(() => {
-  favoriteStore.getFavoriteList();
+  (async () => {
+    const userStore = useUserStore();
+    if (!userStore.accessToken) {
+      ElMessage.warning('请先登录');
+      router.push('/login');
+      return;
+    }
+
+    // 用户信息未加载则加载
+    if (!userStore.userInfo) {
+      await userStore.fetchUserInfo();
+    }
+
+    await favoriteStore.getFavoriteList();
+    console.log('测试收藏列表：', favoriteStore.favorites);
+
+  })();
 });
 
 // 取消收藏

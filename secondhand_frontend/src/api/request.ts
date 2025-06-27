@@ -13,7 +13,7 @@ request.interceptors.request.use(
     (config) => {
         const userStore = useUserStore()
         // 添加Authorization头
-        if (userStore.accessToken && config.headers.Authorization !== null) {
+        if (userStore.accessToken && !config.headers?.Authorization) {
             config.headers.Authorization = `Bearer ${userStore.accessToken}`
             console.log('添加Authorization头:', config.headers.Authorization);
             console.log('当前accessToken:', userStore.accessToken);

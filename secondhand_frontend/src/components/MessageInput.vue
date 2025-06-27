@@ -13,12 +13,14 @@
       ></textarea>
       <div class="input-footer">
         <span class="char-count">{{ messageContent.length }}/200</span>
-        <el-button
-            :disabled="!messageContent.trim() || loading || messageContent.length > 200"
-            size="small"
-            type="primary"
-            @click="submitMessage"
-        >
+        <!-- 提交按钮 -->
+    <el-button
+        type="primary"
+        :loading="loading"
+        @click="submitMessage"
+        class="send-button"
+        :disabled="!messageContent.trim() || loading || messageContent.length > 200"
+    >
           {{ loading ? '发布中...' : '发布留言' }}
         </el-button>
       </div>

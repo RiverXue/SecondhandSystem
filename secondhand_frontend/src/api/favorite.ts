@@ -7,7 +7,7 @@ import request from './request';
  */
 export const addFavorite = (goodsId: number) => {
     return request.post('/favorite/add', null, {
-        params: { goodsId }
+        params: {goodsId}
     });
 };
 
@@ -17,7 +17,9 @@ export const addFavorite = (goodsId: number) => {
  * @returns 操作结果
  */
 export const removeFavorite = (goodsId: number) => {
-    return request.delete('/favorite/remove', { params: { goodsId } });
+    return request.delete('/favorite/remove', {
+        params: {goodsId}
+    });
 };
 
 /**

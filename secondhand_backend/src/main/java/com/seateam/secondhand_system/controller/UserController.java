@@ -43,6 +43,12 @@ public class UserController {
         return userService.getCurrentUserInfo();
     }
 
+    @GetMapping("/{userId}")
+    public Result getUserById(@PathVariable(name = "userId") Integer userId) {
+        System.out.println("前端请求获取用户ID为" + userId + "的信息");
+        return userService.getUserById(userId);
+    }
+
     /**
      * 更新用户信息
      */

@@ -2,6 +2,9 @@ import {defineStore} from 'pinia';
 import {getGoodsDetail, getGoodsList, searchGoods} from '../api/goods';
 import {addFavorite, getFavoriteList, removeFavorite} from '../api/favorite';
 
+/**
+ * 商品状态
+ */
 interface GoodsState {
     goodsList: any[];
     currentGoods: any | null;
@@ -10,6 +13,14 @@ interface GoodsState {
     favorites: number[];
 }
 
+/**
+ * 商品 Store
+ * @returns {GoodsState} 商品状态
+ * @example
+ * const goodsStore = useGoodsStore();
+ * goodsStore.fetchGoodsList();
+ * goodsStore.fetchGoodsDetail(1);
+ */
 export const useGoodsStore = defineStore('goods', {
     state: (): GoodsState => ({
         goodsList: [],
@@ -86,7 +97,7 @@ export const useGoodsStore = defineStore('goods', {
             try {
                 const res = await getFavoriteList();
                 this.favorites = Array.isArray(res.data.data?.favoritesList) ? res.data.data.favoritesList.map((item: any) => item.goodsId) : [];
-                return { data: { code: 200 } };
+                return {data: {code: 200}};
             } catch (error) {
                 console.error('获取收藏列表失败:', error);
                 throw error;

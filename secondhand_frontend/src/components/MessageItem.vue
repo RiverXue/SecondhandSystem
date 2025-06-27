@@ -90,7 +90,7 @@ const submitReply = async () => {
 
   try {
     replyLoading.value = true;
-    await messageStore.replyMessage(props.message.id, replyContent.value.trim());
+    await messageStore.replyMessage(props.message.id, replyContent.value.trim(), props.goodsId);
     emit('reply-sent', props.message.id);
     replyContent.value = '';
   } catch (error) {

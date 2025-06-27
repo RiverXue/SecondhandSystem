@@ -7,6 +7,14 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserService extends IService<User> {
     /**
+     * 获取用户信息
+     *
+     * @param userId 用户ID
+     * @return {@link Result}
+     */
+    Result getUserById(Integer userId);
+    
+    /**
      * 用户注册
      *
      * @param user 用户

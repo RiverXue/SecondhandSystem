@@ -30,6 +30,15 @@ import java.util.concurrent.TimeUnit;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
 
+    @Override
+    public Result getUserById(Integer userId) {
+        User user = this.getById(userId);
+        if (user == null) {
+            return Result.error("用户不存在");
+        }
+        return Result.success().put("user", user);
+    }
+
     /**
      * 日志记录器
      */

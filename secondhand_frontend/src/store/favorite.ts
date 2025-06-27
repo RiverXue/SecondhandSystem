@@ -23,6 +23,7 @@ export const useFavoriteStore = defineStore('favorite', {
                 if (res.data.code === 200) {
                     await this.getFavoriteList();
                 }
+                console.log('add 返回：', res);
                 return res.data;
             } catch (error) {
                 console.error('添加收藏失败:', error);

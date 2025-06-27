@@ -12,16 +12,26 @@ import defaultGoodsImage from '../assets/codelogo.png';
 
 const baseUrl = import.meta.env.VITE_APP_BASE_URL || '';
 
+// 状态
 const route = useRoute();
 const router = useRouter();
 const goodsStore = useGoodsStore();
 const userStore = useUserStore();
 const favoriteStore = useFavoriteStore();
 const orderStore = useOrderStore();
-const currentGoods = ref<any>(null);
-// const isFavorite = ref(false);
-const isFavorite = computed(() => currentGoods.value && favoriteStore.favorites.some(f => f.goodsId === currentGoods.value.id));
+const currentGoodsany = ref<any>(null);
+const currentGoods = computed(() => goodsStore.currentGoods);
+// 第一版逻辑：直接使用 computed 来判断是否收藏
+const isFavorite = ref(false);
 
+
+// 判断是否收藏
+// const updateFavoriteStatus = () => {
+//   if (!userId.value || !currentGoods.value) return;
+//   isFavorite.value = favoriteStore.favoriteList.some(
+//       item => item.goodsId === currentGoods.value?.id
+//   );
+// };
 
 onMounted(async () => {
   const goodsId = Number(route.params.id);
@@ -30,21 +40,21 @@ onMounted(async () => {
   if (userStore.accessToken && !userStore.userInfo) {
     await userStore.fetchUserInfo();
   }
-  await checkFavoriteStatus(goodsId);
+  await favoriteStore.getFavoriteList();
 });
 
 const fetchGoodsDetail = async (goodsId: number) => {
   try {
     await goodsStore.fetchGoodsDetail(goodsId);
-    currentGoods.value = parseGoodsImages(goodsStore.currentGoods);
+    currentGoodsany.value = parseGoodsImages(goodsStore.currentGoods);
     // 确保至少有一张默认图片
-    if (!currentGoods.value.images || currentGoods.value.images.length === 0) {
-      currentGoods.value.images = currentGoods.value.image ? [currentGoods.value.image] : [];
+    if (!currentGoodsany.value.images || currentGoodsany.value.images.length === 0) {
+      currentGoodsany.value.images = currentGoodsany.value.image ? [currentGoodsany.value.image] : [];
     }
   } catch (error) {
     console.error('获取商品详情失败:', error);
     // 错误状态下显示默认图片
-    currentGoods.value = {
+    currentGoodsany.value = {
       images: [],
       title: '商品加载失败',
       price: 0,
@@ -52,22 +62,14 @@ const fetchGoodsDetail = async (goodsId: number) => {
     }
   }
 };
-
-const checkFavoriteStatus = async (goodsId: number) => {
-  try {
-    await favoriteStore.getFavoriteList();
-    // 计算属性会自动响应favoriteStore.favorites变化
-  } catch (error) {
-    console.error('检查收藏状态失败:', error);
-  }
-};
-
+// 收藏按钮逻辑（第一版）
 const toggleFavorite = async () => {
   if (!userStore.accessToken) {
     ElMessage.warning('请先登录');
     router.push('/login');
     return;
   }
+
   const goodsId = currentGoods.value.id;
   try {
     if (isFavorite.value) {
@@ -75,7 +77,7 @@ const toggleFavorite = async () => {
     } else {
       await favoriteStore.addFavorite(goodsId);
     }
-    // 无需手动更新，计算属性会自动响应store变化
+    isFavorite.value = !isFavorite.value;
   } catch (error) {
     console.error('切换收藏状态失败:', error);
   }
@@ -194,7 +196,7 @@ const getImageUrl = (imagePath: string | undefined) => {
         <div class="goods-images">
           <el-carousel :loop="true" height="400px" indicator-position="outside">
             <el-carousel-item
-                v-for="(img, index) in (currentGoods?.images?.length ? currentGoods.images : (currentGoods?.image ? [currentGoods.image] : []))"
+                v-for="(img, index) in (currentGoodsany?.images?.length ? currentGoodsany.images : (currentGoodsany?.image ? [currentGoodsany.image] : []))"
                 :key="index || 'main'">
               <img :src="getImageUrl(img)" alt="商品图片" class="carousel-img"
                    @click="showImagePreview(getImageUrl(img))">
@@ -203,7 +205,7 @@ const getImageUrl = (imagePath: string | undefined) => {
             <!--              <img :src="defaultGoodsImage" alt="默认商品图片" class="carousel-img"-->
             <!--                   @click="showImagePreview(defaultGoodsImage)">-->
             <!--            </el-carousel-item>-->
-            <el-carousel-item v-if="!currentGoods?.images?.length && !currentGoods?.image">
+            <el-carousel-item v-if="!currentGoodsany?.images?.length && !currentGoodsany?.image">
               <div class="carousel-img-wrapper">
                 <img :src="defaultGoodsImage" alt="默认商品图片" class="carousel-img"
                      @click="showImagePreview(defaultGoodsImage)">
@@ -248,7 +250,7 @@ const getImageUrl = (imagePath: string | undefined) => {
                 }}</span>
             </div>
             <div class="meta-item">
-              <span class="label">卖家：</span>
+              <span class="label">卖家ID：</span>
               <span class="value">{{ currentGoods?.userId || '未知卖家' }}</span>
             </div>
           </div>

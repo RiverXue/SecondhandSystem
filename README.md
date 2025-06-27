@@ -101,15 +101,25 @@ secondhand_frontend
 ├── public\
 │  └── vite.svg
 └── src\
-│   ├── App.vue
-    │   ├── vite-env.d.ts  # TypeScript类型声明文件
-    │   ├── api\  # Axios封装与接口请求
+    ├── App.vue
+    ├── api\  # Axios封装与接口请求
+    │   ├── ai.ts  # AI服务接口封装
+    │   ├── user.ts
+    │   ├── goods.ts
+    │   └── ...
     ├── assets\  # 静态资源
     ├── components\  # 公共组件
-    ├── main.ts
+    │   ├── AiChat.vue  # AI聊天对话框组件
+    │   └── ...
+    ├── main.ts  # 应用入口文件
     ├── pages\  # 路由页面组件
     ├── router\  # Vue Router 路由配置
+    │   └── index.ts
     ├── store\  # Pinia 状态管理
+    │   ├── ai.ts  # AI相关状态管理
+    │   ├── user.ts
+    │   ├── goods.ts
+    │   └── ...
     ├── style.css
     ├── views\  # 视图组件
     └── vite-env.d.ts
@@ -209,24 +219,25 @@ secondhand_frontend
 | POST | `/api/user/update`        | 更新用户信息（昵称、头像等） |
 | POST | `/api/user/refresh-token` | 刷新访问令牌         |
 | POST | `/api/logout`             | 用户登出           |
+| GET  | `/api/user/{userId}`      | 根据用户ID获取用户信息   |
 
 ### 2. 商品模块
 
-| 方法   | 路径                        | 描述              |
-|------|---------------------------|-----------------|
-| POST | `/api/goods/publish`      | 发布新商品           |
-| GET  | `/api/goods/list`         | 商品分页列表          |
-| GET  | `/api/goods/detail/{id}`  | 获取商品详情          |
-| GET  | `/api/goods/search`       | 关键词搜索商品         |
-| POST | `/api/goods/upload-image` | 上传商品图片，返回图片访问路径 |
+| 方法   | 路径                        | 描述                                                   |
+|------|---------------------------|------------------------------------------------------|
+| POST | `/api/goods/publish`      | 发布新商品（支持multipart/form-data上传图片或application/json纯数据） |
+| GET  | `/api/goods/list`         | 商品分页列表（支持pageNum、pageSize参数，默认第1页10条）                |
+| GET  | `/api/goods/detail/{id}`  | 获取商品详情                                               |
+| GET  | `/api/goods/search`       | 关键词搜索商品（支持pageNum、pageSize参数，默认第1页10条）               |
+| POST | `/api/goods/upload-image` | 上传商品图片，返回图片访问路径                                      |
 
 ### 3. 收藏模块
 
-| 方法     | 路径                     | 描述       |
-|--------|------------------------|----------|
-| POST   | `/api/favorite/add`    | 添加收藏     |
-| DELETE | `/api/favorite/remove` | 取消收藏     |
-| GET    | `/api/favorite/list`   | 获取我的收藏列表 |
+| 方法     | 路径                     | 描述                                      |
+|--------|------------------------|-----------------------------------------|
+| POST   | `/api/favorite/add`    | 添加收藏                                    |
+| DELETE | `/api/favorite/remove` | 取消收藏                                    |
+| GET    | `/api/favorite/list`   | 获取我的收藏列表（支持pageNum、pageSize参数，默认第1页10条） |
 
 ### 4. 留言模块
 
@@ -244,9 +255,17 @@ secondhand_frontend
 
 ### 6. AI智能服务模块
 
-| 方法   | 路径             | 描述                 |
-|------|----------------|--------------------|
-| POST | `/api/ai/chat` | 发送用户对话，获取AI回复及推荐商品 |
+| 方法   | 路径             | 描述                 | 请求体类型           | 响应体类型            |
+|------|----------------|--------------------|-----------------|------------------|
+| POST | `/api/ai/chat` | 发送用户对话，获取AI回复及推荐商品 | `AiChatRequest` | `AiChatResponse` |
+
+#### 请求参数（AiChatRequest）
+
+| 参数名       | 类型     | 是否必须 | 描述                     |
+|-----------|--------|------|------------------------|
+| userId    | Long   | 是    | 用户ID                   |
+| sessionId | String | 否    | 对话会话ID（多轮对话标识，首次调用可不传） |
+| message   | String | 是    | 用户输入消息内容               |
 
 请求示例：
 
@@ -258,6 +277,14 @@ secondhand_frontend
 }
 ```
 
+#### 响应参数（AiChatResponse）
+
+| 参数名       | 类型      | 描述                 |
+|-----------|---------|--------------------|
+| reply     | String  | AI回复文本内容           |
+| sessionId | String  | 当前对话会话ID           |
+| list      | Goods[] | 推荐商品列表（为空时表示无匹配商品） |
+
 响应示例：
 
 ```json
@@ -266,18 +293,19 @@ secondhand_frontend
   "message": "成功",
   "data": {
     "reply": "根据您的需求，我推荐以下几款手机...",
-    "recommendedGoods": [
+    "sessionId": "uuid-xxxx-xxxx",
+    "list": [
       {
         "id": 12,
         "title": "二手iPhone 11",
         "price": 980.00,
-        "cover_img": "/images/iphone11.jpg"
+        "image": "/uploads/iphone11.jpg"
       },
       {
         "id": 18,
         "title": "二手小米10",
         "price": 1050.00,
-        "cover_img": "/images/xiaomi10.jpg"
+        "image": "/uploads/xiaomi10.jpg"
       }
     ]
   }
@@ -305,15 +333,44 @@ AI推荐功能采用混合推荐策略：
 2. **结果判断**：若搜索到匹配商品(如价格、类别匹配)，直接返回商品推荐
 3. **AI调用降级**：仅当数据库搜索无结果时，才调用DeepSeek API获取AI生成的推荐内容
 
+### AI聊天接口封装
+
+前端通过`src/api/ai.ts`封装AI服务相关接口
+
+**功能说明**：
+
+- `sendAiChatMessage`：发送用户对话内容到后端AI服务接口，支持多轮对话（通过sessionId标识）
+
 ### 1. 状态管理
 
-项目使用 Pinia 进行状态管理，主要 store 文件包括：
+项目使用 Pinia 进行状态管理，采用模块化设计，主要 store 文件及核心功能如下：
 
-- `store/user.ts`: 用户相关状态管理（登录、个人信息等）
-- `store/goods.ts`: 商品相关状态管理（商品列表、详情等）
-- `store/favorite.ts`: 收藏相关状态管理
-- `store/message.ts`: 留言相关状态管理
-- `store/order.ts`: 订单相关状态管理
+#### 核心 Store
+
+- `store/user.ts`: 用户状态管理
+    - 状态：`userInfo`（用户信息）、`accessToken`（访问令牌）、`isLogin`（登录状态）
+    - 核心方法：`login()`、`logout()`、`fetchUserInfo()`、`refreshToken()`
+
+- `store/goods.ts`: 商品状态管理
+    - 状态：`goodsList`（商品列表）、`currentGoods`（当前商品详情）、`total`（商品总数）
+    - 核心方法：`fetchGoodsList()`、`searchGoods()`、`fetchGoodsDetail()`
+
+- `store/ai.ts`: AI服务状态管理
+    - 核心方法：
+        - `sendMessage(content: string)`: 发送消息并处理AI响应
+        - `clearHistory()`: 清除聊天历史
+        - `fetchHistory()`: 获取历史记录（本地模拟）
+
+- `store/favorite.ts`: 收藏状态管理
+- `store/message.ts`: 留言状态管理
+- `store/order.ts`: 订单状态管理
+
+#### 状态管理流程示例（AI对话）
+
+1. 用户输入消息 → 调用 `aiStore.sendMessage()`
+2. 存储用户消息到 `messages` 数组
+3. 调用API获取AI响应 → 更新 `messages` 和 `recommendedGoods`
+4. 组件通过 `useAiStore()` 获取状态并渲染界面
 
 ### 2. 核心页面组件
 
@@ -326,7 +383,19 @@ AI推荐功能采用混合推荐策略：
 
 ### 3. API 请求
 
-所有 API 请求封装在 `src/api/` 目录下，主要包括：
+所有 API 请求通过 `src/api/request.ts` 封装的 Axios 实例实现，包含请求/响应拦截器统一处理：
+
+#### 请求拦截器
+
+自动添加 Authorization 请求头（Bearer Token），实现 JWT 身份验证
+
+#### 响应拦截器
+
+统一错误处理，包含 401/403 权限错误处理和自动登出逻辑。
+
+#### 接口模块划分
+
+所有 API 请求封装在 `src/api/` 目录下，按功能模块划分：
 
 - `api/user.ts`: 用户相关接口
 - `api/goods.ts`: 商品相关接口
@@ -334,9 +403,62 @@ AI推荐功能采用混合推荐策略：
 - `api/message.ts`: 留言相关接口
 - `api/order.ts`: 订单相关接口
 
-### 4. 路由配置
+### 4. 应用初始化配置
 
-路由配置在 `src/router/` 目录下，采用 Vue Router 进行路由管理，实现了页面间的导航和权限控制。
+应用入口文件 `src/main.ts` 负责初始化 Vue 应用并集成核心依赖：
+
+import './style.css'
+import App from './App.vue'
+import 'element-plus/dist/index.css'
+import ElementPlus from 'element-plus'
+import router from './router/index'
+import { createPinia } from "pinia"
+
+// 创建应用实例
+const app = createApp(App)
+
+// 集成核心插件
+app.use(ElementPlus)  // UI组件库
+app.use(router)       // 路由系统
+app.use(createPinia())// 状态管理
+
+// 挂载应用
+app.mount('#app')
+
+```
+
+### 5. 路由配置
+
+路由配置在 `src/router/index.ts` 文件中，采用 Vue Router 进行路由管理，实现了页面间的导航和权限控制。主要路由定义如下：
+
+| 路径                | 组件                  | 说明                 | 权限要求       |
+|---------------------|-----------------------|----------------------|----------------|
+| `/`                 | `pages/Home.vue`      | 首页                 | 无需登录       |
+| `/login`            | `pages/Login.vue`     | 登录页               | 无需登录       |
+| `/register`         | `pages/Register.vue`  | 注册页               | 无需登录       |
+| `/user-center`      | `pages/UserCenter.vue`| 用户中心主页         | 需要登录       |
+| `/goods/detail/:id` | `pages/GoodsDetail.vue`| 商品详情页           | 需要登录       |
+| `/publish`          | `pages/Publish.vue`   | 商品发布页           | 需要登录       |
+| `/user/profile`     | `views/UserProfile.vue`| 用户资料页           | 需要登录       |
+| `/favorites`        | `views/Favorites.vue` | 我的收藏页           | 需要登录       |
+| `/orders`           | `views/OrderList.vue` | 我的订单页           | 需要登录       |
+
+**路由守卫实现**：系统通过全局路由守卫控制页面访问权限，未登录用户访问需要授权的页面时会自动重定向到登录页。核心逻辑如下：
+```typescript
+// 路由守卫实现
+router.beforeEach((to, _from, next) => {
+  const token = localStorage.getItem('accessToken')
+  // 不需要登录的页面
+  const publicPages = ['/login', '/register']
+  const requiresAuth = !publicPages.includes(to.path)
+
+  if (requiresAuth && !token) {
+    next('/login')
+  } else {
+    next()
+  }
+})
+```
 
 ## 八、运行与开发说明
 
@@ -373,7 +495,12 @@ java -jar target/second-hand-market-1.0.jar
 
 ### 前端启动
 
-1. 配置 `src/api/request.ts` 指定后端API基础地址
+1. 配置环境变量（位于前端根目录 `.env` 文件）：
+   ```
+   VITE_APP_API_URL=http://localhost:7272/api  # 后端API基础地址
+   VITE_APP_BASE_URL=http://localhost:7272     # 后端基础地址
+   ```
+   根据实际后端服务地址修改上述值
 
 2. 启动前端项目：
 

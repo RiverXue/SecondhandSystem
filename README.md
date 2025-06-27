@@ -75,6 +75,9 @@ secondhand_backend
     └── main\
         ├── java/com/seateam/secondhand_system/
         │   ├── common  # 公共类
+        │   │   ├── config  # 配置类(CorsConfig、SecurityConfig等)
+        │   │   ├── utils  # 工具类(FileUploadUtils等)
+        │   │   └── exception  # 异常处理类
         │   ├── controller/  # REST API 控制器
         │   ├── entity/  # 实体类
         │   ├── mapper/  # MyBatis-Plus 映射接口
@@ -98,8 +101,9 @@ secondhand_frontend
 ├── public\
 │  └── vite.svg
 └── src\
-    ├── App.vue
-    ├── api\  # Axios封装与接口请求
+│   ├── App.vue
+    │   ├── vite-env.d.ts  # TypeScript类型声明文件
+    │   ├── api\  # Axios封装与接口请求
     ├── assets\  # 静态资源
     ├── components\  # 公共组件
     ├── main.ts
@@ -208,12 +212,13 @@ secondhand_frontend
 
 ### 2. 商品模块
 
-| 方法   | 路径                       | 描述      |
-|------|--------------------------|---------|
-| POST | `/api/goods/publish`     | 发布新商品   |
-| GET  | `/api/goods/list`        | 商品分页列表  |
-| GET  | `/api/goods/detail/{id}` | 获取商品详情  |
-| GET  | `/api/goods/search`      | 关键词搜索商品 |
+| 方法   | 路径                        | 描述              |
+|------|---------------------------|-----------------|
+| POST | `/api/goods/publish`      | 发布新商品           |
+| GET  | `/api/goods/list`         | 商品分页列表          |
+| GET  | `/api/goods/detail/{id}`  | 获取商品详情          |
+| GET  | `/api/goods/search`       | 关键词搜索商品         |
+| POST | `/api/goods/upload-image` | 上传商品图片，返回图片访问路径 |
 
 ### 3. 收藏模块
 
@@ -232,10 +237,10 @@ secondhand_frontend
 
 ### 5. 订单模块
 
-| 方法   | 路径                  | 描述     |
-|------|---------------------|--------|
-| POST | `/api/order/create` | 生成订单   |
-| GET  | `/api/order/my`     | 我的订单列表 |
+| 方法   | 路径                  | 描述       |
+|------|---------------------|----------|
+| POST | `/api/order/create` | 生成订单     |
+| GET  | `/api/order/my`     | 我的订单列表## |
 
 ### 6. AI智能服务模块
 
@@ -283,6 +288,23 @@ secondhand_frontend
 
 ## 七、前端实现详情
 
+### 特色功能：图片上传组件
+
+商品发布页面(`Publish.vue`)实现了多图上传功能，支持以下特性：
+
+- 最多上传5张商品图片
+- 图片预览、删除、重试上传功能
+- 上传进度显示
+- 图片格式验证(仅允许jpg、png格式)
+
+### 特色功能：AI推荐实现细节
+
+AI推荐功能采用混合推荐策略：
+
+1. **数据库优先搜索**：接收用户查询后，首先通过关键词搜索商品数据库
+2. **结果判断**：若搜索到匹配商品(如价格、类别匹配)，直接返回商品推荐
+3. **AI调用降级**：仅当数据库搜索无结果时，才调用DeepSeek API获取AI生成的推荐内容
+
 ### 1. 状态管理
 
 项目使用 Pinia 进行状态管理，主要 store 文件包括：
@@ -317,6 +339,23 @@ secondhand_frontend
 路由配置在 `src/router/` 目录下，采用 Vue Router 进行路由管理，实现了页面间的导航和权限控制。
 
 ## 八、运行与开发说明
+
+### 系统配置补充
+
+#### 后端配置(`application.yml`)
+
+```yaml
+# AI服务配置
+spring:
+  ai:
+    deepseek:
+      api-key: 填入获取到的Key。
+      endpoint: "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
+
+# 文件上传配置
+upload:
+  path: "d:/SecondhandSystem/uploads/"
+```
 
 ### 后端启动
 

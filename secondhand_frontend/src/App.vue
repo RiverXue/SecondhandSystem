@@ -3,7 +3,9 @@
     <Navbar v-if="!isMobile" />
     <BottomNavbar v-else />
     <transition name="glass-fade">
-      <router-view/>
+      <router-view v-slot="{ Component }">
+        <component :is="Component" />
+      </router-view>
     </transition>
   </div>
 </template>

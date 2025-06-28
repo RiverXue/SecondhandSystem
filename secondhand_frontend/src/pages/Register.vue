@@ -29,7 +29,9 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../store/user'
 import { ElMessage, ElForm, ElFormItem, ElInput, ElButton, ElCard } from 'element-plus'
+import { request } from '../api/request';
 
+const baseUrl = import.meta.env.VITE_APP_API_URL || 'http://localhost:7272';
 const router = useRouter()
 const userStore = useUserStore()
 const registerFormRef = ref<InstanceType<typeof ElForm>>()
@@ -70,11 +72,7 @@ const handleRegister = async () => {
   if (!registerFormRef.value) return
   try {
     await registerFormRef.value.validate()
-    const res = await userStore.register({
-      username: registerForm.username,
-      password: registerForm.password,
-      phone: registerForm.phone
-    })
+    const res = await userStore.register(registerForm)
     if (res.code === 200) {
       ElMessage.success('注册成功，请登录')
       router.push('/login')

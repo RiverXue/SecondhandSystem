@@ -2,11 +2,21 @@
   <div class="user-center-container">
     <el-card class="user-card glass-card">
       <div class="user-info">
-        <div class="avatar-container">
-          <el-avatar :size="100" class="avatar">
-            <img :src="userStore.userInfo?.avatar || '/default-avatar.jpg'" alt="用户头像"/>
-          </el-avatar>
-          <el-button class="edit-avatar-btn" type="primary" @click="handleAvatarUpload">更换头像</el-button>
+        <div class="avatar-wrapper">
+          <div class="avatar-container">
+            <el-avatar :size="100" class="avatar" :src="getAvatarUrl(userStore.userInfo?.avatar)"></el-avatar>
+          </div>
+          <el-upload
+            ref="avatarUpload"
+            class="avatar-uploader"
+            :action="uploadUrl"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :headers="() => ({ 'Authorization': `Bearer ${userStore.accessToken}` })"
+          >
+            <el-button class="edit-avatar-btn" type="primary">更换头像</el-button>
+          </el-upload>
         </div>
         <div class="info-details">
           <h2>{{ userStore.userInfo?.username || '未设置' }}</h2>
@@ -75,20 +85,36 @@
 
 <script lang="ts" setup>
 import {onMounted, reactive, ref} from 'vue';
-import {ElForm, ElMessage} from 'element-plus';
+import {ElForm, ElMessage, ElUpload, ElIcon} from 'element-plus';
 import {useUserStore} from '../store/user';
 import {useGoodsStore} from '../store/goods';
 import {useFavoriteStore} from '../store/favorite';
 import OrderList from '../views/OrderList.vue';
 import Favorites from "../views/Favorites.vue";
-// 由于 getGoodsDetail 已声明但未使用，暂时移除该导入
-// import {getGoodsDetail} from '../api/goods';
+import { Plus, Delete } from '@element-plus/icons-vue';
+import defaultAvatar from '../assets/codelogo.png';
 
+const avatarUpload = ref(null);
+const uploadUrl = (import.meta.env.VITE_APP_API_URL || 'http://localhost:7272') + '/user/uploadAvatar';
 const userStore = useUserStore();
 const goodsStore = useGoodsStore();
 const favoriteStore = useFavoriteStore();
 const profileFormRef = ref<InstanceType<typeof ElForm>>();
 const activeTab = ref('profile');
+const userAvatar = ref('');
+
+// 移除handleAvatarUpload方法
+
+// 添加日期格式化函数
+const formatDate = (dateString: string) => {
+  if (!dateString) return '未知时间';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  });
+};
 
 // 个人资料表单
 const profileForm = reactive({
@@ -107,87 +133,132 @@ const profileRules = reactive({
   ]
 });
 
-// 收藏相关
-// const favoritesMap = ref<Record<number, any>>({});
-
 onMounted(async () => {
   await userStore.fetchUserInfo();
-  // 初始化表单数据
-  if (userStore.userInfo) {
-    profileForm.username = userStore.userInfo.username || '';
-    profileForm.phone = userStore.userInfo.phone || '';
-  }
-
-  // 获取收藏列表
-  if (userStore.accessToken) {
-    await favoriteStore.getFavoriteList();
-    console.log('UserCenter获取收藏列表后的数据:', favoriteStore.favorites);
-    console.log('UserCenter收藏列表长度:', favoriteStore.favorites.length);
-    // 获取收藏商品详情
-    // await fetchFavoritesDetail();
-  }
+  profileForm.username = userStore.userInfo?.username || '';
+  profileForm.phone = userStore.userInfo?.phone || '';
+  userAvatar.value = userStore.userInfo?.avatar || '';
 });
 
-// 格式化日期
-const formatDate = (dateString: string) => {
-  if (!dateString) return '未知';
-  const date = new Date(dateString);
-  return date.toLocaleDateString();
+const getAvatarUrl = (avatarPath: string | undefined) => {
+  if (!avatarPath || avatarPath.trim() === '') return defaultAvatar;
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL;
+  if (avatarPath.startsWith('http://') || avatarPath.startsWith('https://')) {
+    return avatarPath;
+  }
+  if (avatarPath.startsWith('/uploads/')) {
+    return `${baseUrl}${avatarPath}`;
+  }
+  return `${baseUrl}/uploads/${avatarPath}`;
 };
 
-// 更新个人资料
+const handleAvatarSuccess = (response: any) => {
+  userAvatar.value = response.data;
+  userStore.updateUserInfo({ avatar: response.data });
+  ElMessage.success('头像上传成功');
+};
+
+const beforeAvatarUpload = (file: File) => {
+  // 检查是否已登录
+  if (!userStore.accessToken) {
+    ElMessage.error('请先登录后再上传头像');
+    return false;
+  }
+  
+  const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+  const isLt2M = file.size / 1024 / 1024 < 2;
+
+  if (!isJPG) {
+    ElMessage.error('上传头像图片只能是 JPG/PNG 格式!');
+  }
+  if (!isLt2M) {
+    ElMessage.error('上传头像图片大小不能超过 2MB!');
+  }
+  return isJPG && isLt2M;
+};
+
+const removeAvatar = () => {
+  userAvatar.value = '';
+  userStore.updateUserInfo({ avatar: '' });
+  ElMessage.success('头像已移除');
+};
+
 const handleUpdateProfile = async () => {
   if (!profileFormRef.value) return;
-
   try {
     await profileFormRef.value.validate();
-    console.log('当前用户信息:', userStore.userInfo);
-    console.log('当前用户ID:', userStore.userInfo?.id);
-    console.log('更新用户信息参数:', {phone: profileForm.phone, username: userStore.userInfo.username});
-    const result = await userStore.updateUserInfo({phone: profileForm.phone});
-    console.log('更新用户信息响应详情:', result);
-    if (result.code === 200 && userStore.userInfo.phone === profileForm.phone) {
-      ElMessage.success('个人资料更新成功');
-    } else {
-      ElMessage.error(result.message || '更新失败，请检查手机号格式或联系管理员');
-    }
+    await userStore.updateUserInfo(profileForm);
+    ElMessage.success('个人资料更新成功');
   } catch (error) {
-    console.error('更新失败:', error);
-    ElMessage.error('更新失败，请重试');
-  }
-};
-
-// 更换头像
-const handleAvatarUpload = () => {
-  ElMessage.info('头像上传功能待实现');
-};
-
-// 获取收藏商品详情
-// const fetchFavoritesDetail = async () => {
-//   for (const goodsId of goodsStore.favorites) {
-//     try {
-//       const res = await getGoodsDetail(goodsId);
-//       if (res.data.code === 200) {
-//         favoritesMap.value[goodsId] = res.data.data;
-//       }
-//     } catch (error) {
-//       console.error(`获取商品${goodsId}详情失败:`, error);
-//     }
-//   }
-// };
-
-// 取消收藏
-const handleRemoveFavorite = async (goodsId: number) => {
-  try {
-    await favoriteStore.removeFavorite(goodsId);
-    ElMessage.success('取消收藏成功');
-  } catch (error) {
-    ElMessage.error('取消收藏失败');
+    ElMessage.error('请完善个人资料');
   }
 };
 </script>
 
 <style scoped>
+.avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+}
+
+.edit-avatar-btn {
+  margin-top: 10px;
+  width: auto;
+  height: auto;
+  border-radius: 4px;
+  background-color: #165DFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 14px;
+}
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.default-avatar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+}
+
+.avatar-icon {
+  font-size: 48px;
+  color: #909399;
+}
+
+.remove-avatar-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .user-center-container {
   max-width: 1000px;
   margin: 0 auto;

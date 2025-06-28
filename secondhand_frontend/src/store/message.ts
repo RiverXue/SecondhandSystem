@@ -47,6 +47,7 @@ export const useMessageStore = defineStore('message', {
                     for (const message of messages) {
                         const userInfo = await getUserById(message.userId);
                         message.username = userInfo.data.username;
+                        message.userAvatar = userInfo.data.avatar;
                     }
                     this.messages = messages;
                     this.hasMore = res.data.data.total > page * pageSize;
@@ -77,6 +78,13 @@ export const useMessageStore = defineStore('message', {
             } finally {
                 this.loading = false;
             }
+        },
+
+        /**
+         * 清空留言列表
+         */
+        clearMessages() {
+            this.messages = [];
         },
 
         /**

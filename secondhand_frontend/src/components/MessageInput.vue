@@ -1,8 +1,5 @@
 <template>
   <div class="message-input-container">
-    <el-avatar :size="40" class="user-avatar">
-      <img :src="userStore.userInfo?.avatar || '/default-avatar.jpg'" alt="用户头像"/>
-    </el-avatar>
     <div class="input-wrapper">
       <textarea
           v-model="messageContent"
@@ -14,13 +11,13 @@
       <div class="input-footer">
         <span class="char-count">{{ messageContent.length }}/200</span>
         <!-- 提交按钮 -->
-    <el-button
-        type="primary"
-        :loading="loading"
-        @click="submitMessage"
-        class="send-button"
-        :disabled="!messageContent.trim() || loading || messageContent.length > 200"
-    >
+        <el-button
+            :disabled="!messageContent.trim() || loading || messageContent.length > 200"
+            :loading="loading"
+            class="send-button"
+            type="primary"
+            @click="submitMessage"
+        >
           {{ loading ? '发布中...' : '发布留言' }}
         </el-button>
       </div>
@@ -71,9 +68,6 @@ const submitMessage = async () => {
   position: relative;
 }
 
-.user-avatar {
-  flex-shrink: 0;
-}
 
 .input-wrapper {
   flex: 1;

@@ -35,6 +35,7 @@
               :key="message.id"
               :is-seller="isSeller"
               :message="message"
+              :goods-id="goodsId"
               @reply-sent="handleReplySent"
           />
         </div>
@@ -61,6 +62,7 @@
 import {computed, onMounted, ref} from 'vue';
 import {useMessageStore} from '../store/message';
 import {useUserStore} from '../store/user';
+import {useGoodsStore} from '../store/goods';
 import MessageInput from './MessageInput.vue';
 import MessageItem from './MessageItem.vue';
 import LoginPrompt from './LoginPrompt.vue';
@@ -74,13 +76,14 @@ const props = defineProps<{
 
 const messageStore = useMessageStore();
 const userStore = useUserStore();
+const goodsStore = useGoodsStore();
 
 const sortOption = ref<'newest' | 'oldest'>('newest');
 const loadingMore = ref(false);
 const currentPage = ref(1);
 const pageSize = 10;
 
-const isSeller = computed(() => userStore.userInfo?.isSeller || false);
+const isSeller = computed(() => userStore.userInfo?.id === goodsStore.currentGoods?.userId);
 
 const sortedMessages = computed(() => {
   return [...messageStore.messages].sort((a, b) => {

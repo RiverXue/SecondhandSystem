@@ -1,7 +1,9 @@
 package com.seateam.secondhand_system.controller;
 
 import com.seateam.secondhand_system.common.Result;
+import com.seateam.secondhand_system.entity.ReplyMessageRequest;
 import com.seateam.secondhand_system.service.MessageService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +47,12 @@ public class MessageController {
     /**
      * 卖家回复留言
      */
-    @PostMapping("/reply")
+    @PostMapping("/reply/{messageId}")
     public Result replyToMessage(
-            @RequestParam(name = "messageId") @NotNull(message = "留言ID不能为空") Long messageId,
-            @RequestParam(name = "replyContent") @NotBlank(message = "回复内容不能为空") String replyContent) {
-        System.out.println(messageId + "和" + replyContent + "正在回复留言");
-        return messageService.replyToMessage(messageId, replyContent);
+            @PathVariable(name = "messageId") @NotNull(message = "留言ID不能为空") Long messageId,
+            @Valid @RequestBody ReplyMessageRequest request) {
+        System.out.println("回复留言ID: " + messageId + ", 内容: " + request.getContent());
+        return messageService.replyToMessage(messageId, request.getContent());
     }
 
     /**

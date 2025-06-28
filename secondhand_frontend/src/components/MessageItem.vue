@@ -1,8 +1,5 @@
 <template>
   <div class="message-item">
-    <el-avatar :size="36" class="message-avatar">
-      <img :src="message.userAvatar || '/default-avatar.jpg'" alt="用户头像"/>
-    </el-avatar>
     <div class="message-content-wrapper">
       <div class="message-header">
         <span class="username">ID: {{ message.userId }}</span>
@@ -64,6 +61,7 @@ interface Message {
 const props = defineProps<{
   message: Message;
   isSeller: boolean;
+  goodsId: number;
 }>();
 
 const emit = defineEmits<{
@@ -114,9 +112,6 @@ const submitReply = async () => {
   border-bottom: none;
 }
 
-.message-avatar {
-  flex-shrink: 0;
-}
 
 .message-content-wrapper {
   flex: 1;

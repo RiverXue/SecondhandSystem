@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <Navbar />
+    <Navbar v-if="!isMobile" />
+    <BottomNavbar v-else />
     <transition name="glass-fade">
       <router-view/>
     </transition>
@@ -8,7 +9,23 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, onMounted, onUnmounted } from 'vue';
 import Navbar from "./components/Navbar.vue"
+import BottomNavbar from "./components/BottomNavbar.vue"
+
+const isMobile = ref(window.innerWidth < 768);
+
+const handleResize = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
 </script>
 
 <style scoped>

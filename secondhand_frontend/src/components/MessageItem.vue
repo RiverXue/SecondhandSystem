@@ -5,7 +5,7 @@
     </el-avatar>
     <div class="message-content-wrapper">
       <div class="message-header">
-        <span class="username">{{ message.username }}</span>
+        <span class="username">ID: {{ message.userId }}</span>
         <span class="create-time">{{ formatDate(message.createTime) }}</span>
       </div>
       <div class="message-bubble">{{ message.content }}</div>
@@ -52,6 +52,7 @@ import {ElAvatar, ElButton, ElMessage} from 'element-plus';
 // 定义留言数据类型
 interface Message {
   id: number;
+  userId: number;
   username: string;
   userAvatar: string | null;
   content: string;

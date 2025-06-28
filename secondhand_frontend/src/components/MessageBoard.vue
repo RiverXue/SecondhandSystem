@@ -145,8 +145,11 @@ const handleReplySent = async () => {
 
 .detail-card {
   padding: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
   margin-bottom: 30px;
 }
 
@@ -162,7 +165,7 @@ const handleReplySent = async () => {
 .board-title {
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -174,7 +177,7 @@ const handleReplySent = async () => {
 
 .stats-item {
   font-size: 14px;
-  color: #606266;
+  color: var(--text-secondary);
 }
 
 .divider {

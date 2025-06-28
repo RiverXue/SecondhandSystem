@@ -83,17 +83,17 @@ const goToRegister = () => {
 .login-card {
   width: 400px;
   padding: 30px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 16px;
+  border: var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--glass-shadow);
 }
 
 .title {
   text-align: center;
   margin-bottom: 20px;
-  color: #F8FAFC;
+  color: var(--text-primary);
   font-size: 24px;
 }
 
@@ -111,17 +111,17 @@ const goToRegister = () => {
 }
 
 .el-input:focus-within {
-  border-color: #9D4EDD;
-  box-shadow: 0 0 0 2px rgba(157, 78, 221, 0.2);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 2px rgba(13, 150, 255, 0.2);
 }
 
 .login-btn {
   width: 100%;
   margin-bottom: 10px;
-  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+  background-color: var(--primary-blue);
   border: none;
-  border-radius: 8px;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .login-btn:hover {

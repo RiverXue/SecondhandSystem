@@ -222,19 +222,19 @@ const handleRemoveFavorite = async (goodsId: number) => {
   display: flex;
   align-items: center;
   gap: 30px;
-  color: #F8FAFC;
+  color: #303133;
 }
 
 /* 表单样式优化 */
 .el-form-item__label {
-  color: #94A3B8;
+  color: #606266;
 }
 
 .el-input {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #F8FAFC;
+      border-radius: 8px;
+  color: #303133;
 }
 
 .el-input__wrapper {
@@ -260,5 +260,10 @@ const handleRemoveFavorite = async (goodsId: number) => {
     backdrop-filter: blur(6px);
     border-radius: 10px;
   }
+}
+.page-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #303133;
 }
 </style>

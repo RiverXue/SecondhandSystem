@@ -4,14 +4,30 @@
   font-weight: 400;
 
   color-scheme: light only;
-  color: #333333;
-  background-color: #F8FAFC;
+  color: #1F1F1F;
+  background-color: #F9FAFB;
 
-  --primary-orange: #FF6B00;
+  /* 交易信任感玻璃态设计变量 */
+  --glass-bg: rgba(255,255,255,0.7);
+  --glass-border: 1px solid #E0EBFF;
+  --glass-shadow: 0 4px 12px rgba(22,119,255,0.1);
+  --glass-gradient: linear-gradient(180deg, #F0F5FF 0%, transparent 100%);
+  --glass-gradient-blue: linear-gradient(135deg, #1677FF 0%, #0969DA 100%);
+  --glass-gradient-orange: linear-gradient(135deg, #FF7D00 0%, #FF9535 100%);
+
+  /* 交易信任感配色方案 */
   --primary-blue: #1677FF;
-  --light-gray: #F8FAFC;
-  --medium-gray: #e5e5e5;
-  --dark-gray: #888888;
+  --primary-dark: #0969DA;
+  --primary-light: #E8F3FF;
+  --secondary-orange: #FF7D00;
+  --secondary-green: #00B42A;
+  --text-primary: #1D2129;
+  --text-secondary: #667085;
+  --background: #F0F5FF;
+  --surface: #FFFFFF;
+  --border-light: rgba(22,119,255,0.1);
+  --border-focus: #1677FF;
+  --border-error: #EF4444;
 }
 
 a {
@@ -27,7 +43,8 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: var(--light-gray);
+  background-color: var(--background);
+  background-image: var(--glass-gradient);
 }
 
 h1 {
@@ -36,34 +53,46 @@ h1 {
 }
 
 button {
-  border-radius: 4px;
+  border-radius: 12px;
   border: none;
   padding: 0.6em 1.2em;
   font-size: 14px;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--primary-orange);
+  background-color: var(--primary-blue);
   color: white;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease;
+  will-change: transform, opacity;
 }
 button:hover {
-  background-color: #F56700;
+  background-color: var(--primary-dark);
+  transform: scale(1.02);
   border-color: transparent;
+}
+button:active {
+  transform: translateY(1px);
 }
 button:focus,
 button:focus-visible {
-  outline: 2px solid rgba(255, 107, 0, 0.3);
+  outline: 2px solid var(--border-focus);
 }
 
 .card {
   padding: 2em;
+  border-radius: 16px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
+  will-change: transform, opacity;
 }
 
 #app {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
 }
 

@@ -10,10 +10,24 @@
 </template>
 
 <script lang="ts" setup>
-import {computed} from 'vue';
+import {computed, onMounted, onUnmounted, ref} from 'vue';
 import {useRouter} from 'vue-router';
 import {useUserStore} from '../store/user';
 import {ElMessage} from 'element-plus';
+
+const isScrolled = ref(false);
+
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 10;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -44,11 +58,20 @@ const handleLogout = async () => {
 }
 
 .glass-nav {
-  background: rgba(248, 250, 252, 0.85);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(220, 220, 220, 0.3);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  color: #333333;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(16px);
+  border-bottom: var(--glass-border);
+  box-shadow: 0 4px 12px rgba(22,119,255,0.1), 0 1px 0 rgba(22,119,255,0.1) inset;
+  color: var(--text-primary);
+  border-radius: 16px 16px 0 0;
+  transition: background 0.3s ease;
+}
+
+.glass-nav.scrolled {
+  background: rgba(255,255,255,0.95);
 }
 
 .el-menu-item {
@@ -70,7 +93,7 @@ const handleLogout = async () => {
 }
 
 .el-menu-item.is-active {
-  border-bottom: 2px solid #9D4EDD;
-  color: #fff;
+  border-bottom: 2px solid var(--primary-blue);
+  color: var(--primary-blue);
 }
 </style>

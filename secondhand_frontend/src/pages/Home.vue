@@ -16,17 +16,14 @@
         <router-link :to="`/goods/detail/${goods.id}`" class="goods-link">
           <div class="goods-image">
             <img :src="getImageUrl(goods.image) || defaultGoodsImage" alt="{{ goods.title }}" class="goods-img">
+            <div v-if="goods.status === 'sold'" class="sold-overlay">
+              <div class="sold-badge">已售出</div>
+            </div>
           </div>
           <div class="goods-info">
             <h3 class="goods-title">{{ goods.title }}</h3>
             <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>
             <div class="goods-footer">
-              <el-button
-                  :icon="goodsStore.favorites.includes(goods.id) ? StarFilled : Star"
-                  class="favorite-btn"
-                  link
-                  @click.stop="toggleFavorite(goods.id)">
-              </el-button>
             </div>
           </div>
         </router-link>
@@ -46,6 +43,10 @@
     </div>
   </div>
 
+  <button class="floating-ai-btn" @click="handleShowAiChat">
+    <Robot/>
+  </button>
+
   <pre> Disgined by RiverX </pre>
 
 </template>
@@ -54,7 +55,8 @@
 import {onMounted, ref} from 'vue';
 import {useGoodsStore} from '../store/goods';
 import {useUserStore} from '../store/user';
-import {Message, Star, StarFilled} from '@element-plus/icons-vue';
+import {Message} from '@element-plus/icons-vue';
+import {UserFilled as Robot} from '@element-plus/icons-vue'; // 假设使用 UserFilled 作为 Robot 替代，实际可根据需求更换为合适的图标
 import AiChat from '../components/AiChat.vue';
 
 import defaultGoodsImage from '../assets/codelogo.png';
@@ -163,11 +165,25 @@ const toggleFavorite = async (goodsId: number) => {
 }
 
 .search-container {
-  background-color: #F8FAFC;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: var(--glass-border);
   padding: 15px 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.1), 0 1px 0 rgba(22, 119, 255, 0.1) inset;
   margin-bottom: 20px;
+  position: relative;
+}
+
+.search-container::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(0deg, rgba(22, 119, 255, 0.1) 0%, transparent 100%);
+  border-radius: 0 0 16px 16px;
 }
 
 .search-bar {
@@ -182,15 +198,48 @@ const toggleFavorite = async (goodsId: number) => {
 }
 
 .search-btn {
-  background-color: var(--primary-orange);
+  background-color: var(--primary-blue);
   color: white;
   width: 100px;
 }
 
-.ai-chat-btn {
-  background-color: #409EFF;
+.floating-ai-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(16, 105, 255, 0.8);
   color: white;
-  width: 100px;
+  box-shadow: 0 0 12px #69B1FF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.floating-ai-btn:hover {
+  transform: scale(1.05);
+}
+
+.floating-ai-btn:active {
+  animation: ripple 0.6s ease;
+}
+
+@keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(105, 177, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(105, 177, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(105, 177, 255, 0);
+  }
 }
 
 .goods-list {
@@ -201,26 +250,37 @@ const toggleFavorite = async (goodsId: number) => {
 }
 
 .goods-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: var(--glass-border);
+  border-radius: 16px;
   overflow: hidden;
   transition: all 0.3s ease;
+  will-change: transform, opacity;
 }
 
 .goods-card:hover {
+  border-radius: 18px;
+  opacity: 0.9;
   transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 12px 24px rgba(22, 119, 255, 0.15);
 }
 
 .goods-title {
   color: #F8FAFC;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .goods-price {
   color: #165DFF;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 4px;
 }
 
 /* 响应式调整 */
@@ -232,8 +292,14 @@ const toggleFavorite = async (goodsId: number) => {
 }
 
 .goods-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px #40a0ffae;
+  transition: all 0.3s ease;
+}
+
+.goods-card:active {
+  transform: translateY(1px);
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
 }
 
 .goods-link {
@@ -245,7 +311,31 @@ const toggleFavorite = async (goodsId: number) => {
   width: 100%;
   aspect-ratio: 1/1;
   overflow: hidden;
+}
+
+.goods-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 1/1;
+  overflow: hidden;
   background-color: #f9f9f9;
+  position: relative;
+}
+
+.goods-image::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: linear-gradient(to top, rgba(64, 160, 255, 0.199), transparent);
+  transition: height 0.3s ease;
+}
+
+.goods-card:hover .goods-image::after {
+  height: 40%;
 }
 
 .goods-img {
@@ -253,6 +343,16 @@ const toggleFavorite = async (goodsId: number) => {
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+  animation: imageLoad 0.5s ease-out;
+}
+
+@keyframes imageLoad {
+  from {
+    filter: blur(10px);
+  }
+  to {
+    filter: blur(0);
+  }
 }
 
 .goods-card:hover .goods-img {
@@ -260,6 +360,7 @@ const toggleFavorite = async (goodsId: number) => {
 }
 
 .goods-info {
+  padding: 12px;
   padding: 12px 10px 10px;
   flex: 1;
   display: flex;
@@ -277,9 +378,39 @@ const toggleFavorite = async (goodsId: number) => {
 
 .goods-price {
   font-size: 18px;
-  color: var(--primary-orange);
+  color: #409eff;
   margin-bottom: 10px;
   font-weight: bold;
+}
+
+.sold-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.sold-badge {
+  background: var(--glass-gradient-orange);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px 8px 0 0;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .goods-footer {
@@ -303,7 +434,7 @@ const toggleFavorite = async (goodsId: number) => {
 }
 
 .favorite-btn:hover {
-  color: var(--primary-orange);
+  color: var(--primary-blue);
 }
 
 .pagination {

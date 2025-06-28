@@ -2,12 +2,12 @@
   <div class="favorites-container">
     <h2 class="page-title">我的收藏</h2>
     <div v-if="favoriteStore.loading" class="loading">加载中...</div>
-    <div v-else-if="!favoriteStore.loading && favoriteStore.favorites.length === 0" class="empty-tip">
+    <div v-else-if="!favoriteStore.loading && favoriteStore.favorites.length === 0" class="empty-tip glass-card">
       <p>您还没有收藏任何商品</p>
       <router-link class="go-shopping-btn" to="/">去逛逛</router-link>
     </div>
     <div v-else class="favorites-list">
-      <div v-for="goods in favoriteStore.favorites" :key="goods.id" class="favorite-item">
+      <div v-for="goods in favoriteStore.favorites" :key="goods.id" class="favorite-item glass-card">
         <router-link :to="`/goods/detail/${goods.id}`" class="item-link">
           <img :src="getImageUrl(goods.image) || defaultGoodsImage" alt="{{ goods.title }}" class="goods-img">
           <div class="goods-info">
@@ -93,7 +93,7 @@ const removeFavorite = async (goodsId: number) => {
 
 <style scoped>
 .favorites-container {
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -101,96 +101,83 @@ const removeFavorite = async (goodsId: number) => {
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #333;
+  color: #F8FAFC;
 }
 
-.loading,
-.empty-tip {
-  text-align: center;
-  padding: 50px 0;
-  color: #666;
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
-.go-shopping-btn {
-  display: inline-block;
-  margin-top: 15px;
-  padding: 8px 16px;
-  background-color: #409eff;
-  color: white;
-  text-decoration: none;
-  border-radius: 4px;
-}
-
-.favorites-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .favorite-item {
   display: flex;
   align-items: center;
   padding: 15px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  transition: box-shadow 0.3s;
-}
-
-.favorite-item:hover {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-}
-
-.item-link {
-  display: flex;
-  align-items: center;
-  flex: 1;
-  text-decoration: none;
-  color: inherit;
-}
-
-.goods-img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-right: 15px;
-}
-
-.goods-info {
-  flex: 1;
+  margin-bottom: 15px;
 }
 
 .goods-title {
+  color: #F8FAFC;
   font-size: 16px;
-  margin-bottom: 8px;
-  color: #333;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 5px;
 }
 
 .goods-price {
-  font-size: 18px;
-  color: #f56c6c;
+  color: #165DFF;
   font-weight: bold;
 }
 
 .remove-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
   padding: 6px 12px;
-  background-color: #f56c6c;
-  color: white;
-  border: none;
-  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .remove-btn:hover {
-  background-color: #e4393c;
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.05);
 }
 
-.remove-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.empty-tip {
+  text-align: center;
+  padding: 50px 20px;
+  color: #94A3B8;
+}
+
+.go-shopping-btn {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.go-shopping-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .glass-card {
+    backdrop-filter: blur(6px);
+    border-radius: 10px;
+  }
 }
 </style>

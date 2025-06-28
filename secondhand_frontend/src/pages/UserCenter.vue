@@ -1,6 +1,6 @@
 <template>
   <div class="user-center-container">
-    <el-card class="user-card">
+    <el-card class="user-card glass-card">
       <div class="user-info">
         <div class="avatar-container">
           <el-avatar :size="100" class="avatar">
@@ -17,7 +17,7 @@
 
     <el-tabs v-model="activeTab" class="user-tabs">
       <el-tab-pane label="个人资料" name="profile">
-        <el-card>
+        <el-card class="glass-card content-card">
           <el-form
               ref="profileFormRef"
               :model="profileForm"
@@ -65,7 +65,7 @@
       </el-tab-pane>
 
       <el-tab-pane label="我的订单" name="orders">
-        <el-card>
+        <el-card class="glass-card content-card">
           <OrderList/>
         </el-card>
       </el-tab-pane>
@@ -192,6 +192,20 @@ const handleRemoveFavorite = async (goodsId: number) => {
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
+  background-color: transparent;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .user-card {
@@ -199,86 +213,52 @@ const handleRemoveFavorite = async (goodsId: number) => {
   padding: 20px;
 }
 
+.content-card {
+  margin-top: 20px;
+  padding: 20px;
+}
+
 .user-info {
   display: flex;
   align-items: center;
   gap: 30px;
+  color: #F8FAFC;
 }
 
-.avatar-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
+/* 表单样式优化 */
+.el-form-item__label {
+  color: #94A3B8;
 }
 
-.avatar {
-  border: 2px solid #f0f0f0;
+.el-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #F8FAFC;
 }
 
-.info-details {
-  flex: 1;
+.el-input__wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
-.user-tabs {
-  margin-top: 20px;
+.el-button--primary {
+  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+  border: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 }
 
-.empty-favorites {
-  text-align: center;
-  padding: 50px 0;
-  color: #888;
+.el-button--primary:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
 }
 
-.favorites-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 15px;
-}
-
-.favorite-card {
-  height: 100%;
-}
-
-.favorite-item {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.favorite-image {
-  width: 80px;
-  height: 80px;
-  flex-shrink: 0;
-}
-
-.favorite-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.favorite-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.favorite-title {
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 5px;
-}
-
-.favorite-price {
-  font-size: 16px;
-  color: #ff4d4f;
-  font-weight: bold;
-}
-
-.loading-skeleton {
-  padding: 15px;
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .glass-card {
+    backdrop-filter: blur(6px);
+    border-radius: 10px;
+  }
 }
 </style>

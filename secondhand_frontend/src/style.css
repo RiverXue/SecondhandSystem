@@ -5,11 +5,11 @@
 
   color-scheme: light only;
   color: #333333;
-  background-color: #f5f5f5;
+  background-color: #F8FAFC;
 
   --primary-orange: #FF6B00;
   --primary-blue: #1677FF;
-  --light-gray: #f5f5f5;
+  --light-gray: #F8FAFC;
   --medium-gray: #e5e5e5;
   --dark-gray: #888888;
 }
@@ -70,7 +70,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #333333;
-    background-color: #f5f5f5;
+    background-color: #F8FAFC;
   }
   a:hover {
     color: #0E62D0;

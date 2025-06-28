@@ -12,7 +12,7 @@
     </div>
 
     <div class="goods-list">
-      <el-card v-for="goods in goodsStore.goodsList" :key="goods.id" class="goods-card">
+      <el-card v-for="goods in goodsStore.goodsList" :key="goods.id" class="goods-card glass-card">
         <router-link :to="`/goods/detail/${goods.id}`" class="goods-link">
           <div class="goods-image">
             <img :src="getImageUrl(goods.image) || defaultGoodsImage" alt="{{ goods.title }}" class="goods-img">
@@ -163,10 +163,10 @@ const toggleFavorite = async (goodsId: number) => {
 }
 
 .search-container {
-  background-color: white;
+  background-color: #F8FAFC;
   padding: 15px 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   margin-bottom: 20px;
 }
 
@@ -201,14 +201,34 @@ const toggleFavorite = async (goodsId: number) => {
 }
 
 .goods-card {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
   overflow: hidden;
-  border: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+}
+
+.goods-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.goods-title {
+  color: #F8FAFC;
+}
+
+.goods-price {
+  color: #165DFF;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .goods-card {
+    backdrop-filter: blur(6px);
+    border-radius: 10px;
+  }
 }
 
 .goods-card:hover {

@@ -1,7 +1,7 @@
 <template>
   <div class="user-profile-container">
     <h2 class="page-title">个人资料</h2>
-    <div class="profile-card">
+    <div class="profile-card glass-card">
       <div class="profile-avatar">
         <img :src="userStore.userInfo?.avatar || defaultAvatar" alt="用户头像" class="avatar-img">
       </div>
@@ -73,7 +73,21 @@ const goToEdit = () => {
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #333;
+  color: #F8FAFC;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .profile-card {
@@ -118,15 +132,17 @@ const goToEdit = () => {
 
 .edit-btn {
   padding: 8px 16px;
-  background-color: #409eff;
+  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .edit-btn:hover {
-  background-color: #3080e8;
+  background: linear-gradient(135deg, #0F42D2 0%, #4080FF 100%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 </style>

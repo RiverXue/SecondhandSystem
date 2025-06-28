@@ -20,7 +20,7 @@ import { RouterLink } from 'vue-router';
 .login-prompt {
   margin-bottom: 20px;
   padding: 24px 16px;
-  background-color: #f5f7fa;
+  background-color: #F8FAFC;
   border-radius: 12px;
   text-align: center;
 }

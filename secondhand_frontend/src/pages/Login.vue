@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <el-card class="login-card">
+    <el-card class="login-card glass-card">
       <h2 class="title">用户登录</h2>
       <el-form :model="loginForm" :rules="rules" ref="loginFormRef" label-width="100px">
         <el-form-item label="用户名" prop="username">
@@ -76,18 +76,67 @@ const goToRegister = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #F8FAFC;
+  background-image: radial-gradient(circle at 25% 50%, rgba(22, 93, 255, 0.05) 0%, transparent 50%);
 }
+
 .login-card {
   width: 400px;
-  padding: 20px;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
+
 .title {
   text-align: center;
   margin-bottom: 20px;
+  color: #F8FAFC;
+  font-size: 24px;
 }
+
+.el-input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #F8FAFC;
+  transition: all 0.3s ease;
+}
+
+.el-input__wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.el-input:focus-within {
+  border-color: #9D4EDD;
+  box-shadow: 0 0 0 2px rgba(157, 78, 221, 0.2);
+}
+
 .login-btn {
   width: 100%;
   margin-bottom: 10px;
+  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+  border: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.login-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+}
+
+.el-button--default {
+  color: #CBD5E1;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.el-button--default:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #F8FAFC;
 }
 </style>

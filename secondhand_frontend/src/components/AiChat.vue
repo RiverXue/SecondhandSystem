@@ -131,6 +131,13 @@
         </el-scrollbar>
       </div>
 
+      <!-- 快捷提问按钮区域 -->
+      <div class="quick-reply-buttons">
+        <el-button v-for="(item, index) in quickReplies" :key="index" @click="handleQuickReply(item)" size="small" class="quick-reply-btn">
+          {{ item.question }}
+        </el-button>
+      </div>
+
       <!-- 输入区域 -->
       <div class="input-area">
         <el-input
@@ -192,6 +199,16 @@ const onImageError = (e: Event) => {
 
 
 const inputMessage = ref('');
+const quickReplies = [
+  { question: "天气很热，我想要买个风扇", answer: "风扇" },
+  { question: "有iPhone吗？", answer: "iPhone" },
+  { question: "有下酒菜吗？", answer: "酒鬼花生" }
+];
+
+const handleQuickReply = (item: { question: string, answer: string }) => {
+  inputMessage.value = item.answer;
+  handleSendMessage();
+};
 const aiStore = useAiStore();
 const userStore = useUserStore();
 // const {messages, isLoading, recommendedGoods} = aiStore;
@@ -456,3 +473,31 @@ watch(() => props.visible, (newVal) => {
   }
 }
 </style>
+
+const quickReplies = [
+  "天气很热，我想要买个风扇",
+  "有iPhone吗？",
+  "有下酒菜吗？"
+];
+
+const handleQuickReply = (text) => {
+  inputMessage.value = text;
+  handleSendMessage();
+};
+
+.quick-reply-buttons {
+  padding: 0 10px 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-reply-btn {
+  background-color: #f5f7fa;
+  color: #409eff;
+  border: 1px solid #e4e7ed;
+}
+
+.quick-reply-btn:hover {
+  background-color: #e6f7ff;
+}

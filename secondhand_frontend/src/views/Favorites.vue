@@ -96,6 +96,7 @@ const removeFavorite = async (goodsId: number) => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #F8FAFC;
 }
 
 .page-title {
@@ -115,10 +116,16 @@ const removeFavorite = async (goodsId: number) => {
   display: inline-block;
   margin-top: 15px;
   padding: 8px 16px;
-  background-color: #409eff;
+  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
   color: white;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.go-shopping-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .favorites-list {
@@ -131,13 +138,17 @@ const removeFavorite = async (goodsId: number) => {
   display: flex;
   align-items: center;
   padding: 15px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  transition: box-shadow 0.3s;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
 
 .favorite-item:hover {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
 }
 
 .item-link {
@@ -152,7 +163,7 @@ const removeFavorite = async (goodsId: number) => {
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 8px;
   margin-right: 15px;
 }
 
@@ -176,21 +187,25 @@ const removeFavorite = async (goodsId: number) => {
 }
 
 .remove-btn {
-  padding: 6px 12px;
-  background-color: #f56c6c;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #ff4d4f 0%, #f5222d 100%);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .remove-btn:hover {
-  background-color: #e4393c;
+  background: linear-gradient(135deg, #e83a3f 0%, #d4141b 100%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .remove-btn:disabled {
-  background-color: #ccc;
+  background: #ccc;
   cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 </style>

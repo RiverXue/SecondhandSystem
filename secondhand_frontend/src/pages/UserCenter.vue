@@ -69,7 +69,7 @@
         <!--            </el-card>-->
         <!--          </div>-->
         <!--        </el-card>-->
-        <el-card>
+        <el-card class="glass-card content-card">
           <Favorites/>
         </el-card>
       </el-tab-pane>

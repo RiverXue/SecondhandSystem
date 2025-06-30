@@ -100,77 +100,29 @@
 
             </div>
 
-            <!--            &lt;!&ndash; 推荐商品展示 &ndash;&gt;-->
-            <!--            <div v-if="isLoading" class="recommended-loading">-->
-            <!--              <el-skeleton :rows="3" width="100%"/>-->
-            <!--            </div>-->
-            <!--            <div v-if="recommendedGoods.length" class="recommended-goods">-->
-            <!--              <h3 class="section-title">推荐商品</h3>-->
-            <!--              <div class="goods-list">-->
-            <!--                <div-->
-            <!--                    v-for="goods in recommendedGoods"-->
-            <!--                    :key="goods.id"-->
-            <!--                    class="goods-item"-->
-            <!--                    @click="gotoGoodsDetail(goods.id)"-->
-            <!--                >-->
-            <!--                  <img-->
-            <!--                      :alt="goods.title"-->
-            <!--                      :src="getImageUrl(goods.image)"-->
-            <!--                      class="goods-image"-->
-            <!--                      @error="e => e.target.src = '/default-goods.jpg'"-->
-            <!--                  />-->
-            <!--                  <div class="goods-info">-->
-            <!--                    <h4 class="goods-name">{{ goods.title }}</h4>-->
-            <!--                    <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>-->
-            <!--                  </div>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </div>-->
-            <!--            <div v-else-if="!recommendedGoods.length && messages.length" class="ai-reply">-->
-            <!--              &lt;!&ndash;              <p>暂无推荐商品</p>&ndash;&gt;-->
-            <!--            </div>-->
-            <!--            &lt;!&ndash; 加载中提示 &ndash;&gt;-->
-            <!--            <div v-if="isLoading" class="loading-message">-->
-            <!--              <el-skeleton :rows="2" width="80%"/>-->
-            <!--            </div>-->
-            <!--          </div>-->
+            <!-- 加载中的AI消息 -->
+            <div v-if="aiStore.isLoading" class="message-item ai-message">
+              <div class="message-row">
+                <div class="message-bubble">
+                  <div class="thinking-container">
+                    <span class="thinking-text">AI正在思考中... 🤔</span>
+                    <span class="loading-dots">
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                      <span class="dot"></span>
+                    </span>
+                  </div>
+                </div>
+                <span class="message-time-inline">{{ formatTime(new Date()) }}</span>
+              </div>
+            </div>
+
             <!-- 推荐商品展示区域 -->
             <template v-if="aiStore.messages.length > 0">
               <!-- 加载状态下骨架屏 -->
               <div v-if="aiStore.isLoading" class="recommended-loading">
                 <el-skeleton :rows="3" width="100%"/>
               </div>
-
-              <!--              &lt;!&ndash; 推荐商品存在时 &ndash;&gt;-->
-              <!--              <div v-else-if="aiStore.recommendedGoods.length > 0" class="recommended-goods">-->
-              <!--                &lt;!&ndash;                <h3 class="section-title">推荐商品</h3>&ndash;&gt;-->
-              <!--                <div class="goods-list">-->
-              <!--                  <div-->
-              <!--                      v-for="goods in aiStore.recommendedGoods"-->
-              <!--                      :key="goods.id"-->
-              <!--                      class="goods-item"-->
-              <!--                      @click="gotoGoodsDetail(goods.id)"-->
-              <!--                  >-->
-              <!--                    &lt;!&ndash;                    <img&ndash;&gt;-->
-              <!--                    &lt;!&ndash;                        :alt="goods.title"&ndash;&gt;-->
-              <!--                    &lt;!&ndash;                        :src="getImageUrl(goods.image)"&ndash;&gt;-->
-              <!--                    &lt;!&ndash;                        class="goods-image"&ndash;&gt;-->
-              <!--                    &lt;!&ndash;                        @error="e => e.target.src = '/default-goods.jpg'"&ndash;&gt;-->
-              <!--                    &lt;!&ndash;                    />&ndash;&gt;-->
-              <!--                    <img-->
-              <!--                        :alt="goods.title"-->
-              <!--                        :src="getImageUrl(goods.image)"-->
-              <!--                        class="goods-image"-->
-              <!--                        @error="onImageError"-->
-              <!--                    />-->
-              <!--                    <div class="goods-info">-->
-              <!--                      <h4 class="goods-name">{{ goods.title }}</h4>-->
-              <!--                      <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>-->
-              <!--                    </div>-->
-              <!--                  </div>-->
-              <!--                </div>-->
-              <!--              </div>-->
-
               <!-- 无推荐商品时的提示 -->
               <div v-else class="ai-reply">
               </div>
@@ -464,5 +416,43 @@ watch(() => props.visible, (newVal) => {
   font-size: 16px;
   color: #ff4d4f;
   font-weight: bold;
+}
+
+.thinking-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loading-dots {
+  display: flex;
+  gap: 4px;
+}
+
+.loading-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #666;
+  animation: dot-pulse 1.4s infinite ease-in-out both;
+}
+
+.loading-dots .dot:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.loading-dots .dot:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes dot-pulse {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 </style>

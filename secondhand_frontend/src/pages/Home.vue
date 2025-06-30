@@ -2,11 +2,11 @@
   <div class="home-container">
     <div class="search-container">
       <div class="search-bar">
-        <el-input v-model="searchKeyword" class="search-input" placeholder="搜索你想要的宝贝..."></el-input>
+        <el-input v-model="searchKeyword" class="search-input" placeholder="🔎 搜索你想要的宝贝..."></el-input>
         <el-button class="search-btn" @click="handleSearch">搜索</el-button>
         <el-button class="ai-chat-btn" @click="handleShowAiChat">
           <Message/>
-          AI助手
+          🤖 AI助手
         </el-button>
       </div>
     </div>
@@ -55,8 +55,7 @@
 import {onMounted, ref} from 'vue';
 import {useGoodsStore} from '../store/goods';
 import {useUserStore} from '../store/user';
-import {Message} from '@element-plus/icons-vue';
-import {UserFilled as Robot} from '@element-plus/icons-vue'; // 假设使用 UserFilled 作为 Robot 替代，实际可根据需求更换为合适的图标
+import {Message, UserFilled as Robot} from '@element-plus/icons-vue'; // 假设使用 UserFilled 作为 Robot 替代，实际可根据需求更换为合适的图标
 import AiChat from '../components/AiChat.vue';
 
 import defaultGoodsImage from '../assets/codelogo.png';

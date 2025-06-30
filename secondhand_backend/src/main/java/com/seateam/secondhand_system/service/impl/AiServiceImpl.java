@@ -105,7 +105,7 @@ public class AiServiceImpl implements AiService {
 
         // 5. 如果有商品推荐，优先返回推荐商品
         if (!recommendedGoods.isEmpty()) {
-            responseData.put("reply", "根据您的需求，为您推荐以下商品：");
+            responseData.put("reply", "\uD83E\uDD16 根据您的需求，为您推荐以下商品：");
             responseData.put("list", recommendedGoods);
             return Result.success().data(responseData);
         }

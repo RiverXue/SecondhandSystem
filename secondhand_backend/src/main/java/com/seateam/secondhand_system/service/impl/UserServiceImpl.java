@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.seateam.secondhand_system.common.Result;
+import com.seateam.secondhand_system.common.utils.FileUploadUtils;
+import com.seateam.secondhand_system.common.utils.HttpContextUtils;
 import com.seateam.secondhand_system.common.utils.JwtUtils;
 import com.seateam.secondhand_system.entity.User;
 import com.seateam.secondhand_system.mapper.UserMapper;
@@ -17,6 +19,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -30,19 +33,9 @@ import java.util.concurrent.TimeUnit;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         implements UserService {
 
-    @Override
-    public Result getUserById(Integer userId) {
-        User user = this.getById(userId);
-        if (user == null) {
-            return Result.error("用户不存在");
-        }
-        return Result.success().put("user", user);
-    }
-
     /**
      * 日志记录器
      */
-
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     // 数据库操作接口
     @Autowired
@@ -56,6 +49,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     // 缓存操作
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private FileUploadUtils fileUploadUtils;
+
+
+    @Override
+    public Result getUserById(Integer userId) {
+        User user = this.getById(userId);
+        if (user == null) {
+            return Result.error("用户不存在");
+        }
+        return Result.success().put("user", user);
+    }
 
     /**
      * 获取当前登录用户ID
@@ -280,6 +285,50 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             return Result.error("更新失败");
         }
     }
+
+    /**
+     * 上传头像
+     *
+     * @param avatarFile 头像文件
+     * @return {@link Result}
+     */
+    @Override
+    public Result uploadAvatar(MultipartFile avatarFile) {
+        if (avatarFile == null || avatarFile.isEmpty()) {
+            return Result.error("请上传文件");
+        }
+
+        try {
+            HttpServletRequest request = HttpContextUtils.getHttpServletRequest();
+            String token = jwtUtils.getTokenFromRequest(request);
+            log.info("Received token: {}", token != null ? token.substring(0, 10) + "..." : "null");
+
+            Long userId = getCurrentUserId();
+            log.info("Uploading avatar for user ID: {}", userId);
+
+            // 上传文件，返回路径
+            String avatarUrl = fileUploadUtils.uploadFile(avatarFile);
+            log.info("Avatar uploaded successfully, URL: {}", avatarUrl);
+            if (!StringUtils.hasText(avatarUrl)) {
+                return Result.error("头像上传失败");
+            }
+
+            // 更新数据库
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();  // 使用UpdateWrapper
+            updateWrapper.eq("id", userId).set("avatar", avatarUrl);  // 设置更新条件和字段
+            userMapper.update(null, updateWrapper);                   // 执行更新操作
+
+            // 删除缓存
+            redisTemplate.delete("user:info:" + userId);  // 删除用户信息缓存
+
+            return Result.success("头像上传成功").put("avatarUrl", avatarUrl);
+        } catch (Exception e) {
+            log.error("上传头像失败", e);
+            return Result.error("系统错误，上传失败");
+        }
+    }
+
+
 }
 
 

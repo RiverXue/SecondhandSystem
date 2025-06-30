@@ -1,17 +1,22 @@
 package com.seateam.secondhand_system.common.utils;
 
+import com.seateam.secondhand_system.service.impl.UserServiceImpl;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
+import java.security.SignatureException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -21,12 +26,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class JwtUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     @Value("${jwt.secret}")
     private String secret;
-
     @Value("${jwt.expiration}")
     private long expiration;
-
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
@@ -84,8 +88,9 @@ public class JwtUtils {
     /**
      * 验证JWT令牌
      */
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token) throws SignatureException {
         if (isTokenBlacklisted(token)) {
+            log.info("Token is blacklisted");
             return false;
         }
         try {
@@ -93,8 +98,13 @@ public class JwtUtils {
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token);
+            log.info("Token validation successful");
             return true;
+        } catch (ExpiredJwtException e) {
+            log.info("Token expired: {}", e.getMessage());
+            return false;
         } catch (Exception e) {
+            log.info("Token validation failed: {}", e.getMessage());
             return false;
         }
     }

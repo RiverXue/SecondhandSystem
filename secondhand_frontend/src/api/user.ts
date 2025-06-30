@@ -75,7 +75,6 @@ export function updateUserInfo(data: { nickname?: string; avatar?: string; phone
     return request({
         url: '/user/update',
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         data
     })
 }

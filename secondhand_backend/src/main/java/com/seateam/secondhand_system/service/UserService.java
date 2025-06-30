@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.seateam.secondhand_system.common.Result;
 import com.seateam.secondhand_system.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService extends IService<User> {
     /**
@@ -13,7 +14,7 @@ public interface UserService extends IService<User> {
      * @return {@link Result}
      */
     Result getUserById(Integer userId);
-    
+
     /**
      * 用户注册
      *
@@ -60,4 +61,13 @@ public interface UserService extends IService<User> {
      * @return {@link Result}
      */
     Result logout(HttpServletRequest request);
+
+    /**
+     * 上传头像
+     *
+     * @param avatarFile 头像文件
+     * @return {@link Result}
+     */
+    Result uploadAvatar(MultipartFile avatarFile);
+
 }

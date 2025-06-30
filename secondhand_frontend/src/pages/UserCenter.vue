@@ -4,16 +4,16 @@
       <div class="user-info">
         <div class="avatar-wrapper">
           <div class="avatar-container">
-            <el-avatar :size="100" class="avatar" :src="getAvatarUrl(userStore.userInfo?.avatar)"></el-avatar>
+            <el-avatar :size="100" :src="getAvatarUrl(userStore.userInfo?.avatar)" class="avatar"></el-avatar>
           </div>
           <el-upload
-            ref="avatarUpload"
-            class="avatar-uploader"
-            :action="uploadUrl"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-            :headers="() => ({ 'Authorization': `Bearer ${userStore.accessToken}` })"
+              ref="avatarUpload"
+              :action="uploadUrl"
+              :before-upload="beforeAvatarUpload"
+              :headers="headers"
+              :on-success="handleAvatarSuccess"
+              :show-file-list="false"
+              class="avatar-uploader"
           >
             <el-button class="edit-avatar-btn" type="primary">更换头像</el-button>
           </el-upload>
@@ -48,27 +48,6 @@
       </el-tab-pane>
 
       <el-tab-pane label="我的收藏" name="favorites">
-        <!--        <el-card>-->
-        <!--          <div v-if="favoriteStore.favorites.length === 0" class="empty-favorites">-->
-        <!--            <p>您暂无收藏的商品</p>-->
-        <!--          </div>-->
-        <!--          <div v-else class="favorites-list">-->
-        <!--            <el-card v-for="item in favoriteStore.favorites" :key="item.id" class="favorite-card">-->
-        <!--              <div class="favorite-item">-->
-        <!--                <router-link :to="`/goods/detail/${item.goods_id}`">-->
-        <!--                  <div class="favorite-image">-->
-        <!--                    <img :src="item.image_url || '/default-goods.jpg'" alt="{{ item.title }}">-->
-        <!--                  </div>-->
-        <!--                  <div class="favorite-info">-->
-        <!--                    <h3 class="favorite-title">{{ item.title }}</h3>-->
-        <!--                    <p class="favorite-price">¥{{ item.price.toFixed(2) }}</p>-->
-        <!--                  </div>-->
-        <!--                </router-link>-->
-        <!--                <el-button icon="Delete" link @click="handleRemoveFavorite(item.goods_id)"></el-button>-->
-        <!--              </div>-->
-        <!--            </el-card>-->
-        <!--          </div>-->
-        <!--        </el-card>-->
         <el-card class="glass-card content-card">
           <Favorites/>
         </el-card>
@@ -84,18 +63,18 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from 'vue';
-import {ElForm, ElMessage, ElUpload, ElIcon} from 'element-plus';
+// import {onMounted, reactive, ref} from 'vue';
+import {computed, onMounted, reactive, ref} from 'vue';
+import {ElForm, ElMessage, ElUpload} from 'element-plus';
 import {useUserStore} from '../store/user';
 import {useGoodsStore} from '../store/goods';
 import {useFavoriteStore} from '../store/favorite';
 import OrderList from '../views/OrderList.vue';
 import Favorites from "../views/Favorites.vue";
-import { Plus, Delete } from '@element-plus/icons-vue';
 import defaultAvatar from '../assets/codelogo.png';
 
 const avatarUpload = ref(null);
-const uploadUrl = (import.meta.env.VITE_APP_API_URL || 'http://localhost:7272') + '/user/uploadAvatar';
+const uploadUrl = (import.meta.env.VITE_APP_API_URL || 'http://localhost:7272') + '/user/avatar';
 const userStore = useUserStore();
 const goodsStore = useGoodsStore();
 const favoriteStore = useFavoriteStore();
@@ -103,7 +82,11 @@ const profileFormRef = ref<InstanceType<typeof ElForm>>();
 const activeTab = ref('profile');
 const userAvatar = ref('');
 
-// 移除handleAvatarUpload方法
+
+const headers = computed(() => ({
+  Authorization: 'Bearer ' + userStore.accessToken
+}));
+
 
 // 添加日期格式化函数
 const formatDate = (dateString: string) => {
@@ -154,17 +137,18 @@ const getAvatarUrl = (avatarPath: string | undefined) => {
 
 const handleAvatarSuccess = (response: any) => {
   userAvatar.value = response.data;
-  userStore.updateUserInfo({ avatar: response.data });
+  userStore.updateUserInfo({avatar: response.data.data});
   ElMessage.success('头像上传成功');
 };
 
 const beforeAvatarUpload = (file: File) => {
   // 检查是否已登录
+  console.log('Uploading with token:', userStore.accessToken);
   if (!userStore.accessToken) {
     ElMessage.error('请先登录后再上传头像');
     return false;
   }
-  
+
   const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
   const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -179,7 +163,7 @@ const beforeAvatarUpload = (file: File) => {
 
 const removeAvatar = () => {
   userAvatar.value = '';
-  userStore.updateUserInfo({ avatar: '' });
+  userStore.updateUserInfo({avatar: ''});
   ElMessage.success('头像已移除');
 };
 
@@ -224,6 +208,7 @@ const handleUpdateProfile = async () => {
   padding: 8px 16px;
   font-size: 14px;
 }
+
 .avatar {
   width: 100%;
   height: 100%;
@@ -259,6 +244,7 @@ const handleUpdateProfile = async () => {
   align-items: center;
   justify-content: center;
 }
+
 .user-center-container {
   max-width: 1000px;
   margin: 0 auto;
@@ -304,7 +290,7 @@ const handleUpdateProfile = async () => {
 .el-input {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
+  border-radius: 8px;
   color: #303133;
 }
 
@@ -332,6 +318,7 @@ const handleUpdateProfile = async () => {
     border-radius: 10px;
   }
 }
+
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;

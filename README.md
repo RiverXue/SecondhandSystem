@@ -4,7 +4,7 @@
 
 ## 一、项目概述
 
-本项目为一款二手物品交易平台，基于前后端分离架构，用户可发布商品、浏览商品、留言交流、收藏感兴趣商品，并支持基础交易功能，含后台管理模块（可选）。新增AI智能服务模块，用户可通过智能对话获取个性化商品推荐。系统设计简洁、功能完整，适合作为高校毕设、课程设计、个人实战项目及中小型商业原型开发。
+本项目为一款二手物品交易平台，基于前后端分离架构，用户可发布商品、浏览商品、留言交流、收藏感兴趣商品，并支持基础交易功能。内置AI智能服务模块，用户可通过对话智能获取平台商品推荐。系统设计简洁、功能完整，适合作为高校毕设、课程设计、个人实战项目及中小型商业原型开发。
 
 ---
 
@@ -26,7 +26,7 @@
 
 - 个人资料管理（昵称、头像、手机号等，含手机号格式验证）
 
-- 我的发布、收藏、交易记录
+- 个人资料、我的收藏、我的交易
 
 - 头像上传
 
@@ -188,19 +188,19 @@ secondhand_frontend
 
 ### 5. 订单表（`order`）
 
-| 字段名         | 类型                    | 允许为空 | 默认值               | 说明               |
-|-------------|-----------------------|------|-------------------|------------------|
-| id          | BIGINT AUTO_INCREMENT | 否    | —                 | 主键，自增            |
-| buyer_id    | BIGINT                | 否    | —                 | 买家ID             |
-| seller_id   | BIGINT                | 否    | —                 | 卖家ID             |
-| goods_id    | BIGINT                | 否    | —                 | 商品ID             |
-| price       | DECIMAL(10,2)         | 否    | —                 | 成交价格             |
+| 字段名         | 类型                    | 允许为空 | 默认值               | 说明                                 |
+|-------------|-----------------------|------|-------------------|------------------------------------|
+| id          | BIGINT AUTO_INCREMENT | 否    | —                 | 主键，自增                              |
+| buyer_id    | BIGINT                | 否    | —                 | 买家ID                               |
+| seller_id   | BIGINT                | 否    | —                 | 卖家ID                               |
+| goods_id    | BIGINT                | 否    | —                 | 商品ID                               |
+| price       | DECIMAL(10,2)         | 否    | —                 | 成交价格                               |
 | status      | TINYINT               | 否    | 0                 | 订单状态：0-未付款，1-已付款，2-已发货，3-已完成，4-已取消 |
-| pay_time    | DATETIME              | 是    | NULL              | 支付时间             |
-| ship_time   | DATETIME              | 是    | NULL              | 发货时间             |
-| finish_time | DATETIME              | 是    | NULL              | 完成时间             |
-| cancel_time | DATETIME              | 是    | NULL              | 取消时间             |
-| create_time | DATETIME              | 否    | CURRENT_TIMESTAMP | 下单时间             |
+| pay_time    | DATETIME              | 是    | NULL              | 支付时间                               |
+| ship_time   | DATETIME              | 是    | NULL              | 发货时间                               |
+| finish_time | DATETIME              | 是    | NULL              | 完成时间                               |
+| cancel_time | DATETIME              | 是    | NULL              | 取消时间                               |
+| create_time | DATETIME              | 否    | CURRENT_TIMESTAMP | 下单时间                               |
 
 ---
 
@@ -260,16 +260,16 @@ secondhand_frontend
 
 ### 5. 订单模块
 
-| 方法   | 路径                  | 描述       |
-|------|---------------------|----------|
-| POST | `/api/order/create`   | 生成订单       |
-| GET  | `/api/order/my`       | 我的订单列表   |
-| GET  | `/api/order/seller`   | 卖家订单列表   |
-| POST | `/api/order/pay/{id}` | 支付订单       |
-| POST | `/api/order/cancel/{id}` | 取消订单    |
-| POST | `/api/order/ship/{id}` | 发货订单      |
-| POST | `/api/order/complete/{id}` | 完成订单  |
-| DELETE | `/api/order/{id}` | 删除订单    |
+| 方法     | 路径                         | 描述     |
+|--------|----------------------------|--------|
+| POST   | `/api/order/create`        | 生成订单   |
+| GET    | `/api/order/my`            | 我的订单列表 |
+| GET    | `/api/order/seller`        | 卖家订单列表 |
+| POST   | `/api/order/pay/{id}`      | 支付订单   |
+| POST   | `/api/order/cancel/{id}`   | 取消订单   |
+| POST   | `/api/order/ship/{id}`     | 发货订单   |
+| POST   | `/api/order/complete/{id}` | 完成订单   |
+| DELETE | `/api/order/{id}`          | 删除订单   |
 
 ### 6. AI智能服务模块
 
@@ -355,9 +355,9 @@ AI推荐功能采用混合推荐策略
 
 - AI回复等待时的消息气泡动画和loading闪点效果，营造AI“思考”的视觉体验
 
-#### AI聊天接口封装
+AI聊天接口封装
 
-前端通过`src/api/ai.ts`封装AI服务相关接口
+- 前端通过`src/api/ai.ts`封装AI服务相关接口
 
 **功能说明**：
 
@@ -452,7 +452,7 @@ AI推荐功能采用混合推荐策略
 | `/publish`          | `pages/Publish.vue`     | 商品发布页  | 需要登录 |
 | `/user/profile`     | `views/UserProfile.vue` | 用户资料页  | 需要登录 |
 | `/favorites`        | `views/Favorites.vue`   | 我的收藏页  | 需要登录 |
-| `/orders`           | `views/OrderList.vue`   | 我的订单页  | 需要登录 |
+| `/orders`           | `views/OrderList.vue`   | 我的交易页  | 需要登录 |
 
 **路由守卫实现**：系统通过全局路由守卫控制页面访问权限，未登录用户访问需要授权的页面时会自动重定向到登录页。核心逻辑如下：
 

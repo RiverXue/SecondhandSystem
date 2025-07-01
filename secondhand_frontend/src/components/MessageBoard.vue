@@ -149,11 +149,12 @@ const handleReplySent = async () => {
 .detail-card {
   padding: 20px;
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
+  backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
   box-shadow: var(--glass-shadow);
-  border-radius: 16px;
+  border-radius: 20px;
   margin-bottom: 30px;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .message-board-header {

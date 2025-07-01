@@ -396,11 +396,14 @@ watch(() => props.visible, (newVal) => {
 }
 
 .goods-item {
-  border: 1px solid #e5e6eb;
-  border-radius: 10px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.2s ease;
   padding: 8px;
   height: 180px;
   display: flex;

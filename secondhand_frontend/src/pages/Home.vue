@@ -248,13 +248,14 @@ const toggleFavorite = async (goodsId: number) => {
   margin-bottom: 30px;
 }
 
-.goods-card {
+.goods-card .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
+  backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
-  border-radius: 16px;
+  border-radius: 20px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform, opacity;
 }
 

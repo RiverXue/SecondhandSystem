@@ -7,13 +7,14 @@
   color: #1F1F1F;
   background-color: #F9FAFB;
 
-  /* 交易信任感玻璃态设计变量 */
-  --glass-bg: rgba(255,255,255,0.7);
-  --glass-border: 1px solid #E0EBFF;
-  --glass-shadow: 0 4px 12px rgba(22,119,255,0.1);
-  --glass-gradient: linear-gradient(180deg, #F0F5FF 0%, transparent 100%);
-  --glass-gradient-blue: linear-gradient(135deg, #1677FF 0%, #0969DA 100%);
-  --glass-gradient-orange: linear-gradient(135deg, #FF7D00 0%, #FF9535 100%);
+  /* iOS 26液态玻璃UI设计变量 */
+  --glass-bg: rgba(255,255,255,0.85);
+  --glass-border: 1px solid rgba(255,255,255,0.2);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  --glass-backdrop: blur(20px);
+  --glass-gradient: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 100%);
+  --glass-gradient-blue: linear-gradient(135deg, rgba(22,119,255,0.8) 0%, rgba(9,105,218,0.8) 100%);
+  --glass-gradient-orange: linear-gradient(135deg, rgba(255,125,0,0.8) 0%, rgba(255,149,53,0.8) 100%);
 
   /* 交易信任感配色方案 */
   --primary-blue: #1677FF;

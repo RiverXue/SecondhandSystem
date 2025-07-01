@@ -36,9 +36,10 @@ import {RouterLink} from 'vue-router';
   left: 0;
   right: 0;
   height: 60px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.05);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border-top: var(--glass-border);
+  box-shadow: var(--glass-shadow);
   z-index: 100;
 }
 

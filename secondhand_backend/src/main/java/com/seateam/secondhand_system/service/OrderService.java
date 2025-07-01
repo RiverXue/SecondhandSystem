@@ -19,9 +19,41 @@ public interface OrderService extends IService<Order> {
     Result createOrder(Long goodsId);
 
     /**
-     * 获取我的订单列表
+     * 获取我的订单列表（买家视角）
      *
      * @return 订单列表
      */
     Result getMyOrders();
+
+    /**
+     * 获取我的销售订单列表（卖家视角）
+     *
+     * @return 订单列表
+     */
+    Result getSellerOrders();
+
+    /**
+     * 支付订单
+     */
+    Result payOrder(Long orderId);
+
+    /**
+     * 取消订单
+     */
+    Result cancelOrder(Long orderId);
+
+    /**
+     * 发货
+     */
+    Result shipOrder(Long orderId);
+
+    /**
+     * 完成订单
+     */
+    Result completeOrder(Long orderId);
+
+    /**
+     * 删除订单
+     */
+    Result deleteOrder(Long orderId);
 }

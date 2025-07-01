@@ -142,18 +142,6 @@ const handleShowAiChat = () => {
   console.log('AI助手按钮被点击，showAiChat:', showAiChat.value);
 };
 
-const toggleFavorite = async (goodsId: number) => {
-  if (!userStore.accessToken) {
-    // 未登录处理
-    return;
-  }
-
-  if (goodsStore.favorites.includes(goodsId)) {
-    await goodsStore.removeFavorite(goodsId);
-  } else {
-    await goodsStore.addFavorite(goodsId);
-  }
-};
 </script>
 
 <style scoped>

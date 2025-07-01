@@ -22,10 +22,10 @@ CREATE TABLE `goods`
     `description` TEXT COMMENT '商品描述',
     `price`       DECIMAL(10, 2) NOT NULL COMMENT '商品价格',
     `category`    VARCHAR(50) COMMENT '商品分类',
-    `status`      TINYINT  DEFAULT 0 COMMENT '状态（0-在售，1-已售）',
+    `status`      TINYINT      DEFAULT 0 COMMENT '状态（0-在售，1-已售）',
     `image`       VARCHAR(255) DEFAULT NULL COMMENT '商品主图URL',
-    `images`      TEXT DEFAULT NULL COMMENT '商品多图URL，JSON格式数组',
-    `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
+    `images`      TEXT         DEFAULT NULL COMMENT '商品多图URL，JSON格式数组',
+    `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='商品表';
@@ -61,7 +61,11 @@ CREATE TABLE `order`
     `seller_id`   BIGINT         NOT NULL COMMENT '卖家ID',
     `goods_id`    BIGINT         NOT NULL COMMENT '商品ID',
     `price`       DECIMAL(10, 2) NOT NULL COMMENT '成交价格',
-    `status`      TINYINT  DEFAULT 0 COMMENT '订单状态（0-未付款 1-已完成）',
+    `status`      TINYINT  DEFAULT 0 COMMENT '订单状态（0-未付款 1-已付款 2-已发货 3-已完成 4-已取消）',
+    `pay_time`    DATETIME COMMENT '支付时间',
+    `ship_time`   DATETIME COMMENT '发货时间',
+    `finish_time` DATETIME COMMENT '完成时间',
+    `cancel_time` DATETIME COMMENT '取消时间',
     `create_time` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '下单时间',
     FOREIGN KEY (`buyer_id`) REFERENCES `user` (`id`),
     FOREIGN KEY (`seller_id`) REFERENCES `user` (`id`),

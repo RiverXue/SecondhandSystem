@@ -13,7 +13,7 @@ import java.util.Date;
  *
  * @TableName order
  */
-@TableName(value = "order")
+@TableName(value = "`order`")
 @Data
 public class Order {
     /**
@@ -43,9 +43,29 @@ public class Order {
     private BigDecimal price;
 
     /**
-     * 订单状态（0-未付款 1-已完成）
+     * 订单状态（0-未付款 1-已付款 2-已发货 3-已完成 4-已取消）
      */
     private Integer status;
+
+    /**
+     * 支付时间
+     */
+    private Date payTime;
+
+    /**
+     * 发货时间
+     */
+    private Date shipTime;
+
+    /**
+     * 完成时间
+     */
+    private Date finishTime;
+
+    /**
+     * 取消时间
+     */
+    private Date cancelTime;
 
     /**
      * 下单时间

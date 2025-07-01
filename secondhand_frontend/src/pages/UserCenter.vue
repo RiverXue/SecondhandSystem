@@ -53,7 +53,7 @@
         </el-card>
       </el-tab-pane>
 
-      <el-tab-pane label="我的订单" name="orders">
+      <el-tab-pane label="我的交易" name="orders">
         <el-card class="glass-card content-card">
           <OrderList/>
         </el-card>

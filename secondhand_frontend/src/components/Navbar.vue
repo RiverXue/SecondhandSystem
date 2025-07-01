@@ -9,8 +9,8 @@
     >
       <el-menu-item index="/">首页</el-menu-item>
       <el-menu-item index="/publish">发布商品</el-menu-item>
-      <el-menu-item @click="goToFavorites">我的收藏</el-menu-item>
-      <el-menu-item @click="goToOrders">我的订单</el-menu-item>
+      <el-menu-item index="/favorites">我的收藏</el-menu-item>
+      <el-menu-item index="/orders">我的交易</el-menu-item>
     </el-menu>
 
     <!-- 右侧：未登录时显示登录/注册 -->
@@ -110,11 +110,11 @@ const handleLogout = async () => {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
   padding: 0 20px;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.1), 0 1px 0 rgba(22, 119, 255, 0.1) inset;
+  box-shadow: 0 5px 12px rgba(22, 119, 255, 0.15), 0 1px 0 rgba(22, 119, 255, 0.1) inset;
 }
 
 

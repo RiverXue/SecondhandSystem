@@ -1,19 +1,21 @@
 <template>
   <div class="order-list-container">
-    <h2 class="page-title">我的订单</h2>
+    <h2 class="page-title">我的交易</h2>
     <div class="total-amount">
       <span class="total-label">订单总价: </span>
       <span class="total-price">{{ totalPrice.toFixed(2) }}</span>
     </div>
-    <div v-if="orderStore.loading" class="loading">加载中...</div>
-    <div v-else-if="!orderStore.loading && orderStore.orders.length === 0" class="empty-tip">
-      <p>您还没有任何订单</p>
-      <router-link class="go-shopping-btn" to="/">去购物</router-link>
-    </div>
-    <div v-else class="orders-list">
-      <div v-for="order in orderStore.orders" :key="order.id" class="order-item glass-card">
+    <el-tabs v-model="activeTab" class="order-tabs">
+      <el-tab-pane label="我的购买" name="buyer">
+        <div v-if="orderStore.loading" class="loading">加载中...</div>
+        <div v-else-if="!orderStore.loading && orderStore.buyerOrders.length === 0" class="empty-tip">
+          <p>您还没有购买订单</p>
+          <router-link class="go-shopping-btn" to="/">去购物</router-link>
+        </div>
+        <div v-else class="orders-list">
+          <div v-for="order in orderStore.buyerOrders" :key="order.id" class="order-item glass-card">
         <div class="order-header">
-          <span class="order-number">订单编号: {{ order.orderNo }}</span>
+          <span class="order-number">订单编号: {{ order.id }}</span>
           <span class="order-date">{{ formatDate(order.createTime) }}</span>
           <span :class="getStatusClass(order.status)" class="order-status">{{ formatStatus(order.status) }}</span>
         </div>
@@ -27,18 +29,127 @@
           </router-link>
         </div>
         <div class="order-total">
-          <!--          <span>订单总价: <span class="total-price">{{ order.totalPrice?.toFixed(2) || '0.00' }}</span></span>-->
+          <span>订单总价: <span class="total-price">{{ order.price?.toFixed(2) || '0.00' }}</span></span>
         </div>
-      </div>
-    </div>
+        <div class="order-actions">
+          <el-button
+              v-if="order.status === 0"
+              size="small"
+              type="primary"
+              @click="handlePay(order.id)">
+            支付
+          </el-button>
+          <el-button
+              v-if="order.status === 0 && userStore.userInfo?.id === order.buyerId"
+              size="small"
+              type="danger"
+              @click="handleCancel(order.id)">
+            取消订单
+          </el-button>
+          <el-button
+              v-if="order.buyerId && Number(order.status) === 4 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.buyerId)"
+              type="text"
+              @click="handleDelete(order.id)">
+            删除订单
+          </el-button>
+          <el-button
+              v-if="order.sellerId && Number(order.status) === 1 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.sellerId)"
+              size="small"
+              type="text"
+              @click="handleShip(order.id)">
+            发货
+          </el-button>
+          <el-button
+              v-if="order.status === 2"
+              size="small"
+              type="success"
+              @click="handleComplete(order.id)">
+            确认收货
+          </el-button>
+        </div>
+                </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="我的卖出" name="seller">
+        <div v-if="orderStore.loading" class="loading">加载中...</div>
+        <div v-else-if="!orderStore.loading && orderStore.sellerOrders.length === 0" class="empty-tip">
+          <p>您还没有卖出订单</p>
+        </div>
+        <div v-else class="orders-list">
+          <div v-for="order in orderStore.sellerOrders" :key="order.id" class="order-item glass-card">
+        <div class="order-header">
+          <span class="order-number">订单编号: {{ order.id }}</span>
+          <span class="order-date">{{ formatDate(order.createTime) }}</span>
+          <span :class="getStatusClass(order.status)" class="order-status">{{ formatStatus(order.status) }}</span>
+        </div>
+        <div class="order-goods">
+          <router-link :to="order.goodsId != null ? `/goods/detail/${order.goodsId}` : '#'" class="goods-link">
+            <img :src="getImageUrl(order.image) || defaultGoodsImage" alt="{{ order.title }}" class="goods-img">
+            <div class="goods-info">
+              <h3 class="goods-title">{{ order.title }}</h3>
+              <p class="goods-price">{{ order.price?.toFixed(2) || '0.00' }}</p>
+            </div>
+          </router-link>
+        </div>
+        <div class="order-total">
+          <span>订单总价: <span class="total-price">{{ order.price?.toFixed(2) || '0.00' }}</span></span>
+        </div>
+        <div class="order-actions">
+          <el-button
+              v-if="order.status === 1"
+              size="small"
+              type="primary"
+              @click="handleShip(order.id)">
+            发货
+          </el-button>
+          <el-button
+              v-if="order.status === 4 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.sellerId)"
+              type="text"
+              @click="handleDelete(order.id)">
+            删除订单
+          </el-button>
+        </div>
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
+import {ElMessage, ElMessageBox} from 'element-plus';
 import {useOrderStore} from '../store/order';
-import {ElMessage} from 'element-plus';
+import {useUserStore} from '../store/user';
 import defaultGoodsImage from '../assets/codelogo.png';
+
+const userStore = useUserStore();
+const orderStore = useOrderStore();
+const activeTab = ref('buyer');
+
+// 添加获取订单数据的函数
+const fetchOrders = async () => {
+  await orderStore.getMyOrders();
+};
+
+const fetchSellerOrders = async () => {
+  await orderStore.getSellerOrders();
+};
+
+// 在组件挂载时加载数据
+onMounted(() => {
+  fetchOrders();
+  fetchSellerOrders();
+});
+
+// 监听标签页切换，重新加载对应数据
+watch(activeTab, (newVal) => {
+  if (newVal === 'buyer') {
+    fetchOrders();
+  } else {
+    fetchSellerOrders();
+  }
+});
 
 const getImageUrl = (imagePath: string | undefined) => {
   if (!imagePath || typeof imagePath !== 'string') {
@@ -57,45 +168,28 @@ const getImageUrl = (imagePath: string | undefined) => {
   return `${baseUrl}/uploads/${normalizedPath}`;
 };
 
-const orderStore = useOrderStore();
-
-// const totalPrice = computed(() => {
-//   return orderStore.orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
-// });
 const totalPrice = computed(() => {
-  return orderStore.orders.reduce((sum, order) => {
-    return sum + (order.price || 0);
-  }, 0);
+  const orders = activeTab.value === 'buyer' ? orderStore.buyerOrders : orderStore.sellerOrders;
+  return orders.reduce((sum, order) => sum + (order.price || 0), 0);
 });
 
-onMounted(async () => {
-  try {
-    await orderStore.getMyOrders();
-    if (orderStore.orders.length === 0) {
-      ElMessage.info('暂无订单数据，请先创建订单');
-    }
-  } catch (error) {
-    ElMessage.error('获取订单列表失败，请刷新页面重试');
-    console.error('获取订单列表失败:', error);
-  }
-});
+
 
 // 格式化订单状态
 const formatStatus = (status: number) => {
   switch (status) {
     case 0:
-      // return '待付款';
-      return '已下单';
+      return '待付款';
     case 1:
       return '已付款';
-      // case 2:
-      //   return '已发货';
-      // case 3:
-      //   return '已完成';
-      // case 4:
-      //   return '已取消';
-      // default:
-      //   return '未知状态';
+    case 2:
+      return '已发货';
+    case 3:
+      return '已完成';
+    case 4:
+      return '已取消';
+    default:
+      return '未知状态';
   }
 };
 
@@ -122,6 +216,109 @@ const formatDate = (dateString: string) => {
   if (!dateString) return '';
   const date = new Date(dateString);
   return date.toLocaleString();
+};
+
+// 处理支付
+const handlePay = async (orderId: number) => {
+  try {
+    await orderStore.payOrder(orderId);
+  } catch (error) {
+    console.error('支付失败:', error);
+  }
+};
+
+// 处理取消订单
+const handleCancel = async (orderId: number) => {
+  try {
+    await ElMessageBox.confirm(
+        '确定要取消订单吗？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+    );
+    await orderStore.cancelOrder(orderId);
+  } catch (error) {
+    if (error === 'cancel') {
+      ElMessage.info('已取消操作');
+    } else {
+      console.error('取消订单失败:', error);
+    }
+  }
+};
+
+const handleDelete = async (orderId: number) => {
+  try {
+    await ElMessageBox.confirm(
+        '确定要删除该订单吗？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }
+    );
+    await orderStore.deleteOrder(orderId);
+    ElMessage.success('订单删除成功');
+    if (userStore.userInfo?.role?.toLowerCase() === 'buyer') {
+      fetchOrders();
+    } else {
+      fetchSellerOrders();
+    }
+  } catch (error) {
+    if (error === 'cancel') {
+      ElMessage.info('已取消操作');
+    } else {
+      ElMessage.error('订单删除失败');
+      console.error('删除订单失败:', error);
+    }
+  }
+};
+
+// 处理发货
+const handleShip = async (orderId: number) => {
+  try {
+    await ElMessageBox.confirm(
+        '确定要发货吗？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'info',
+        }
+    );
+    await orderStore.shipOrder(orderId);
+  } catch (error) {
+    if (error === 'cancel') {
+      ElMessage.info('已取消操作');
+    } else {
+      console.error('发货失败:', error);
+    }
+  }
+};
+
+// 处理确认收货
+const handleComplete = async (orderId: number) => {
+  try {
+    await ElMessageBox.confirm(
+        '确定已收到商品并完成订单吗？',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'info',
+        }
+    );
+    await orderStore.completeOrder(orderId);
+  } catch (error) {
+    if (error === 'cancel') {
+      ElMessage.info('已取消操作');
+    } else {
+      console.error('确认订单失败:', error);
+    }
+  }
 };
 </script>
 
@@ -238,11 +435,23 @@ const formatDate = (dateString: string) => {
   font-size: 12px;
 }
 
-.total-amount {
+.total-amount.order-total {
   margin: 15px 0;
   font-size: 16px;
   font-weight: bold;
   color: #ff4d4f;
+}
+
+.order-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: flex-end;
+}
+
+.order-actions .el-button {
+  padding: 6px 12px;
+  font-size: 12px;
 }
 
 .total-amount {

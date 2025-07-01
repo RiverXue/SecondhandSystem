@@ -1,111 +1,117 @@
 :root {
-  font-family: system-ui, -apple-system, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  color-scheme: light only;
-  color: #1F1F1F;
-  background-color: #F9FAFB;
+    color-scheme: light only;
+    color: #1F1F1F;
+    background-color: #F9FAFB;
 
-  /* iOS 26液态玻璃UI设计变量 */
-  --glass-bg: rgba(255,255,255,0.85);
-  --glass-border: 1px solid rgba(255,255,255,0.2);
-  --glass-shadow: 0 8px 32px rgba(0,0,0,0.08);
-  --glass-backdrop: blur(20px);
-  --glass-gradient: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 100%);
-  --glass-gradient-blue: linear-gradient(135deg, rgba(22,119,255,0.8) 0%, rgba(9,105,218,0.8) 100%);
-  --glass-gradient-orange: linear-gradient(135deg, rgba(255,125,0,0.8) 0%, rgba(255,149,53,0.8) 100%);
+    /* iOS 26液态玻璃UI设计变量 */
+    --glass-bg: rgba(255, 255, 255, 0.85);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --glass-backdrop: blur(20px);
+    --glass-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
+    --glass-gradient-blue: linear-gradient(135deg, rgba(22, 119, 255, 0.8) 0%, rgba(9, 105, 218, 0.8) 100%);
+    --glass-gradient-orange: linear-gradient(135deg, rgba(255, 125, 0, 0.8) 0%, rgba(255, 149, 53, 0.8) 100%);
 
-  /* 交易信任感配色方案 */
-  --primary-blue: #1677FF;
-  --primary-dark: #0969DA;
-  --primary-light: #E8F3FF;
-  --secondary-orange: #FF7D00;
-  --secondary-green: #00B42A;
-  --text-primary: #1D2129;
-  --text-secondary: #667085;
-  --background: #F0F5FF;
-  --surface: #FFFFFF;
-  --border-light: rgba(22,119,255,0.1);
-  --border-focus: #1677FF;
-  --border-error: #EF4444;
+    /* 交易信任感配色方案 */
+    --primary-blue: #1677FF;
+    --primary-dark: #0969DA;
+    --primary-light: #E8F3FF;
+    --secondary-orange: #FF7D00;
+    --secondary-green: #00B42A;
+    --text-primary: #1D2129;
+    --text-secondary: #667085;
+    --background: #F0F5FF;
+    --surface: #FFFFFF;
+    --border-light: rgba(22, 119, 255, 0.1);
+    --border-focus: #1677FF;
+    --border-error: #EF4444;
 }
 
 a {
-  font-weight: 500;
-  color: var(--primary-blue);
-  text-decoration: none;
+    font-weight: 500;
+    color: var(--primary-blue);
+    text-decoration: none;
 }
+
 a:hover {
-  color: #0E62D0;
+    color: #0E62D0;
 }
 
 body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--background);
-  background-image: var(--glass-gradient);
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: var(--background);
+    background-image: var(--glass-gradient);
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+    font-size: 3.2em;
+    line-height: 1.1;
 }
 
 button {
-  border-radius: 12px;
-  border: none;
-  padding: 0.6em 1.2em;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: var(--primary-blue);
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  will-change: transform, opacity;
+    border-radius: 12px;
+    border: none;
+    padding: 0.6em 1.2em;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: var(--primary-blue);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    will-change: transform, opacity;
 }
+
 button:hover {
-  background-color: var(--primary-dark);
-  transform: scale(1.02);
-  border-color: transparent;
+    background-color: var(--primary-dark);
+    transform: scale(1.02);
+    border-color: transparent;
 }
+
 button:active {
-  transform: translateY(1px);
+    transform: translateY(1px);
 }
+
 button:focus,
 button:focus-visible {
-  outline: 2px solid var(--border-focus);
+    outline: 2px solid var(--border-focus);
 }
 
 .card {
-  padding: 2em;
-  border-radius: 16px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  border: var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  transition: all 0.3s ease;
-  will-change: transform, opacity;
+    padding: 2em;
+    border-radius: 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    transition: all 0.3s ease;
+    will-change: transform, opacity;
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 1rem;
-  text-align: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 1rem;
+    text-align: center;
 }
 
 @media (prefers-color-scheme: light) {
-  :root {
-    color: #333333;
-    background-color: #F8FAFC;
-  }
-  a:hover {
-    color: #0E62D0;
-  }
-  button {
-    background-color: var(--primary-orange);
-  }
+    :root {
+        color: #333333;
+        background-color: #F8FAFC;
+    }
+
+    a:hover {
+        color: #0E62D0;
+    }
+
+    button {
+        background-color: var(--primary-orange);
+    }
 }

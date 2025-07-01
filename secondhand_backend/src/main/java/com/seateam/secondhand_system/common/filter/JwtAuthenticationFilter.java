@@ -47,6 +47,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     logger.info("User authentication set successfully");
                 } else {
                     logger.warn("Token validation failed");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Invalid token\"}");
+                    return;
                 }
             } else {
                 logger.info("No token found in request");
@@ -57,6 +60,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.error("Invalid token signature: {}");
         } catch (Exception e) {
             logger.error("Authentication error: {}");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"" + e.getMessage() + "\"}");
+            return;
         }
 
         filterChain.doFilter(request, response);

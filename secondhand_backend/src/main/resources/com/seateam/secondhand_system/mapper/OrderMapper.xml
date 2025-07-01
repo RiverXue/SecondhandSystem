@@ -32,4 +32,27 @@
         WHERE buyer_id = #{buyerId}
         ORDER BY create_time DESC
     </select>
+
+    <!-- 根据卖家ID查询订单列表 -->
+    <select id="selectBySellerId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM `order`
+        WHERE seller_id = #{sellerId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 更新订单状态 -->
+    <update id="updateOrderStatus">
+        UPDATE `order`
+        SET
+            status = #{status},
+            pay_time = CASE WHEN #{status} = 1 THEN CURRENT_TIMESTAMP ELSE pay_time END,
+            ship_time = CASE WHEN #{status} = 2 THEN CURRENT_TIMESTAMP ELSE ship_time END,
+            finish_time = CASE WHEN #{status} = 3 THEN CURRENT_TIMESTAMP ELSE finish_time END,
+            cancel_time = CASE WHEN #{status} = 4 THEN CURRENT_TIMESTAMP ELSE cancel_time END
+        WHERE
+            id = #{orderId}
+            <if test="isSeller">AND seller_id = #{userId}</if>
+            <if test="!isSeller">AND buyer_id = #{userId}</if>
+    </update>
 </mapper>

@@ -46,7 +46,9 @@
 
 ### 3. 交易模块
 
-- 模拟订单下单、交易订单查看
+- 订单全流程管理：创建订单、支付、取消、发货、完成交易及订单删除
+- 买家订单与卖家订单分离管理
+- 订单状态实时更新与展示
 
 ### 4. 留言/收藏模块
 
@@ -193,7 +195,11 @@ secondhand_frontend
 | seller_id   | BIGINT                | 否    | —                 | 卖家ID             |
 | goods_id    | BIGINT                | 否    | —                 | 商品ID             |
 | price       | DECIMAL(10,2)         | 否    | —                 | 成交价格             |
-| status      | TINYINT               | 否    | 0                 | 订单状态：0-未付款，1-已完成 |
+| status      | TINYINT               | 否    | 0                 | 订单状态：0-未付款，1-已付款，2-已发货，3-已完成，4-已取消 |
+| pay_time    | DATETIME              | 是    | NULL              | 支付时间             |
+| ship_time   | DATETIME              | 是    | NULL              | 发货时间             |
+| finish_time | DATETIME              | 是    | NULL              | 完成时间             |
+| cancel_time | DATETIME              | 是    | NULL              | 取消时间             |
 | create_time | DATETIME              | 否    | CURRENT_TIMESTAMP | 下单时间             |
 
 ---
@@ -256,8 +262,14 @@ secondhand_frontend
 
 | 方法   | 路径                  | 描述       |
 |------|---------------------|----------|
-| POST | `/api/order/create` | 生成订单     |
-| GET  | `/api/order/my`     | 我的订单列表## |
+| POST | `/api/order/create`   | 生成订单       |
+| GET  | `/api/order/my`       | 我的订单列表   |
+| GET  | `/api/order/seller`   | 卖家订单列表   |
+| POST | `/api/order/pay/{id}` | 支付订单       |
+| POST | `/api/order/cancel/{id}` | 取消订单    |
+| POST | `/api/order/ship/{id}` | 发货订单      |
+| POST | `/api/order/complete/{id}` | 完成订单  |
+| DELETE | `/api/order/{id}` | 删除订单    |
 
 ### 6. AI智能服务模块
 

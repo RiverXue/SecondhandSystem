@@ -11,7 +11,7 @@
       <router-link class="go-shopping-btn" to="/">去购物</router-link>
     </div>
     <div v-else class="orders-list">
-      <div v-for="order in orderStore.orders" :key="order.id" class="order-item">
+      <div v-for="order in orderStore.orders" :key="order.id" class="order-item glass-card">
         <div class="order-header">
           <span class="order-number">订单编号: {{ order.orderNo }}</span>
           <span class="order-date">{{ formatDate(order.createTime) }}</span>
@@ -135,7 +135,7 @@ const formatDate = (dateString: string) => {
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #333;
+  color: #303133;
 }
 
 .loading,
@@ -149,10 +149,17 @@ const formatDate = (dateString: string) => {
   display: inline-block;
   margin-top: 15px;
   padding: 8px 16px;
-  background-color: #409eff;
+  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
   color: white;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.go-shopping-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
 }
 
 .orders-list {
@@ -163,8 +170,21 @@ const formatDate = (dateString: string) => {
 
 .order-item {
   padding: 15px;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
 .order-header {
@@ -227,11 +247,14 @@ const formatDate = (dateString: string) => {
 
 .total-amount {
   margin: 20px 0;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
+  padding: 15px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 12px;
   text-align: right;
   font-size: 18px;
+  box-shadow: var(--glass-shadow);
 }
 
 .total-price {
@@ -241,18 +264,21 @@ const formatDate = (dateString: string) => {
 }
 
 .status-pending {
-  background-color: #fff3cd;
+  background: rgba(255, 243, 205, 0.3);
   color: #856404;
+  backdrop-filter: blur(4px);
 }
 
 .status-paid {
-  background-color: #d1ecf1;
+  background: rgba(209, 236, 241, 0.3);
   color: #0c5460;
+  backdrop-filter: blur(4px);
 }
 
 .status-shipped {
-  background-color: #d4edda;
+  background: rgba(212, 237, 218, 0.3);
   color: #155724;
+  backdrop-filter: blur(4px);
 }
 
 .status-completed {
@@ -261,8 +287,9 @@ const formatDate = (dateString: string) => {
 }
 
 .status-canceled {
-  background-color: #f8d7da;
+  background: rgba(248, 215, 218, 0.3);
   color: #721c24;
+  backdrop-filter: blur(4px);
 }
 
 .order-goods {

@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
-    <Navbar v-if="!isMobile" />
-    <BottomNavbar v-else />
+    <Navbar v-if="!isMobile"/>
+    <BottomNavbar v-else/>
     <transition name="glass-fade">
       <router-view v-slot="{ Component }">
-        <component :is="Component" />
+        <component :is="Component"/>
       </router-view>
     </transition>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import {onMounted, onUnmounted, ref} from 'vue';
 import Navbar from "./components/Navbar.vue"
 import BottomNavbar from "./components/BottomNavbar.vue"
 
@@ -32,8 +32,9 @@ onUnmounted(() => {
 
 <style scoped>
 .app-container {
-  background-color: #F8FAFC;
+  background-color: rgba(64, 158, 255, 0.04);
   min-height: 100vh;
+  border: rgba(105, 177, 255, 0) 1px solid;
 }
 
 .glass-fade-enter-active, .glass-fade-leave-active {

@@ -1,43 +1,93 @@
 <template>
-  <el-menu :default-active="activeIndex" class="el-menu-demo glass-nav" mode="horizontal" @select="handleSelect">
-    <el-menu-item index="/">首页</el-menu-item>
-    <el-menu-item index="/publish">发布商品</el-menu-item>
-    <el-menu-item index="/user-center">个人中心</el-menu-item>
-    <el-menu-item v-if="!userStore.accessToken" index="/login">登录</el-menu-item>
-    <el-menu-item v-if="!userStore.accessToken" index="/register">注册</el-menu-item>
-    <el-menu-item v-if="userStore.accessToken" index="logout" @click="handleLogout">退出登录</el-menu-item>
-  </el-menu>
+  <div class="nav-wrapper">
+    <!-- 左侧菜单 -->
+    <el-menu
+        :default-active="activeIndex"
+        class="el-menu-demo glass-nav"
+        mode="horizontal"
+        @select="handleSelect"
+    >
+      <el-menu-item index="/">首页</el-menu-item>
+      <el-menu-item index="/publish">发布商品</el-menu-item>
+      <el-menu-item @click="goToFavorites">我的收藏</el-menu-item>
+      <el-menu-item @click="goToOrders">我的订单</el-menu-item>
+    </el-menu>
+
+    <!-- 右侧：未登录时显示登录/注册 -->
+    <div v-if="!userStore.accessToken" class="auth-buttons">
+      <el-button link @click="router.push('/login')">登录</el-button>
+      <el-button link @click="router.push('/register')">注册</el-button>
+    </div>
+
+    <!-- 右侧：登录后显示头像和下拉菜单 -->
+    <el-dropdown v-else>
+      <span class="el-dropdown-link">
+        <el-avatar
+            :src="getAvatarUrl(userStore.userInfo?.avatar)"
+            size="small"
+            @error="handleAvatarError"
+        />
+        <span class="username">{{ userStore.userInfo?.username || '用户' }}</span>
+        <el-icon><arrow-down/></el-icon>
+      </span>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item @click="goToUserCenter">个人中心</el-dropdown-item>
+          <!--          <el-dropdown-item @click="goToFavorites">我的收藏</el-dropdown-item>-->
+          <!--          <el-dropdown-item @click="goToOrders">我的订单</el-dropdown-item>-->
+          <el-dropdown-item divided @click="handleLogout">退出登录</el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import {computed, onMounted, onUnmounted, ref} from 'vue';
+import {computed} from 'vue';
 import {useRouter} from 'vue-router';
 import {useUserStore} from '../store/user';
 import {ElMessage} from 'element-plus';
-
-const isScrolled = ref(false);
-
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 10;
-};
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
+import {ArrowDown} from '@element-plus/icons-vue';
+import defaultAvatarlogo from '../assets/codelogo.png';
 
 const router = useRouter();
 const userStore = useUserStore();
 
+const defaultAvatar = defaultAvatarlogo; // 默认头像
+
+const getAvatarUrl = (avatarPath: string | undefined) => {
+  if (!avatarPath || avatarPath.trim() === '') return defaultAvatar;
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL || '';
+  if (avatarPath.startsWith('http://') || avatarPath.startsWith('https://')) {
+    return avatarPath;
+  }
+  if (avatarPath.startsWith('/uploads/')) {
+    return `${baseUrl}${avatarPath}`;
+  }
+  return `${baseUrl}/uploads/${avatarPath}`;
+};
+
+const handleAvatarError = (e: Event) => {
+  const img = e.target as HTMLImageElement;
+  img.src = defaultAvatar;
+};
+
 const activeIndex = computed(() => router.currentRoute.value.path);
 
 const handleSelect = (key: string) => {
-  if (key !== 'logout') {
-    router.push(key);
-  }
+  router.push(key);
+};
+
+const goToUserCenter = () => {
+  router.push('/user-center');
+};
+
+const goToFavorites = () => {
+  router.push('/favorites');
+};
+
+const goToOrders = () => {
+  router.push('/orders');
 };
 
 const handleLogout = async () => {
@@ -53,47 +103,50 @@ const handleLogout = async () => {
 </script>
 
 <style scoped>
-.el-menu-demo {
-  margin-bottom: 20px;
-}
-
-.glass-nav {
+.nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255,255,255,0.8);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(16px);
-  border-bottom: var(--glass-border);
-  box-shadow: 0 4px 12px rgba(22,119,255,0.1), 0 1px 0 rgba(22,119,255,0.1) inset;
-  color: var(--text-primary);
+  padding: 0 20px;
   border-radius: 16px 16px 0 0;
-  transition: background 0.3s ease;
+  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.1), 0 1px 0 rgba(22, 119, 255, 0.1) inset;
 }
 
-.glass-nav.scrolled {
-  background: rgba(255,255,255,0.95);
+
+.el-menu-demo {
+  background: transparent;
+  border-bottom: none;
+  flex: 1;
 }
 
-.el-menu-item {
-  color: #333333 !important;
-  transition: all 0.2s ease;
+/* 登录/注册按钮 */
+.auth-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-.el-menu-item:hover,
-.el-menu-item.is-active {
-  color: #165DFF !important;
-  background-color: rgba(22, 93, 255, 0.05);
-  transition: all 0.2s ease;
-  border-bottom: 2px solid transparent;
+/* 用户头像和用户名 */
+.el-dropdown-link {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  color: #333;
+  gap: 8px;
+  padding: 0 8px;
 }
 
-.el-menu-item:hover {
-  transform: scale(1.05);
-  opacity: 0.9;
+.el-dropdown-link:hover {
+  opacity: 0.85;
 }
 
-.el-menu-item.is-active {
-  border-bottom: 2px solid var(--primary-blue);
-  color: var(--primary-blue);
+.username {
+  margin-left: 4px;
 }
 </style>

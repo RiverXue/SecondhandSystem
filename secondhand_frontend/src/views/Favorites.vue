@@ -96,13 +96,12 @@ const removeFavorite = async (goodsId: number) => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #F8FAFC;
 }
 
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #333;
+  color: #303133;
 }
 
 .loading,
@@ -110,6 +109,12 @@ const removeFavorite = async (goodsId: number) => {
   text-align: center;
   padding: 50px 0;
   color: #666;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  margin: 20px 0;
 }
 
 .go-shopping-btn {
@@ -124,8 +129,8 @@ const removeFavorite = async (goodsId: number) => {
 }
 
 .go-shopping-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
 }
 
 .favorites-list {
@@ -138,12 +143,12 @@ const removeFavorite = async (goodsId: number) => {
   display: flex;
   align-items: center;
   padding: 15px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .favorite-item:hover {
@@ -163,7 +168,7 @@ const removeFavorite = async (goodsId: number) => {
   width: 80px;
   height: 80px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 4px;
   margin-right: 15px;
 }
 
@@ -174,7 +179,7 @@ const removeFavorite = async (goodsId: number) => {
 .goods-title {
   font-size: 16px;
   margin-bottom: 8px;
-  color: #333;
+  color: #303133;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -198,8 +203,8 @@ const removeFavorite = async (goodsId: number) => {
 
 .remove-btn:hover {
   background: linear-gradient(135deg, #e83a3f 0%, #d4141b 100%);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(245, 34, 45, 0.3);
 }
 
 .remove-btn:disabled {

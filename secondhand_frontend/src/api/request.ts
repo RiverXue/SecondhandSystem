@@ -54,9 +54,12 @@ request.interceptors.response.use(
 
         // 处理401未授权错误
         if (error.response?.status === 401) {
-            await userStore.logout();
-            ElMessage.error('登录已过期，请重新登录');
-            router.push('/login');
+            // 避免logout请求本身触发401时的无限循环
+            if (!originalRequest.url.includes('/logout')) {
+                await userStore.logout();
+                ElMessage.error('登录已过期，请重新登录');
+                router.push('/login');
+            }
             return Promise.reject(error);
         }
 

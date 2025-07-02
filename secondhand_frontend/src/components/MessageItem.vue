@@ -105,7 +105,7 @@ const submitReply = async () => {
   display: flex;
   gap: 12px;
   padding: 15px 0;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .message-item:last-child {
@@ -126,20 +126,20 @@ const submitReply = async () => {
 
 .username {
   font-weight: 500;
-  color: #333;
+  color: var(--text-primary);
   font-size: 14px;
 }
 
 .create-time {
-  color: #86909c;
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
 .message-bubble {
-  background-color: #f2f3f5;
+  background-color: var(--bg-secondary);
   padding: 10px 15px;
   border-radius: 8px;
-  color: #303133;
+  color: var(--text-primary);
   font-size: 14px;
   line-height: 1.5;
   max-width: 80%;
@@ -160,19 +160,19 @@ const submitReply = async () => {
 }
 
 .reply-seller {
-  color: #409eff;
+  color: var(--primary-blue);
   font-weight: 500;
 }
 
 .reply-time {
-  color: #86909c;
+  color: var(--text-secondary);
 }
 
 .reply-bubble {
-  background-color: #e6f7ff;
+  background-color: var(--primary-light-bg);
   padding: 8px 12px;
   border-radius: 8px;
-  color: #004085;
+  color: var(--primary-dark-text);
   font-size: 13px;
   line-height: 1.5;
   max-width: 80%;
@@ -188,16 +188,18 @@ const submitReply = async () => {
   width: 100%;
   min-height: 60px;
   padding: 8px 12px;
-  border: 1px solid #e5e6eb;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   resize: none;
   font-size: 13px;
   line-height: 1.5;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
 }
 
 .reply-input:focus {
   outline: none;
-  border-color: #409eff;
+  border-color: var(--primary-blue);
 }
 
 .reply-input-footer {
@@ -209,6 +211,6 @@ const submitReply = async () => {
 
 .reply-char-count {
   font-size: 12px;
-  color: #86909c;
+  color: var(--text-secondary);
 }
 </style>

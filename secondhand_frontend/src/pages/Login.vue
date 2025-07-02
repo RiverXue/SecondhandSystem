@@ -76,8 +76,8 @@ const goToRegister = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #F8FAFC;
-  background-image: radial-gradient(circle at 25% 50%, rgba(22, 93, 255, 0.05) 0%, transparent 50%);
+  background-color: var(--bg-color);
+  background-image: radial-gradient(circle at 25% 50%, var(--primary-gradient-light) 0%, transparent 50%);
 }
 
 .login-card {
@@ -98,10 +98,10 @@ const goToRegister = () => {
 }
 
 .el-input {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-bg);
+  border: var(--glass-border);
   border-radius: 8px;
-  color: #F8FAFC;
+  color: var(--text-primary);
   transition: all 0.3s ease;
 }
 
@@ -130,13 +130,13 @@ const goToRegister = () => {
 }
 
 .el-button--default {
-  color: #CBD5E1;
+  color: var(--text-secondary);
   background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .el-button--default:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #F8FAFC;
+  color: var(--text-primary);
 }
 </style>

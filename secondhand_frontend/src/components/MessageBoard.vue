@@ -163,7 +163,7 @@ const handleReplySent = async () => {
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .board-title {

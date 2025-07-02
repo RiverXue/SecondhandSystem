@@ -14,60 +14,60 @@
         </div>
         <div v-else class="orders-list">
           <div v-for="order in orderStore.buyerOrders" :key="order.id" class="order-item glass-card">
-        <div class="order-header">
-          <span class="order-number">订单编号: {{ order.id }}</span>
-          <span class="order-date">{{ formatDate(order.createTime) }}</span>
-          <span :class="getStatusClass(order.status)" class="order-status">{{ formatStatus(order.status) }}</span>
-        </div>
-        <div class="order-goods">
-          <router-link :to="order.goodsId != null ? `/goods/detail/${order.goodsId}` : '#'" class="goods-link">
-            <img :src="getImageUrl(order.image) || defaultGoodsImage" alt="{{ order.title }}" class="goods-img">
-            <div class="goods-info">
-              <h3 class="goods-title">{{ order.title }}</h3>
-              <p class="goods-price">{{ order.price?.toFixed(2) || '0.00' }}</p>
+            <div class="order-header">
+              <span class="order-number">订单编号: {{ order.id }}</span>
+              <span class="order-date">{{ formatDate(order.createTime) }}</span>
+              <span :class="getStatusClass(order.status)" class="order-status">{{ formatStatus(order.status) }}</span>
             </div>
-          </router-link>
-        </div>
-        <div class="order-total">
-          <span>订单总价: <span class="total-price">{{ order.price?.toFixed(2) || '0.00' }}</span></span>
-        </div>
-        <div class="order-actions">
-          <el-button
-              v-if="order.status === 0"
-              size="small"
-              type="primary"
-              @click="handlePay(order.id)">
-            支付
-          </el-button>
-          <el-button
-              v-if="order.status === 0 && userStore.userInfo?.id === order.buyerId"
-              size="small"
-              type="danger"
-              @click="handleCancel(order.id)">
-            取消订单
-          </el-button>
-          <el-button
-              v-if="order.buyerId && Number(order.status) === 4 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.buyerId)"
-              type="text"
-              @click="handleDelete(order.id)">
-            删除订单
-          </el-button>
-          <el-button
-              v-if="order.sellerId && Number(order.status) === 1 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.sellerId)"
-              size="small"
-              type="text"
-              @click="handleShip(order.id)">
-            发货
-          </el-button>
-          <el-button
-              v-if="order.status === 2"
-              size="small"
-              type="success"
-              @click="handleComplete(order.id)">
-            确认收货
-          </el-button>
-        </div>
+            <div class="order-goods">
+              <router-link :to="order.goodsId != null ? `/goods/detail/${order.goodsId}` : '#'" class="goods-link">
+                <img :src="getImageUrl(order.image) || defaultGoodsImage" alt="{{ order.title }}" class="goods-img">
+                <div class="goods-info">
+                  <h3 class="goods-title">{{ order.title }}</h3>
+                  <p class="goods-price">{{ order.price?.toFixed(2) || '0.00' }}</p>
                 </div>
+              </router-link>
+            </div>
+            <div class="order-total">
+              <span>订单价格   : <span class="total-price">{{ order.price?.toFixed(2) || '0.00' }}</span></span>
+            </div>
+            <div class="order-actions">
+              <el-button
+                  v-if="order.status === 0"
+                  size="small"
+                  type="primary"
+                  @click="handlePay(order.id)">
+                支付
+              </el-button>
+              <el-button
+                  v-if="order.status === 0 && userStore.userInfo?.id === order.buyerId"
+                  size="small"
+                  type="danger"
+                  @click="handleCancel(order.id)">
+                取消订单
+              </el-button>
+              <el-button
+                  v-if="order.buyerId && Number(order.status) === 4 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.buyerId)"
+                  type="text"
+                  @click="handleDelete(order.id)">
+                删除订单
+              </el-button>
+              <el-button
+                  v-if="order.sellerId && Number(order.status) === 1 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.sellerId)"
+                  size="small"
+                  type="text"
+                  @click="handleShip(order.id)">
+                发货
+              </el-button>
+              <el-button
+                  v-if="order.status === 2"
+                  size="small"
+                  type="success"
+                  @click="handleComplete(order.id)">
+                确认收货
+              </el-button>
+            </div>
+          </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="我的卖出" name="seller">
@@ -77,38 +77,38 @@
         </div>
         <div v-else class="orders-list">
           <div v-for="order in orderStore.sellerOrders" :key="order.id" class="order-item glass-card">
-        <div class="order-header">
-          <span class="order-number">订单编号: {{ order.id }}</span>
-          <span class="order-date">{{ formatDate(order.createTime) }}</span>
-          <span :class="getStatusClass(order.status)" class="order-status">{{ formatStatus(order.status) }}</span>
-        </div>
-        <div class="order-goods">
-          <router-link :to="order.goodsId != null ? `/goods/detail/${order.goodsId}` : '#'" class="goods-link">
-            <img :src="getImageUrl(order.image) || defaultGoodsImage" alt="{{ order.title }}" class="goods-img">
-            <div class="goods-info">
-              <h3 class="goods-title">{{ order.title }}</h3>
-              <p class="goods-price">{{ order.price?.toFixed(2) || '0.00' }}</p>
+            <div class="order-header">
+              <span class="order-number">订单编号: {{ order.id }}</span>
+              <span class="order-date">{{ formatDate(order.createTime) }}</span>
+              <span :class="getStatusClass(order.status)" class="order-status">{{ formatStatus(order.status) }}</span>
             </div>
-          </router-link>
-        </div>
-        <div class="order-total">
-          <span>订单总价: <span class="total-price">{{ order.price?.toFixed(2) || '0.00' }}</span></span>
-        </div>
-        <div class="order-actions">
-          <el-button
-              v-if="order.status === 1"
-              size="small"
-              type="primary"
-              @click="handleShip(order.id)">
-            发货
-          </el-button>
-          <el-button
-              v-if="order.status === 4 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.sellerId)"
-              type="text"
-              @click="handleDelete(order.id)">
-            删除订单
-          </el-button>
-        </div>
+            <div class="order-goods">
+              <router-link :to="order.goodsId != null ? `/goods/detail/${order.goodsId}` : '#'" class="goods-link">
+                <img :src="getImageUrl(order.image) || defaultGoodsImage" alt="{{ order.title }}" class="goods-img">
+                <div class="goods-info">
+                  <h3 class="goods-title">{{ order.title }}</h3>
+                  <p class="goods-price">{{ order.price?.toFixed(2) || '0.00' }}</p>
+                </div>
+              </router-link>
+            </div>
+            <div class="order-total">
+              <span>订单价格: <span class="total-price">{{ order.price?.toFixed(2) || '0.00' }}</span></span>
+            </div>
+            <div class="order-actions">
+              <el-button
+                  v-if="order.status === 1"
+                  size="small"
+                  type="primary"
+                  @click="handleShip(order.id)">
+                发货
+              </el-button>
+              <el-button
+                  v-if="order.status === 4 && userStore.userInfo && Number(userStore.userInfo.id) === Number(order.sellerId)"
+                  type="text"
+                  @click="handleDelete(order.id)">
+                删除订单
+              </el-button>
+            </div>
           </div>
         </div>
       </el-tab-pane>
@@ -172,7 +172,6 @@ const totalPrice = computed(() => {
   const orders = activeTab.value === 'buyer' ? orderStore.buyerOrders : orderStore.sellerOrders;
   return orders.reduce((sum, order) => sum + (order.price || 0), 0);
 });
-
 
 
 // 格式化订单状态
@@ -332,21 +331,21 @@ const handleComplete = async (orderId: number) => {
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #303133;
+  color: var(--text-primary);
 }
 
 .loading,
 .empty-tip {
   text-align: center;
   padding: 50px 0;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .go-shopping-btn {
   display: inline-block;
   margin-top: 15px;
   padding: 8px 16px;
-  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
   color: white;
   text-decoration: none;
   border-radius: 8px;
@@ -390,43 +389,46 @@ const handleComplete = async (orderId: number) => {
   align-items: center;
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 1px dashed #eee;
+  border-bottom: 1px dashed var(--border-color);
 }
 
 .order-number {
-  color: #666;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 .order-date {
-  color: #999;
+  color: var(--text-secondary);
   font-size: 14px;
 }
 
 /* 订单状态样式 */
 .status-pending {
-  color: #ff9800;
-  background-color: #fff8e1;
+  background: var(--warning-bg-color);
+  color: var(--warning-text-color);
+  backdrop-filter: blur(4px);
 }
 
 .status-paid {
-  color: #2196f3;
-  background-color: #e3f2fd;
+  background: var(--info-bg-color);
+  color: var(--info-text-color);
+  backdrop-filter: blur(4px);
 }
 
 .status-shipped {
-  color: #4caf50;
-  background-color: #e8f5e9;
+  background: var(--info-bg-color);
+  color: var(--info-text-color);
+  backdrop-filter: blur(4px);
 }
 
 .status-completed {
-  color: #9c27b0;
-  background-color: #f3e5f5;
+  background: var(--success-bg-color);
+  color: var(--success-text-color);
 }
 
 .status-canceled {
-  color: #f44336;
-  background-color: #ffebee;
+  background: var(--danger-bg-color);
+  color: var(--danger-color);
 }
 
 .order-status {
@@ -439,7 +441,7 @@ const handleComplete = async (orderId: number) => {
   margin: 15px 0;
   font-size: 16px;
   font-weight: bold;
-  color: #ff4d4f;
+  color: var(--danger-color);
 }
 
 .order-actions {
@@ -467,37 +469,38 @@ const handleComplete = async (orderId: number) => {
 }
 
 .total-price {
-  color: #ff4d4f;
+  color: var(--danger-color);
   font-weight: bold;
   margin-left: 8px;
 }
 
 .status-pending {
-  background: rgba(255, 243, 205, 0.3);
-  color: #856404;
+  background: var(--warning-bg-color);
+  color: var(--warning-text-color);
   backdrop-filter: blur(4px);
 }
 
 .status-paid {
-  background: rgba(209, 236, 241, 0.3);
-  color: #0c5460;
+  background: var(--success-bg-color);
+  color: var(--success-text-color);
   backdrop-filter: blur(4px);
 }
 
 .status-shipped {
-  background: rgba(212, 237, 218, 0.3);
-  color: #155724;
+  background: var(--info-bg-color);
+  color: var(--info-text-color);
   backdrop-filter: blur(4px);
 }
 
 .status-completed {
-  background-color: #c3e6cb;
-  color: #155724;
+  background: var(--success-bg-color);
+  color: var(--success-text-color);
+  backdrop-filter: blur(4px);
 }
 
 .status-canceled {
-  background: rgba(248, 215, 218, 0.3);
-  color: #721c24;
+  background: var(--danger-bg-color);
+  color: var(--danger-text-color);
   backdrop-filter: blur(4px);
 }
 
@@ -527,23 +530,23 @@ const handleComplete = async (orderId: number) => {
 .goods-title {
   font-size: 16px;
   margin-bottom: 8px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .goods-price {
   font-size: 18px;
-  color: #f56c6c;
+  color: var(--danger-color);
   font-weight: bold;
 }
 
 .order-total {
   text-align: right;
   font-size: 16px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .total-price {
-  color: #f56c6c;
+  color: var(--danger-color);
   font-weight: bold;
 }
 </style>

@@ -20,7 +20,7 @@ import { RouterLink } from 'vue-router';
 .login-prompt {
   margin-bottom: 20px;
   padding: 24px 16px;
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
   border-radius: 12px;
   text-align: center;
 }
@@ -34,12 +34,12 @@ import { RouterLink } from 'vue-router';
 
 .login-icon {
   font-size: 28px;
-  color: #c0c6cf;
+  color: var(--text-secondary);
 }
 
 .prompt-text {
   font-size: 14px;
-  color: #606266;
+  color: var(--text-secondary);
   margin: 0;
 }
 

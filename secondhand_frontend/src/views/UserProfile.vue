@@ -73,7 +73,7 @@ const goToEdit = () => {
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #F8FAFC;
+  color: var(--text-primary);
 }
 
 .glass-card {
@@ -86,17 +86,17 @@ const goToEdit = () => {
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-color: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .profile-card {
   display: flex;
   align-items: center;
   padding: 20px;
-  background-color: #fff;
+  background-color: var(--bg-color);
   border-radius: 8px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--glass-shadow);
 }
 
 .profile-avatar {
@@ -108,7 +108,7 @@ const goToEdit = () => {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #eee;
+  border: 1px solid var(--border-color);
 }
 
 .profile-info {
@@ -123,16 +123,16 @@ const goToEdit = () => {
 .label {
   display: inline-block;
   width: 100px;
-  color: #888;
+  color: var(--text-secondary);
 }
 
 .value {
-  color: #333;
+  color: var(--text-primary);
 }
 
 .edit-btn {
   padding: 8px 16px;
-  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
   color: white;
   border: none;
   border-radius: 8px;
@@ -141,7 +141,7 @@ const goToEdit = () => {
 }
 
 .edit-btn:hover {
-  background: linear-gradient(135deg, #0F42D2 0%, #4080FF 100%);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
   transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }

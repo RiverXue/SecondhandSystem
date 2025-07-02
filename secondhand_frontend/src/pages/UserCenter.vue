@@ -192,7 +192,7 @@ const handleUpdateProfile = async () => {
   height: 150px;
   border-radius: 50%;
   overflow: hidden;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   margin-bottom: 10px;
 }
 
@@ -201,7 +201,7 @@ const handleUpdateProfile = async () => {
   width: auto;
   height: auto;
   border-radius: 4px;
-  background-color: #165DFF;
+  background-color: var(--primary-blue);
   color: white;
   border: none;
   cursor: pointer;
@@ -221,12 +221,12 @@ const handleUpdateProfile = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5f5f5;
+  background-color: var(--bg-color);
 }
 
 .avatar-icon {
   font-size: 48px;
-  color: #909399;
+  color: var(--text-secondary);
 }
 
 .remove-avatar-btn {
@@ -236,7 +236,7 @@ const handleUpdateProfile = async () => {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-bg-color);
   color: white;
   border: none;
   cursor: pointer;
@@ -262,7 +262,7 @@ const handleUpdateProfile = async () => {
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--glass-border);
 }
 
 .user-card {
@@ -279,19 +279,19 @@ const handleUpdateProfile = async () => {
   display: flex;
   align-items: center;
   gap: 30px;
-  color: #303133;
+  color: var(--text-primary);
 }
 
 /* 表单样式优化 */
 .el-form-item__label {
-  color: #606266;
+  color: var(--text-secondary);
 }
 
 .el-input {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-bg);
+  border: var(--glass-border);
   border-radius: 8px;
-  color: #303133;
+  color: var(--text-primary);
 }
 
 .el-input__wrapper {
@@ -300,7 +300,7 @@ const handleUpdateProfile = async () => {
 }
 
 .el-button--primary {
-  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
   border: none;
   border-radius: 8px;
   transition: all 0.2s ease;
@@ -308,7 +308,7 @@ const handleUpdateProfile = async () => {
 
 .el-button--primary:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+  box-shadow: var(--glass-shadow);
 }
 
 /* 响应式调整 */
@@ -322,6 +322,6 @@ const handleUpdateProfile = async () => {
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #303133;
+  color: var(--text-primary);
 }
 </style>

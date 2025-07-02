@@ -17,15 +17,15 @@ import { ChatDotRound } from '@element-plus/icons-vue';
   align-items: center;
   justify-content: center;
   padding: 60px 20px;
-  color: #86909c;
-  background-color: #f7f8fa;
+  color: var(--text-color-secondary);
+  background-color: var(--bg-color);
   border-radius: 12px;
 }
 
 .empty-icon {
   font-size: 48px;
   margin-bottom: 16px;
-  color: #c9cdD4;
+  color: var(--text-color-disabled);
 }
 
 .empty-text {

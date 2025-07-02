@@ -13,6 +13,16 @@
       <el-menu-item index="/orders">我的交易</el-menu-item>
     </el-menu>
 
+    <div class="theme-switch">
+      <el-switch
+          :active-icon="Moon"
+          :inactive-icon="Sunny"
+          :model-value="themeStore.isDark"
+          style="margin-right: 15px;"
+          @update:model-value="themeStore.toggleTheme"
+      />
+    </div>
+
     <!-- 右侧：未登录时显示登录/注册 -->
     <div v-if="!userStore.accessToken" class="auth-buttons">
       <el-button link @click="router.push('/login')">登录</el-button>
@@ -47,11 +57,13 @@ import {computed} from 'vue';
 import {useRouter} from 'vue-router';
 import {useUserStore} from '../store/user';
 import {ElMessage} from 'element-plus';
-import {ArrowDown} from '@element-plus/icons-vue';
+import {ArrowDown, Moon, Sunny} from '@element-plus/icons-vue';
+import {useThemeStore} from '../store/theme';
 import defaultAvatarlogo from '../assets/codelogo.png';
 
 const router = useRouter();
 const userStore = useUserStore();
+const themeStore = useThemeStore();
 
 const defaultAvatar = defaultAvatarlogo; // 默认头像
 
@@ -82,14 +94,6 @@ const goToUserCenter = () => {
   router.push('/user-center');
 };
 
-const goToFavorites = () => {
-  router.push('/favorites');
-};
-
-const goToOrders = () => {
-  router.push('/orders');
-};
-
 const handleLogout = async () => {
   try {
     await userStore.logout();
@@ -110,11 +114,11 @@ const handleLogout = async () => {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
   padding: 0 20px;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0 5px 12px rgba(22, 119, 255, 0.15), 0 1px 0 rgba(22, 119, 255, 0.1) inset;
+  box-shadow: 0 5px 12px var(--primary-gradient-light), 0 1px 0 var(--primary-gradient-light) inset;
 }
 
 
@@ -122,6 +126,10 @@ const handleLogout = async () => {
   background: transparent;
   border-bottom: none;
   flex: 1;
+}
+
+.el-menu-item {
+  color: var(--text-primary) !important;
 }
 
 /* 登录/注册按钮 */
@@ -137,7 +145,7 @@ const handleLogout = async () => {
   align-items: center;
   cursor: pointer;
   font-weight: bold;
-  color: #333;
+  color: var(--text-primary);
   gap: 8px;
   padding: 0 8px;
 }

@@ -157,7 +157,7 @@ const handleShowAiChat = () => {
   border: var(--glass-border);
   padding: 15px 20px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(22, 119, 255, 0.1), 0 1px 0 rgba(22, 119, 255, 0.1) inset;
+  box-shadow: 0 4px 12px var(--primary-gradient-light), 0 1px 0 var(--primary-gradient-light) inset;
   margin-bottom: 20px;
   position: relative;
 }
@@ -169,7 +169,7 @@ const handleShowAiChat = () => {
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(0deg, rgba(22, 119, 255, 0.1) 0%, transparent 100%);
+  background: linear-gradient(0deg, var(--primary-gradient-light) 0%, transparent 100%);
   border-radius: 0 0 16px 16px;
 }
 
@@ -186,7 +186,7 @@ const handleShowAiChat = () => {
 
 .search-btn {
   background-color: var(--primary-blue);
-  color: white;
+  color: var(--text-on-primary);
   width: 100px;
 }
 
@@ -197,9 +197,9 @@ const handleShowAiChat = () => {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: rgba(16, 105, 255, 0.8);
-  color: white;
-  box-shadow: 0 0 12px #69B1FF;
+  background-color: var(--primary-blue-transparent);
+  color: var(--text-on-primary);
+  box-shadow: 0 0 12px var(--primary-shadow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -219,13 +219,13 @@ const handleShowAiChat = () => {
 
 @keyframes ripple {
   0% {
-    box-shadow: 0 0 0 0 rgba(105, 177, 255, 0.7);
+    box-shadow: 0 0 0 0 var(--primary-blue-transparent);
   }
   70% {
-    box-shadow: 0 0 0 15px rgba(105, 177, 255, 0);
+    box-shadow: 0 0 0 15px var(--primary-blue-transparent);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(105, 177, 255, 0);
+    box-shadow: 0 0 0 0 var(--primary-blue-transparent);
   }
 }
 
@@ -236,8 +236,8 @@ const handleShowAiChat = () => {
   margin-bottom: 30px;
 }
 
-.goods-card .glass-card {
-  background: var(--glass-bg);
+.el-card.goods-card.glass-card {
+  background: var(--glass-bg) !important;
   backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
   border-radius: 20px;
@@ -251,11 +251,11 @@ const handleShowAiChat = () => {
   border-radius: 18px;
   opacity: 0.9;
   transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(22, 119, 255, 0.15);
+  box-shadow: 0 12px 24px var(--primary-gradient-light);
 }
 
 .goods-title {
-  color: #F8FAFC;
+  color: var(--text-primary);
   font-size: 16px;
   font-weight: 500;
   margin-bottom: 8px;
@@ -265,7 +265,7 @@ const handleShowAiChat = () => {
 }
 
 .goods-price {
-  color: #165DFF;
+  color: var(--primary-blue);
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 4px;
@@ -281,13 +281,17 @@ const handleShowAiChat = () => {
 
 .goods-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px #40a0ffae;
+  box-shadow: 0 10px 20px var(--primary-gradient-light);
   transition: all 0.3s ease;
+}
+
+::v-deep .el-card__body {
+  background-color: var(--glass-bg) !important;
 }
 
 .goods-card:active {
   transform: translateY(1px);
-  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.2);
+  box-shadow: 0 4px 12px var(--primary-gradient-light);
 }
 
 .goods-link {
@@ -307,7 +311,7 @@ const handleShowAiChat = () => {
   object-fit: cover;
   aspect-ratio: 1/1;
   overflow: hidden;
-  background-color: #f9f9f9;
+  background-color: var(--surface);
   position: relative;
 }
 
@@ -318,7 +322,7 @@ const handleShowAiChat = () => {
   left: 0;
   right: 0;
   height: 0;
-  background: linear-gradient(to top, rgba(64, 160, 255, 0.199), transparent);
+  background: linear-gradient(to top, var(--primary-gradient-light), transparent);
   transition: height 0.3s ease;
 }
 
@@ -361,12 +365,12 @@ const handleShowAiChat = () => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .goods-price {
   font-size: 18px;
-  color: #409eff;
+  color: var(--primary-blue);
   margin-bottom: 10px;
   font-weight: bold;
 }
@@ -377,7 +381,7 @@ const handleShowAiChat = () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-bg-color);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: flex-end;
@@ -406,7 +410,7 @@ const handleShowAiChat = () => {
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
-  color: var(--dark-gray);
+  color: var(--text-secondary);
   font-size: 12px;
 }
 
@@ -418,7 +422,7 @@ const handleShowAiChat = () => {
 }
 
 .favorite-btn {
-  color: var(--dark-gray);
+  color: var(--text-secondary);
 }
 
 .favorite-btn:hover {

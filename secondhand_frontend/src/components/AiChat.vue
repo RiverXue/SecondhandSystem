@@ -4,7 +4,6 @@
       :close-on-click-modal="false"
       :model-value="visible"
       :show-close="true"
-      append-to-body
       title="AI智能助手"
       width="420px"
       @update:model-value="(val) => emit('update:visible', val)"
@@ -268,18 +267,62 @@ watch(() => props.visible, (newVal) => {
   display: flex;
   flex-direction: column;
   height: 100%;
+  background: var(--glass-bg) !important;
+}
+
+::v-deep .el-dialog__header {
+  background: var(--glass-bg) !important;
+}
+
+::v-deep .el-dialog__body {
+  background: var(--glass-bg) !important;
+  padding: 0 !important;
+}
+
+::v-deep .el-dialog__footer {
+  background: var(--glass-bg) !important;
+}
+
+::v-deep .el-dialog {
+  background: var(--glass-bg) !important;
+  border: var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+  backdrop-filter: var(--glass-backdrop) !important;
+}
+
+::v-deep .el-dialog * {
+  background: inherit !important;
+  border-color: inherit !important;
+}
+
+::v-deep .el-dialog__wrapper {
+  background: transparent !important;
+}
+
+::v-deep .el-dialog__mask {
+  background: transparent !important;
+}
+
+::v-deep .el-scrollbar__wrap {
+  background: transparent !important;
+}
+
+::v-deep .el-overlay {
+  background: transparent !important;
 }
 
 .chat-messages {
   flex: 1;
   overflow-y: auto;
   padding: 10px;
+  background: var(--glass-bg) !important;
 }
 
 .message-list {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  background: var(--glass-bg) !important;
 }
 
 
@@ -303,7 +346,7 @@ watch(() => props.visible, (newVal) => {
 
 .message-time-inline {
   font-size: 10px;
-  color: #aaa;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
@@ -312,7 +355,7 @@ watch(() => props.visible, (newVal) => {
   top: 6px;
   right: 12px;
   font-size: 10px;
-  color: #999;
+  color: var(--text-secondary);
 }
 
 .message-content {
@@ -335,37 +378,44 @@ watch(() => props.visible, (newVal) => {
 }
 
 .user-message .message-bubble {
-  background-color: #409eff;
+  background-color: var(--primary-blue);
   color: white;
 }
 
 .ai-message .message-bubble {
-  background-color: #f2f3f5;
-  color: #303133;
+  background-color: var(--glass-bg) !important;
+  color: var(--text-primary);
 }
 
 .message-time {
   font-size: 12px;
   margin-top: 5px;
   text-align: right;
-  color: #86909c;
+  color: var(--text-secondary);
 }
 
 .welcome-message {
   text-align: center;
   padding: 20px;
-  color: #86909c;
+  color: var(--text-secondary);
 }
 
 .input-area {
   display: flex;
   gap: 10px;
   padding: 10px;
-  border-top: 1px solid #e5e6eb;
+  border-top: 1px solid var(--border-color);
+  background: var(--glass-bg) !important;
 }
 
 .message-input {
   flex: 1;
+}
+
+::v-deep .el-textarea__inner {
+  background: var(--glass-bg) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
 }
 
 .send-button {
@@ -384,7 +434,7 @@ watch(() => props.visible, (newVal) => {
 .section-title {
   font-size: 16px;
   margin-bottom: 10px;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 500;
 }
 
@@ -434,7 +484,7 @@ watch(() => props.visible, (newVal) => {
 
 .goods-price {
   font-size: 16px;
-  color: #ff4d4f;
+  color: var(--danger-color);
   font-weight: bold;
 }
 
@@ -453,7 +503,7 @@ watch(() => props.visible, (newVal) => {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: #666;
+  background-color: var(--text-secondary);
   animation: dot-pulse 1.4s infinite ease-in-out both;
 }
 
@@ -496,11 +546,11 @@ const handleQuickReply = (text) => {
 }
 
 .quick-reply-btn {
-  background-color: #f5f7fa;
-  color: #409eff;
-  border: 1px solid #e4e7ed;
+  background-color: var(--glass-bg);
+  color: var(--primary-blue);
+  border: 1px solid var(--border-color);
 }
 
 .quick-reply-btn:hover {
-  background-color: #e6f7ff;
+  background-color: var(--primary-light-bg);
 }

@@ -78,30 +78,36 @@ const submitMessage = async () => {
 .message-input {
   width: 100%;
   min-height: 100px;
-  border: 1px solid #e5e6eb;
+  max-height: 200px;
+  resize: vertical;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  resize: none;
+  padding: 12px;
   font-size: 14px;
-  transition: all 0.2s;
+  background-color: var(--card-bg-color);
+  color: var(--text-color-primary);
+  outline: none;
+  transition: border-color 0.2s;
   line-height: 1.5;
 }
 
 .message-input:focus {
   outline: none;
-  border-color: #409eff;
-  box-shadow: 0 0 0 2px rgba(55, 169, 250, 0.1);
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 2px var(--primary-gradient-light);
 }
 
 .input-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 10px;
+  color: var(--text-color-secondary);
 }
 
 .char-count {
   font-size: 12px;
-  color: #86909c;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 768px) {

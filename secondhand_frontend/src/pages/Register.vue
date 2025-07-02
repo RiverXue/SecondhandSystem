@@ -95,7 +95,7 @@ const goToLogin = () => {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #F8FAFC;
+  background-color: var(--bg-color);
 }
 .register-card {
   width: 400px;
@@ -104,6 +104,7 @@ const goToLogin = () => {
 .title {
   text-align: center;
   margin-bottom: 20px;
+  color: var(--text-primary);
 }
 .register-btn {
   width: 100%;

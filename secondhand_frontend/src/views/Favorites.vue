@@ -101,14 +101,14 @@ const removeFavorite = async (goodsId: number) => {
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #303133;
+  color: var(--text-color-primary);
 }
 
 .loading,
 .empty-tip {
   text-align: center;
   padding: 50px 0;
-  color: #666;
+  color: var(--text-color-secondary);
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
@@ -121,7 +121,7 @@ const removeFavorite = async (goodsId: number) => {
   display: inline-block;
   margin-top: 15px;
   padding: 8px 16px;
-  background: linear-gradient(135deg, #165DFF 0%, #4080FF 100%);
+  background: var(--primary-color);
   color: white;
   text-decoration: none;
   border-radius: 8px;
@@ -130,7 +130,7 @@ const removeFavorite = async (goodsId: number) => {
 
 .go-shopping-btn:hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+  box-shadow: var(--glass-shadow);
 }
 
 .favorites-list {
@@ -153,7 +153,7 @@ const removeFavorite = async (goodsId: number) => {
 
 .favorite-item:hover {
   border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--glass-shadow);
 }
 
 .item-link {
@@ -179,7 +179,7 @@ const removeFavorite = async (goodsId: number) => {
 .goods-title {
   font-size: 16px;
   margin-bottom: 8px;
-  color: #303133;
+  color: var(--text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -187,28 +187,28 @@ const removeFavorite = async (goodsId: number) => {
 
 .goods-price {
   font-size: 18px;
-  color: #f56c6c;
-  font-weight: bold;
+  font-weight: 500;
+  color: var(--danger-color);
 }
 
 .remove-btn {
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #ff4d4f 0%, #f5222d 100%);
-  color: white;
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
   border: none;
-  border-radius: 8px;
+  padding: 5px 10px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
 .remove-btn:hover {
-  background: linear-gradient(135deg, #e83a3f 0%, #d4141b 100%);
+  background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-dark-color) 100%);
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(245, 34, 45, 0.3);
+  box-shadow: var(--danger-shadow);
 }
 
 .remove-btn:disabled {
-  background: #ccc;
+  background: var(--text-secondary);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;

@@ -37,10 +37,10 @@ const handleRetry = () => {
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background-color: #fff6f6;
-  border: 1px solid #ffccc7;
+  background-color: var(--danger-bg-color);
+  border: 1px solid var(--danger-border-color);
   border-radius: 12px;
-  color: #f56c6c;
+  color: var(--danger-color);
 }
 
 .error-icon {
@@ -54,12 +54,12 @@ const handleRetry = () => {
 }
 
 .retry-button {
-  color: #f56c6c;
+  color: var(--danger-color);
   padding: 0;
 }
 
 .retry-button:hover {
-  color: #e4393c;
+  color: var(--danger-dark-color);
   background-color: transparent;
 }
 </style>

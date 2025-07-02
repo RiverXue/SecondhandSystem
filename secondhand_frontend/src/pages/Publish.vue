@@ -282,12 +282,16 @@ const retryUpload = async (file: any) => {
 
 .publish-card {
   padding: 30px;
+  background: var(--glass-bg) !important;
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .title {
   text-align: center;
   margin-bottom: 30px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .publish-form {

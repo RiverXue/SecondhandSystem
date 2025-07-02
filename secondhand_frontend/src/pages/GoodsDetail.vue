@@ -239,10 +239,6 @@ const getImageUrl = (imagePath: string | undefined) => {
           </div>
 
           <div class="goods-meta">
-            <!--            <div class="meta-item">-->
-            <!--              <span class="label">新旧程度：</span>-->
-            <!--              <span class="value">{{ currentGoods?.condition || '未填写' }}</span>-->
-            <!--            </div>-->
             <div class="meta-item">
               <span class="label">发布时间：</span>
               <span class="value">{{
@@ -308,9 +304,15 @@ const getImageUrl = (imagePath: string | undefined) => {
 
 .detail-card {
   padding: 20px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--glass-shadow);
   border-radius: 8px;
   margin-bottom: 30px;
+  background-color: var(--bg-color) !important;
+}
+
+::v-deep .el-card__body {
+  background-color: var(--bg-color) !important;
+  padding: 0;
 }
 
 .goods-detail {
@@ -328,7 +330,7 @@ const getImageUrl = (imagePath: string | undefined) => {
   align-items: center;
   width: 100%;
   height: 400px;
-  background-color: #f5f5f5;
+  background-color: var(--bg-color);
 
   object-fit: contain;
   cursor: zoom-in; //
@@ -351,7 +353,7 @@ const getImageUrl = (imagePath: string | undefined) => {
 }
 
 .thumbnail-item.active {
-  border-color: #409eff;
+  border-color: var(--primary-blue);
 }
 
 .thumbnail-item img {
@@ -369,7 +371,7 @@ const getImageUrl = (imagePath: string | undefined) => {
 .status-badge {
   display: inline-block;
   padding: 4px 8px;
-  background-color: #f56c6c;
+  background-color: var(--danger-color);
   color: white;
   font-size: 12px;
   border-radius: 4px;
@@ -379,7 +381,7 @@ const getImageUrl = (imagePath: string | undefined) => {
 .goods-title {
   font-size: 24px;
   margin-bottom: 15px;
-  color: #333;
+  color: var(--text-primary);
   font-weight: 600;
 }
 
@@ -389,20 +391,20 @@ const getImageUrl = (imagePath: string | undefined) => {
 
 .current-price {
   font-size: 28px;
-  color: #ff4d4f;
+  color: var(--danger-color);
   font-weight: bold;
   margin-right: 10px;
 }
 
 .original-price {
   font-size: 16px;
-  color: #909399;
+  color: var(--text-secondary);
   text-decoration: line-through;
 }
 
 .goods-meta {
-  border-top: 1px solid #f5f5f5;
-  border-bottom: 1px solid #f5f5f5;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
   padding: 15px 0;
   margin-bottom: 20px;
 }
@@ -418,12 +420,12 @@ const getImageUrl = (imagePath: string | undefined) => {
 
 .label {
   width: 100px;
-  color: #909399;
+  color: var(--text-secondary);
 }
 
 .value {
   flex: 1;
-  color: #606266;
+  color: var(--text-secondary);
 }
 
 .goods-description {
@@ -433,11 +435,11 @@ const getImageUrl = (imagePath: string | undefined) => {
 .goods-description h3 {
   font-size: 16px;
   margin-bottom: 10px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .goods-description p {
-  color: #606266;
+  color: var(--text-secondary);
   line-height: 1.6;
   white-space: pre-line;
 }
@@ -450,9 +452,9 @@ const getImageUrl = (imagePath: string | undefined) => {
 
 .favorite-btn {
   padding: 10px 20px;
-  background-color: #f5f5f5;
-  color: #666;
-  border: 1px solid #ddd;
+  background-color: var(--bg-color);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   cursor: pointer;
   display: flex;
@@ -462,18 +464,18 @@ const getImageUrl = (imagePath: string | undefined) => {
 }
 
 .favorite-btn:hover {
-  background-color: #f0f0f0;
+  background-color: var(--hover-bg-color);
 }
 
 .favorite-btn.active {
-  background-color: #fef0f0;
-  color: #f56c6c;
-  border-color: #fbc4c4;
+  background-color: var(--danger-bg-color);
+  color: var(--danger-color);
+  border-color: var(--danger-border-color);
 }
 
 .order-btn {
   padding: 10px 20px;
-  background-color: #409eff;
+  background-color: var(--primary-blue);
   color: white;
   border: none;
   border-radius: 4px;
@@ -484,11 +486,11 @@ const getImageUrl = (imagePath: string | undefined) => {
 }
 
 .order-btn:hover {
-  background-color: #3391e8;
+  background-color: var(--primary-dark);
 }
 
 .order-btn:disabled {
-  background-color: #c0c4cc;
+  background-color: var(--text-secondary);
   cursor: not-allowed;
 }
 

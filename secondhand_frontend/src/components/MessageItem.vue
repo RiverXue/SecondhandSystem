@@ -44,7 +44,7 @@
 <script lang="ts" setup>
 import {defineProps, ref} from 'vue';
 import {useMessageStore} from '../store/message';
-import {ElAvatar, ElButton, ElMessage} from 'element-plus';
+import {ElButton, ElMessage} from 'element-plus';
 
 // 定义留言数据类型
 interface Message {
@@ -186,31 +186,39 @@ const submitReply = async () => {
 
 .reply-input {
   width: 100%;
-  min-height: 60px;
-  padding: 8px 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  resize: none;
-  font-size: 13px;
-  line-height: 1.5;
-  background-color: var(--bg-color);
-  color: var(--text-primary);
-}
 
-.reply-input:focus {
-  outline: none;
-  border-color: var(--primary-blue);
-}
+  .reply-input {
+    min-height: 60px;
+    padding: 8px 12px;
+    border: var(--glass-border);
+    border-radius: 12px;
+    resize: none;
+    font-size: 13px;
+    line-height: 1.5;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-backdrop);
+    color: var(--text-primary);
+    background-image: var(--glass-highlight);
+    transition: var(--glass-transition);
+  }
 
-.reply-input-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 6px;
-}
+  .reply-input:focus {
+    outline: none;
+    border-color: rgba(22, 119, 255, 0.5);
+    transform: perspective(1000px) rotateY(1deg) scale(1.01);
+    box-shadow: 0 5px 15px rgba(22, 119, 255, 0.15);
+  }
 
-.reply-char-count {
-  font-size: 12px;
-  color: var(--text-secondary);
+  .reply-input-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+  }
+
+  .reply-char-count {
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
 }
 </style>

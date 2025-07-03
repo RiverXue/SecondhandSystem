@@ -39,6 +39,10 @@ import {RouterLink} from 'vue-router';
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
   border-top: var(--glass-border);
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
+  animation: var(--glass-animation);
   box-shadow: var(--glass-shadow);
   z-index: 100;
 }

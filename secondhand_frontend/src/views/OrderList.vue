@@ -375,12 +375,16 @@ const handleComplete = async (orderId: number) => {
   border: var(--glass-border);
   border-radius: 20px;
   box-shadow: var(--glass-shadow);
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 10px rgba(255, 255, 255, 0.3) inset;
+
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
 }
 
 .glass-card:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 .order-header {
@@ -466,12 +470,27 @@ const handleComplete = async (orderId: number) => {
   text-align: right;
   font-size: 18px;
   box-shadow: var(--glass-shadow);
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
 }
 
 .total-price {
   color: var(--danger-color);
   font-weight: bold;
   margin-left: 8px;
+}
+
+::v-deep .el-tabs__item {
+  color: var(--text-primary) !important;
+}
+
+::v-deep .el-tabs__item.is-active {
+  color: var(--primary-blue) !important;
+}
+
+.total-label {
+  color: var(--text-secondary);
 }
 
 .status-pending {

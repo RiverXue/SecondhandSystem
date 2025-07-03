@@ -153,13 +153,17 @@ const handleShowAiChat = () => {
 
 .search-container {
   background: var(--glass-bg);
-  backdrop-filter: blur(16px);
+  backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
   padding: 15px 20px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px var(--primary-gradient-light), 0 1px 0 var(--primary-gradient-light) inset;
-  margin-bottom: 20px;
+  box-shadow: var(--glass-shadow);
+  margin: 7px 0 23px 0;
   position: relative;
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
+  overflow: hidden;
 }
 
 .search-container::after {
@@ -236,22 +240,50 @@ const handleShowAiChat = () => {
   margin-bottom: 30px;
 }
 
-.el-card.goods-card.glass-card {
-  background: var(--glass-bg) !important;
+.goods-card.glass-card {
+  background-image: var(--glass-highlight);
+  transform: perspective(1200px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
+  animation: var(--glass-animation);
   backdrop-filter: var(--glass-backdrop);
+  box-shadow: var(--glass-shadow), inset 0 0 30px rgba(255, 255, 255, 0.15);
+  background: var(--glass-bg);
   border: var(--glass-border);
-  border-radius: 20px;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: var(--glass-shadow);
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-  will-change: transform, opacity;
+  position: relative;
+  will-change: transform, box-shadow;
+}
+
+.goods-card.glass-card::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: calc(100% + 100px);
+  height: calc(100% + 100px);
+  background: radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.4), transparent 50%), radial-gradient(circle at 85% 75%, rgba(100, 160, 255, 0.45), transparent 55%), radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.25), transparent 65%), radial-gradient(circle at 30% 70%, rgba(200, 220, 255, 0.3), transparent 60%), inherit;
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%;
+  filter: blur(80px);
+  opacity: 0.98;
+  z-index: -1;
+  transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(0);
+  box-shadow: 0 0 200px rgba(255, 255, 255, 0.4), 0 0 60px rgba(100, 160, 255, 0.25) inset, 0 0 20px rgba(255, 255, 255, 0.3) inset;
+  animation: glassFlow 15s infinite ease-in-out;
 }
 
 .goods-card:hover {
-  border-radius: 18px;
-  opacity: 0.9;
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px var(--primary-gradient-light);
+  transform: perspective(1200px) rotateY(5deg) scale(1.08) translateY(-12px);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35), 0 0 50px rgba(160, 190, 255, 0.5) inset;
+}
+
+.goods-card:hover::before {
+  filter: blur(75px);
+  opacity: 1;
+  transform: translateY(-10px);
+  box-shadow: 0 0 180px rgba(160, 190, 255, 0.45);
+  animation: glassFlow 6s infinite ease-in-out;
 }
 
 .goods-title {

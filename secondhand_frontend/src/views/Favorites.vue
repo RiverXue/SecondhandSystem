@@ -101,7 +101,7 @@ const removeFavorite = async (goodsId: number) => {
 .page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: var(--text-color-primary);
+  color: var(--text-primary);
 }
 
 .loading,
@@ -146,14 +146,18 @@ const removeFavorite = async (goodsId: number) => {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
-  border-radius: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
   box-shadow: var(--glass-shadow);
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .favorite-item:hover {
+  transform: perspective(1000px) rotateY(1deg) scale(1.01);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   border-color: rgba(255, 255, 255, 0.2);
-  box-shadow: var(--glass-shadow);
 }
 
 .item-link {

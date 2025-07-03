@@ -154,7 +154,9 @@ const handleReplySent = async () => {
   box-shadow: var(--glass-shadow);
   border-radius: 20px;
   margin-bottom: 30px;
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
 }
 
 .message-board-header {

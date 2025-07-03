@@ -88,6 +88,9 @@ const goToRegister = () => {
   background: var(--glass-bg);
   backdrop-filter: blur(16px);
   box-shadow: var(--glass-shadow);
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
 }
 
 .title {
@@ -95,6 +98,7 @@ const goToRegister = () => {
   margin-bottom: 20px;
   color: var(--text-primary);
   font-size: 24px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .el-input {

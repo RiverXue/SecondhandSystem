@@ -68,6 +68,14 @@ const goToEdit = () => {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 20px;
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
+  animation: var(--glass-animation);
 }
 
 .page-title {

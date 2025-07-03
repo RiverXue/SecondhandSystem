@@ -132,7 +132,8 @@
 
       <!-- 快捷提问按钮区域 -->
       <div class="quick-reply-buttons">
-        <el-button v-for="(item, index) in quickReplies" :key="index" @click="handleQuickReply(item)" size="small" class="quick-reply-btn">
+        <el-button v-for="(item, index) in quickReplies" :key="index" class="quick-reply-btn" size="small"
+                   @click="handleQuickReply(item)">
           {{ item.question }}
         </el-button>
       </div>
@@ -199,9 +200,9 @@ const onImageError = (e: Event) => {
 
 const inputMessage = ref('');
 const quickReplies = [
-  { question: "天气很热，我想要买个风扇", answer: "风扇" },
-  { question: "有iPhone吗？", answer: "iPhone" },
-  { question: "有下酒菜吗？", answer: "酒鬼花生" }
+  {question: "天气很热，我想要买个风扇", answer: "风扇"},
+  {question: "有iPhone吗？", answer: "iPhone"},
+  {question: "有下酒菜吗？", answer: "酒鬼花生"}
 ];
 
 const handleQuickReply = (item: { question: string, answer: string }) => {
@@ -264,6 +265,8 @@ watch(() => props.visible, (newVal) => {
 
 <style scoped>
 .chat-container {
+  perspective: 1000px;
+
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -284,6 +287,13 @@ watch(() => props.visible, (newVal) => {
 }
 
 ::v-deep .el-dialog {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
   background: var(--glass-bg) !important;
   border: var(--glass-border) !important;
   box-shadow: var(--glass-shadow) !important;
@@ -327,6 +337,14 @@ watch(() => props.visible, (newVal) => {
 
 
 .message-bubble {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  background-image: var(--glass-highlight);
+  transition: var(--glass-transition);
+  position: relative;
+  overflow: hidden;
   position: relative;
   padding: 10px 15px;
   border-radius: 18px;
@@ -401,6 +419,12 @@ watch(() => props.visible, (newVal) => {
 }
 
 .input-area {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: var(--glass-transition);
+
   display: flex;
   gap: 10px;
   padding: 10px;
@@ -446,6 +470,13 @@ watch(() => props.visible, (newVal) => {
 }
 
 .goods-item {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  transition: var(--glass-transition);
+  position: relative;
+
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
   border: var(--glass-border);
@@ -528,29 +559,29 @@ watch(() => props.visible, (newVal) => {
 </style>
 
 const quickReplies = [
-  "天气很热，我想要买个风扇",
-  "有iPhone吗？",
-  "有下酒菜吗？"
+"天气很热，我想要买个风扇",
+"有iPhone吗？",
+"有下酒菜吗？"
 ];
 
 const handleQuickReply = (text) => {
-  inputMessage.value = text;
-  handleSendMessage();
+inputMessage.value = text;
+handleSendMessage();
 };
 
 .quick-reply-buttons {
-  padding: 0 10px 10px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+padding: 0 10px 10px;
+display: flex;
+gap: 8px;
+flex-wrap: wrap;
 }
 
 .quick-reply-btn {
-  background-color: var(--glass-bg);
-  color: var(--primary-blue);
-  border: 1px solid var(--border-color);
+background-color: var(--glass-bg);
+color: var(--primary-blue);
+border: 1px solid var(--border-color);
 }
 
 .quick-reply-btn:hover {
-  background-color: var(--primary-light-bg);
+background-color: var(--primary-light-bg);
 }

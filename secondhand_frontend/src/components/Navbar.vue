@@ -115,10 +115,14 @@ const handleLogout = async () => {
   top: 0;
   z-index: 100;
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: var(--glass-backdrop);
+  background-image: var(--glass-highlight);
   padding: 0 20px;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0 5px 12px var(--primary-gradient-light), 0 1px 0 var(--primary-gradient-light) inset;
+  box-shadow: var(--glass-shadow);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
+  border: var(--glass-border);
 }
 
 

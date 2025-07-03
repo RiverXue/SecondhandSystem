@@ -258,11 +258,14 @@ const handleUpdateProfile = async () => {
   border: var(--glass-border);
   border-radius: 20px;
   box-shadow: var(--glass-shadow);
-  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
 }
 
 .glass-card:hover {
-  border-color: var(--glass-border);
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 .user-card {
@@ -323,5 +326,13 @@ const handleUpdateProfile = async () => {
   font-size: 24px;
   margin-bottom: 20px;
   color: var(--text-primary);
+}
+
+::v-deep .el-tabs__item {
+  color: var(--text-primary) !important;
+}
+
+::v-deep .el-tabs__item.is-active {
+  color: var(--primary-blue) !important;
 }
 </style>

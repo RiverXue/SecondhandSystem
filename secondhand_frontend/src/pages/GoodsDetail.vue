@@ -285,6 +285,13 @@ const getImageUrl = (imagePath: string | undefined) => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: var(--glass-border);
+  border-radius: 20px;
+  background-image: var(--glass-highlight);
+  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
+  transition: var(--glass-transition);
 }
 
 .carousel-img-wrapper {
@@ -448,6 +455,11 @@ const getImageUrl = (imagePath: string | undefined) => {
   display: flex;
   gap: 15px;
   margin-top: 20px;
+  background: var(--glass-bg);
+  padding: 15px;
+  border-radius: 12px;
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
 }
 
 .favorite-btn {

@@ -75,7 +75,6 @@
     --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(255, 255, 255, 0.08) inset, 0 4px 10px rgba(54, 144, 255, 0.1) inset;
     --glass-backdrop: blur(50px);
     --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.08) 100%);
-    --glass-scale: 1;
     --glass-distortion: 1deg;
     --glass-transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 

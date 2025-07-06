@@ -376,7 +376,7 @@ const handleComplete = async (orderId: number) => {
   border-radius: 20px;
   box-shadow: var(--glass-shadow);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 10px rgba(255, 255, 255, 0.3) inset;
-
+  margin: 20px;
   background-image: var(--glass-highlight);
   transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
   transition: var(--glass-transition);
@@ -461,7 +461,7 @@ const handleComplete = async (orderId: number) => {
 }
 
 .total-amount {
-  margin: 20px 0;
+  margin: 20px;
   padding: 15px;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-backdrop);
@@ -470,7 +470,6 @@ const handleComplete = async (orderId: number) => {
   text-align: right;
   font-size: 18px;
   box-shadow: var(--glass-shadow);
-  background-image: var(--glass-highlight);
   transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
   transition: var(--glass-transition);
 }

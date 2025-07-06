@@ -8,22 +8,17 @@
     background-color: var(--background);
 
     /* iOS 26液态玻璃UI设计变量 - 增强版 */
-    --glass-bg: rgba(255, 255, 255, 0.65);
-    --glass-border: 1px solid rgba(255, 255, 255, 0.2);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 2px 10px rgba(255, 255, 255, 0.3) inset;
-    --glass-backdrop: blur(35px);
-    --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
-    --glass-scale: 1;
-    --glass-distortion: 0deg;
-    --glass-transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-    --glass-animation: glassFloat 5s ease-in-out infinite;
     --glass-bg: rgba(255, 255, 255, 0.35);
-    --glass-border: 1px solid rgba(255, 255, 255, 0.4);
-    --glass-shadow: 0 18px 50px rgba(0, 0, 0, 0.25), 0 10px 25px rgba(255, 255, 255, 0.3) inset;
-    --glass-backdrop: blur(65px);
-    --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.25) 100%);
-    --glass-gradient-blue: linear-gradient(135deg, rgba(22, 119, 255, 0.8) 0%, rgba(9, 105, 218, 0.8) 100%);
-    --glass-gradient-orange: linear-gradient(135deg, rgba(255, 125, 0, 0.8) 0%, rgba(255, 149, 53, 0.8) 100%);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.18), 0 8px 20px rgba(255, 255, 255, 0.25) inset, 0 4px 10px rgba(100, 160, 255, 0.15) inset;
+    --glass-backdrop: blur(50px);
+    --glass-highlight: linear-gradient(0deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(100, 160, 255, 0.1) 100%);
+    --glass-distortion: 1deg;
+    --glass-transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    --glass-animation: glassFloat 8s ease-in-out infinite;
+    --glass-gradient-blue: linear-gradient(0deg, rgba(22, 119, 255, 0.8) 0%, rgba(9, 105, 218, 0.8) 100%);
+    --glass-gradient-orange: linear-gradient(0deg, rgba(255, 125, 0, 0.8) 0%, rgba(255, 149, 53, 0.8) 100%);
 
     /* 交易信任感配色方案 */
     --primary-blue: #1677FF;
@@ -45,7 +40,7 @@
     --warning-bg-color: rgba(254, 243, 199, 0.3);
     --warning-text-color: #854d0e;
     --text-primary: #1D2129;
-    --text-secondary: #020202;
+    --text-secondary: #4E5969;
     --background: #F0F5FF;
     --surface: #FFFFFF;
     --border-light: rgba(22, 119, 255, 0.15);
@@ -75,19 +70,14 @@
     background-color: var(--background);
 
     /* iOS 26液态玻璃UI设计变量 - 暗黑模式增强版 */
-    --glass-bg: rgba(30, 30, 30, 0.65);
-    --glass-border: 1px solid rgba(60, 60, 60, 0.4);
-    --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(255, 255, 255, 0.05) inset;
-    --glass-backdrop: blur(35px);
-    --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%);
-    --glass-distortion: 0deg;
-    --glass-scale: 1;
-    --glass-transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
     --glass-bg: rgba(15, 23, 42, 0.7);
     --glass-border: 1px solid rgba(120, 120, 120, 0.7);
-    --glass-shadow: 0 18px 50px rgba(0, 0, 0, 0.7), 0 10px 25px rgba(255, 255, 255, 0.12) inset;
-    --glass-backdrop: blur(65px);
+    --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.5), 0 8px 20px rgba(255, 255, 255, 0.08) inset, 0 4px 10px rgba(54, 144, 255, 0.1) inset;
+    --glass-backdrop: blur(50px);
     --glass-highlight: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.08) 100%);
+    --glass-scale: 1;
+    --glass-distortion: 1deg;
+    --glass-transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 
     /* 交易信任感配色方案 - 暗黑模式 */
     --primary-blue: #3690FF;
@@ -166,7 +156,7 @@ button:focus-visible {
         transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale)) translateY(0) rotateX(0.5deg);
     }
     50% {
-        transform: perspective(1000px) rotateY(calc(var(--glass-distortion) * -1)) scale(var(--glass-scale)) translateY(-8px) rotateX(-0.5deg);
+        transform: perspective(1000px) rotateY(calc(var(--glass-distortion) * -1)) scale(1.01) translateY(-8px) rotateX(-0.5deg);
     }
 }
 

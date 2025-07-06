@@ -160,7 +160,6 @@ const handleShowAiChat = () => {
   box-shadow: var(--glass-shadow);
   margin: 7px 0 23px 0;
   position: relative;
-  background-image: var(--glass-highlight);
   transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
   transition: var(--glass-transition);
   overflow: hidden;

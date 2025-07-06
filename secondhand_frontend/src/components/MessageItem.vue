@@ -27,8 +27,10 @@
         ></textarea>
         <div class="reply-input-footer">
           <span class="reply-char-count">{{ replyContent.length }}/100</span>
+          <span class="space">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
           <el-button
               :disabled="!replyContent.trim() || replyLoading || replyContent.length > 100"
+              class="reply-button"
               size="small"
               type="primary"
               @click="submitReply"
@@ -143,6 +145,7 @@ const submitReply = async () => {
   font-size: 14px;
   line-height: 1.5;
   max-width: 80%;
+  border: 1px solid var(--border-color);
 }
 
 /* 回复样式 */
@@ -218,7 +221,23 @@ const submitReply = async () => {
 
   .reply-char-count {
     font-size: 12px;
+    margin-left: 120px;
     color: var(--text-secondary);
+  }
+
+  .reply-button {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 10px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .space {
+    margin: 0 20px;
   }
 }
 </style>

@@ -285,13 +285,8 @@ const getImageUrl = (imagePath: string | undefined) => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-backdrop);
-  border: var(--glass-border);
+  background: var(--glass-bg); // 背景颜色
   border-radius: 20px;
-  background-image: var(--glass-highlight);
-  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
-  transition: var(--glass-transition);
 }
 
 .carousel-img-wrapper {
@@ -460,6 +455,7 @@ const getImageUrl = (imagePath: string | undefined) => {
   border-radius: 12px;
   border: var(--glass-border);
   box-shadow: var(--glass-shadow);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0), 0 2px 10px rgba(255, 255, 255, 0.3) inset
 }
 
 .favorite-btn {

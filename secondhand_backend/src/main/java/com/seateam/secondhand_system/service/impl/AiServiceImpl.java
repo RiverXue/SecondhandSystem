@@ -44,6 +44,7 @@ public class AiServiceImpl implements AiService {
      */
     @Override
     public Result chat(AiChatRequest request) {
+        // 获取历史对话（上下文）
         // 1. 查询历史对话 - 使用会话ID从数据库获取之前的对话记录，按时间排序
         List<AiChat> historyChats = aiChatMapper.selectList(
                 new QueryWrapper<AiChat>()  // 使用QueryWrapper构建查询条件
@@ -51,7 +52,7 @@ public class AiServiceImpl implements AiService {
                         .orderByAsc("create_time")  // 按创建时间升序排序
         );
 
-        // 2. 构建消息列表
+        // 2. 构建消息列表，构造上下文格式
         List<Map<String, String>> messages = new ArrayList<>();  // 用于存储多轮对话上下文
         for (AiChat chat : historyChats) {  // 遍历历史对话记录
             messages.add(Map.of("role", "user", "content", chat.getMessage()));  // 将用户消息加入上下文

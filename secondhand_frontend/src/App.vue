@@ -32,10 +32,10 @@ onUnmounted(() => {
 
 <style scoped>
 .app-container {
-  background-color: var(--app-bg-color);
+  background-color: var(--glass-bg);
   min-height: 100vh;
-  border: var(--app-border);
-  box-shadow: var(--app-box-shadow);
+  border: rgba(40, 190, 215, 0.09) 1px solid;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.17), 0 1px 0 rgba(22, 119, 255, 0.1) inset;
   border-radius: 16px;
 }
 

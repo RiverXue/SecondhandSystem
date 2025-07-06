@@ -481,18 +481,6 @@ const handleComplete = async (orderId: number) => {
   margin-left: 8px;
 }
 
-::v-deep .el-tabs__item {
-  color: var(--text-primary) !important;
-}
-
-::v-deep .el-tabs__item.is-active {
-  color: var(--primary-blue) !important;
-}
-
-.total-label {
-  color: var(--text-secondary);
-}
-
 .status-pending {
   background: var(--warning-bg-color);
   color: var(--warning-text-color);

@@ -290,7 +290,6 @@ const retryUpload = async (file: any) => {
   background-image: var(--glass-highlight);
   transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
   transition: var(--glass-transition);
-  animation: var(--glass-animation);
   overflow: hidden;
 }
 

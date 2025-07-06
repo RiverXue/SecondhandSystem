@@ -32,27 +32,31 @@ public class DeepSeekApiClient {
      * @return AI生成的回复内容字符串
      */
     public String chat(List<Map<String, String>> messages) {
+        // 准备 URL 和日志打印
         String url = deepSeekConfig.getEndpoint();
         System.out.println("调用DeepSeek接口URL: [" + url + "]");
 
-        // 请求体封装 - 构建符合DeepSeek API要求的请求参数
+        // 构造请求体 - 构建符合DeepSeek API要求的请求参数
         Map<String, Object> payload = new HashMap<>();
         payload.put("model", "deepseek-v3");
         payload.put("input", Map.of("messages", messages));
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        // 设置请求头 headers
+        HttpHeaders headers = new HttpHeaders();  // 创建HttpHeaders对象
+        headers.setContentType(MediaType.APPLICATION_JSON);  // 设置请求体类型为JSON
         headers.setBearerAuth(deepSeekConfig.getApiKey()); // 使用Bearer Token认证
+        /*发送 HTTP 请求
+          用 RestTemplate 发 POST 请求，把刚才构造的请求体和请求头发给 DeepSeek。
+          结果返回的是 Map 类型，包含了 AI 的完整响应。
+         */
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);  // 使用HttpEntity封装请求体
-
         ResponseEntity<Map> response = restTemplate.postForEntity(url, entity, Map.class);  // 发送POST请求
         System.out.println("DeepSeek API响应: " + response.getBody());  // 打印API响应
 
         // 解析返回数据 - 从API响应中提取AI生成的回复内容
-        Map<String, Object> output = (Map<String, Object>) response.getBody().get("output");  // 提取output字段
+        Map<String, Object> output = (Map<String, Object>) response.getBody().get("output");  // 从响应中取出 output 字段
         List<Map<String, Object>> respMessages = (List<Map<String, Object>>) output.get("choices");  // 提取choices字段
-        Map<String, Object> firstChoice = respMessages.get(0);  // 取第一个选择
-        Map<String, String> messageMap = (Map<String, String>) firstChoice.get("message");  // 提取message字段
+        Map<String, Object> firstChoice = respMessages.get(0);  // 拿数组中第一个 message
+        Map<String, String> messageMap = (Map<String, String>) firstChoice.get("message");  // 取出 content 字段，作为 AI 的回复文本。
         return messageMap.get("content");  // 返回content字段
     }
 

@@ -310,6 +310,8 @@ const getImageUrl = (imagePath: string | undefined) => {
   border-radius: 8px;
   margin-bottom: 30px;
   background-color: var(--bg-color) !important;
+  background-image: var(--glass-highlight);
+
 }
 
 ::v-deep .el-card__body {

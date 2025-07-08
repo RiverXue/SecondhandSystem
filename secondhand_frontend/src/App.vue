@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
+    <!-- 导航栏响应式切换逻辑 -->
+    <!-- 当屏幕宽度 >= 768px 时显示顶部导航栏 -->
     <Navbar v-if="!isMobile"/>
+    <!-- 当屏幕宽度 < 768px 时显示底部导航栏 -->
     <BottomNavbar v-else/>
     <transition name="glass-fade">
       <router-view v-slot="{ Component }">
@@ -15,8 +18,12 @@ import {onMounted, onUnmounted, ref} from 'vue';
 import Navbar from "./components/Navbar.vue"
 import BottomNavbar from "./components/BottomNavbar.vue"
 
+// 响应式导航栏状态变量
+// 根据窗口宽度判断设备类型，小于768px为移动设备
 const isMobile = ref(window.innerWidth < 768);
 
+// 窗口大小变化处理函数
+// 当窗口宽度改变时更新设备类型状态
 const handleResize = () => {
   isMobile.value = window.innerWidth < 768;
 };

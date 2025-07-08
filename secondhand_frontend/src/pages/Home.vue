@@ -163,6 +163,8 @@ const handleShowAiChat = () => {
   transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
   transition: var(--glass-transition);
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .search-container::after {

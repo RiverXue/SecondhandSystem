@@ -4,6 +4,7 @@
       :close-on-click-modal="false"
       :model-value="visible"
       :show-close="true"
+      append-to-body
       title="AI智能助手"
       width="420px"
       @update:model-value="(val) => emit('update:visible', val)"
@@ -266,59 +267,10 @@ watch(() => props.visible, (newVal) => {
 <style scoped>
 .chat-container {
   perspective: 1000px;
-
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--glass-bg) !important;
-}
-
-::v-deep .el-dialog__header {
-  background: var(--glass-bg) !important;
-}
-
-::v-deep .el-dialog__body {
-  background: var(--glass-bg) !important;
-  padding: 0 !important;
-}
-
-::v-deep .el-dialog__footer {
-  background: var(--glass-bg) !important;
-}
-
-::v-deep .el-dialog {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-backdrop);
-  border: var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  background-image: var(--glass-highlight);
-  transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale));
-  transition: var(--glass-transition);
-  background: var(--glass-bg) !important;
-  border: var(--glass-border) !important;
-  box-shadow: var(--glass-shadow) !important;
-  backdrop-filter: var(--glass-backdrop) !important;
-}
-
-::v-deep .el-dialog * {
-  background: inherit !important;
-  border-color: inherit !important;
-}
-
-::v-deep .el-dialog__wrapper {
-  background: transparent !important;
-}
-
-::v-deep .el-dialog__mask {
-  background: transparent !important;
-}
-
-::v-deep .el-scrollbar__wrap {
-  background: transparent !important;
-}
-
-::v-deep .el-overlay {
-  background: transparent !important;
+  background: var(--glass-bg) !important
 }
 
 .chat-messages {
@@ -424,7 +376,6 @@ watch(() => props.visible, (newVal) => {
   border: var(--glass-border);
   box-shadow: var(--glass-shadow);
   transition: var(--glass-transition);
-
   display: flex;
   gap: 10px;
   padding: 10px;
@@ -434,12 +385,6 @@ watch(() => props.visible, (newVal) => {
 
 .message-input {
   flex: 1;
-}
-
-::v-deep .el-textarea__inner {
-  background: var(--glass-bg) !important;
-  border-color: var(--border-color) !important;
-  color: var(--text-primary) !important;
 }
 
 .send-button {
@@ -485,6 +430,7 @@ watch(() => props.visible, (newVal) => {
   transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
   cursor: pointer;
+  transition: all 0.2s ease;
   padding: 8px;
   height: 180px;
   display: flex;
@@ -557,31 +503,3 @@ watch(() => props.visible, (newVal) => {
   }
 }
 </style>
-
-const quickReplies = [
-"天气很热，我想要买个风扇",
-"有iPhone吗？",
-"有下酒菜吗？"
-];
-
-const handleQuickReply = (text) => {
-inputMessage.value = text;
-handleSendMessage();
-};
-
-.quick-reply-buttons {
-padding: 0 10px 10px;
-display: flex;
-gap: 8px;
-flex-wrap: wrap;
-}
-
-.quick-reply-btn {
-background-color: var(--glass-bg);
-color: var(--primary-blue);
-border: 1px solid var(--border-color);
-}
-
-.quick-reply-btn:hover {
-background-color: var(--primary-light-bg);
-}

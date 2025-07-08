@@ -7,7 +7,17 @@
     color: var(--text-primary);
     background-color: var(--background);
 
-    /* iOS 26液态玻璃UI设计变量 - 增强版 */
+    /* iOS 26液态玻璃UI设计变量 - 增强版
+   这些变量控制玻璃态元素的视觉效果，实现现代毛玻璃效果
+   - --glass-bg: 背景颜色，使用rgba实现半透明效果
+   - --glass-border: 边框样式，半透明白色边框增强玻璃质感
+   - --glass-shadow: 多层次阴影效果，内外阴影结合增强立体感
+   - --glass-backdrop: 背景模糊效果，实现毛玻璃核心效果
+   - --glass-highlight: 高光渐变，增强玻璃的反光效果
+   - --glass-distortion: 透视变形角度，增强3D效果
+   - --glass-transition: 过渡动画参数，控制状态变化的平滑度
+   - --glass-animation: 浮动动画，使玻璃元素有轻微的悬浮效果
+   - --glass-gradient-blue/orange: 功能性渐变背景，用于特殊状态提示 */
     --glass-bg: rgba(255, 255, 255, 0.35);
     --glass-border: 1px solid rgba(255, 255, 255, 0.5);
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
@@ -20,7 +30,13 @@
     --glass-gradient-blue: linear-gradient(0deg, rgba(22, 119, 255, 0.8) 0%, rgba(9, 105, 218, 0.8) 100%);
     --glass-gradient-orange: linear-gradient(0deg, rgba(255, 125, 0, 0.8) 0%, rgba(255, 149, 53, 0.8) 100%);
 
-    /* 交易信任感配色方案 */
+    /* 交易信任感配色方案 - 主色调系统
+   基于蓝色系构建，传达信任、专业和安全感
+   - 主色: --primary-blue (标准蓝)、--primary-dark (深蓝)、--primary-light (浅蓝)
+   - 辅助色: 橙色(--secondary-orange)用于警告/提示，绿色(--secondary-green)用于成功状态
+   - 功能色: 危险(--danger-color)、成功(--success-text-color)、信息(--info-text-color)、警告(--warning-text-color)
+   - 文本色: --text-primary (主要文本)、--text-secondary (次要文本)
+   - 背景色: --background (页面背景)、--surface (卡片背景) */
     --primary-blue: #1677FF;
     --primary-dark: #0969DA;
     --primary-light: #E8F3FF;
@@ -64,7 +80,10 @@
     --primary-blue-transparent: rgba(22, 119, 255, 0.8);
 }
 
-/* 暗黑主题变量 */
+/* 暗黑主题变量 - 夜间模式适配
+   优化低光环境下的视觉体验，减少眼部疲劳
+   所有变量与浅色模式一一对应，但采用更深的色调和更高的对比度
+   玻璃态效果在暗黑模式下更强调边框和内部发光效果 */
 .dark {
     color: var(--text-primary);
     background-color: var(--background);
@@ -134,6 +153,7 @@ button {
     will-change: transform, opacity;
 }
 
+
 button:hover {
     background-color: var(--primary-dark);
     transform: scale(1.05) perspective(1000px) rotateY(2deg);
@@ -150,6 +170,10 @@ button:focus-visible {
     outline: 2px solid var(--border-focus);
 }
 
+/* 玻璃态浮动动画 - 微妙的悬浮效果
+   模拟轻薄物体在空气中轻微浮动的物理效果
+   结合透视变换和Y轴旋转，增强3D空间感
+   周期为8秒，缓动函数为ease-in-out，实现自然流畅的动画 */
 @keyframes glassFloat {
     0%, 100% {
         transform: perspective(1000px) rotateY(var(--glass-distortion)) scale(var(--glass-scale)) translateY(0) rotateX(0.5deg);
@@ -159,6 +183,10 @@ button:focus-visible {
     }
 }
 
+/* 玻璃态流动动画 - 背景渐变流动效果
+   通过改变背景位置实现渐变色彩的流动感
+   模拟光线在玻璃表面流动的视觉效果
+   周期为15秒，创造缓慢而持续的变化 */
 @keyframes glassFlow {
     0% {
         background-position: 0% 0%, 100% 100%;

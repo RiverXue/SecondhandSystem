@@ -114,11 +114,37 @@
       </el-tab-pane>
     </el-tabs>
   </div>
+  <!-- 支付弹窗 -->
+  <el-dialog v-model="payDialogVisible" title="选择支付方式" width="30%">
+    <div class="payment-methods">
+      <el-radio-group v-model="selectedPaymentMethod" class="payment-radio-group">
+        <el-radio class="payment-radio" label="alipay">
+          <span>支付宝支付</span>
+        </el-radio>
+        <el-radio class="payment-radio" label="wechat">
+          <span>微信支付</span>
+        </el-radio>
+      </el-radio-group>
+
+      <div class="qr-code-container">
+        <img v-if="selectedPaymentMethod === 'alipay'" :src="ali" alt="支付宝收款码"
+             class="qr-code-img">
+        <img v-else :src="wechatQr" alt="微信收款码" class="qr-code-img">
+        <p class="qr-tip">请使用{{ selectedPaymentMethod === 'alipay' ? '支付宝' : '微信' }}扫描二维码支付</p>
+      </div>
+    </div>
+    <template #footer>
+      <el-button @click="payDialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="confirmPayment">确认支付</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
+import ali from '../assets/alipay-qr.png';
+import wechatQr from '../assets/wechat-qr.png';
 import {computed, onMounted, ref, watch} from 'vue';
-import {ElMessage, ElMessageBox} from 'element-plus';
+import {ElMessage, ElMessageBox, ElRadio, ElRadioGroup} from 'element-plus';
 import {useOrderStore} from '../store/order';
 import {useUserStore} from '../store/user';
 import defaultGoodsImage from '../assets/codelogo.png';
@@ -217,12 +243,26 @@ const formatDate = (dateString: string) => {
   return date.toLocaleString();
 };
 
+// 支付弹窗状态
+const payDialogVisible = ref(false);
+const selectedPaymentMethod = ref('alipay');
+const currentOrderId = ref(0);
+
 // 处理支付
 const handlePay = async (orderId: number) => {
+  currentOrderId.value = orderId;
+  payDialogVisible.value = true;
+};
+
+// 确认支付
+const confirmPayment = async () => {
   try {
-    await orderStore.payOrder(orderId);
+    payDialogVisible.value = false;
+    await orderStore.payOrder(currentOrderId.value);
+    ElMessage.success('支付成功');
   } catch (error) {
     console.error('支付失败:', error);
+    ElMessage.error('支付失败，请重试');
   }
 };
 
@@ -555,4 +595,36 @@ const handleComplete = async (orderId: number) => {
   color: var(--danger-color);
   font-weight: bold;
 }
+
+.payment-methods {
+  padding: 20px 0;
+}
+
+.payment-radio-group {
+  margin-bottom: 20px;
+}
+
+.payment-radio {
+  display: block;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.qr-code-container {
+  text-align: center;
+  padding: 20px;
+}
+
+.qr-code-img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.qr-tip {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
 </style>

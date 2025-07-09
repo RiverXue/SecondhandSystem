@@ -16,7 +16,7 @@
         <router-link :to="`/goods/detail/${goods.id}`" class="goods-link">
           <div class="goods-image">
             <img :src="getImageUrl(goods.image) || defaultGoodsImage" alt="{{ goods.title }}" class="goods-img">
-            <div v-if="goods.status === 'sold'" class="sold-overlay">
+            <div v-if="goods.status === 1" class="sold-overlay">
               <div class="sold-badge">已售出</div>
             </div>
           </div>

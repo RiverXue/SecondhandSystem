@@ -4,6 +4,7 @@ import com.seateam.secondhand_system.common.Result;
 import com.seateam.secondhand_system.entity.Goods;
 import com.seateam.secondhand_system.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -69,5 +70,27 @@ public class GoodsController {
             @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         return goodsService.searchGoods(keyword, pageNum, pageSize);
+    }
+
+    /**
+     * 获取用户发布的商品列表
+     * 用于前台我的发布页面
+     */
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/my-published")
+    public Result getMyPublishedGoods(
+            @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+        return goodsService.getMyPublishedGoods(pageNum, pageSize);
+    }
+
+    /**
+     * 删除商品
+     * 用于前台删除我的发布商品
+     */
+    @PreAuthorize("isAuthenticated()")
+    @DeleteMapping("/{id}")
+    public Result deleteGoods(@PathVariable Long id) {
+        return goodsService.deleteGoods(id);
     }
 }

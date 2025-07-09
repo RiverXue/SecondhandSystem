@@ -8,12 +8,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seateam.secondhand_system.common.Result;
 import com.seateam.secondhand_system.common.utils.FileUploadUtils;
 import com.seateam.secondhand_system.common.utils.JwtUtils;
+import com.seateam.secondhand_system.entity.Favorite;
 import com.seateam.secondhand_system.entity.Goods;
+import com.seateam.secondhand_system.entity.Message;
+import com.seateam.secondhand_system.entity.Order;
+import com.seateam.secondhand_system.mapper.FavoriteMapper;
 import com.seateam.secondhand_system.mapper.GoodsMapper;
+import com.seateam.secondhand_system.mapper.MessageMapper;
+import com.seateam.secondhand_system.mapper.OrderMapper;
 import com.seateam.secondhand_system.service.GoodsService;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +53,17 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
 
     @Resource
     private ObjectMapper objectMapper;
+    /**
+     * 删除商品
+     */
+    @Autowired
+    private MessageMapper messageMapper;
+
+    @Autowired
+    private FavoriteMapper favoriteMapper;
+
+    @Autowired
+    private OrderMapper orderMapper;
 
     /**
      * 获取当前登录用户ID
@@ -225,6 +243,84 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
         IPage<Goods> goodsPage = goodsMapper.selectPage(page, queryWrapper);
 
         return Result.success().put("total", goodsPage.getTotal()).put("list", goodsPage.getRecords());
+    }
+
+    /**
+     * 获取用户发布的商品列表
+     */
+    @Override
+    public Result getMyPublishedGoods(Integer pageNum, Integer pageSize) {
+        // 1. 验证分页参数
+        if (pageNum == null || pageSize == null || pageNum < 1 || pageSize < 1) {
+            pageNum = 1;
+            pageSize = 10;
+        }
+
+        // 2. 获取当前用户ID
+        Long userId = getCurrentUserId();
+
+        // 3. 分页查询用户发布的商品（按发布时间倒序）
+        Page<Goods> page = new Page<>(pageNum, pageSize);
+        QueryWrapper<Goods> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        queryWrapper.orderByDesc("create_time");
+        IPage<Goods> goodsPage = goodsMapper.selectPage(page, queryWrapper);
+
+        return Result.success().put("total", goodsPage.getTotal()).put("list", goodsPage.getRecords());
+    }
+
+    public Result deleteGoods(Long id) {
+        try {
+            // 1. 验证商品ID
+            if (id == null) {
+                return Result.error("商品ID不能为空");
+            }
+
+            // 2. 查询商品是否存在
+            Goods goods = goodsMapper.selectById(id);
+            if (goods == null) {
+                return Result.error("商品不存在");
+            }
+
+            // 3. 验证当前用户是否为商品发布者
+            Long currentUserId = getCurrentUserId();
+            if (!currentUserId.equals(goods.getUserId())) {
+                return Result.error("没有权限删除该商品");
+            }
+
+            // 4. 删除关联的留言记录
+            QueryWrapper<Message> messageQueryWrapper = new QueryWrapper<>();
+            messageQueryWrapper.eq("goods_id", id);
+            messageMapper.delete(messageQueryWrapper);
+            log.info("删除商品关联的留言记录成功，商品ID: {}", id);
+
+            // 删除关联的收藏记录
+            QueryWrapper<Favorite> favoriteQueryWrapper = new QueryWrapper<>();
+            favoriteQueryWrapper.eq("goods_id", id);
+            favoriteMapper.delete(favoriteQueryWrapper);
+            log.info("删除商品关联的收藏记录成功，商品ID: {}", id);
+
+            // 删除关联的订单记录
+            QueryWrapper<Order> orderQueryWrapper = new QueryWrapper<>();
+            orderQueryWrapper.eq("goods_id", id);
+            orderMapper.delete(orderQueryWrapper);
+            log.info("删除商品关联的订单记录成功，商品ID: {}", id);
+
+            // 4. 执行删除操作
+            int rows = goodsMapper.deleteById(id);
+            if (rows > 0) {
+                log.info("商品删除成功，ID: {}", id);
+                return Result.success("商品删除成功");
+            } else {
+                return Result.error("商品删除失败");
+            }
+        } catch (RuntimeException e) {
+            log.error("商品删除失败", e);
+            return Result.error("商品删除失败：" + e.getMessage());
+        } catch (Exception e) {
+            log.error("商品删除失败", e);
+            return Result.error("商品删除失败：系统异常");
+        }
     }
 }
 

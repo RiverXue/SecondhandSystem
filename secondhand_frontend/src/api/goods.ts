@@ -54,3 +54,22 @@ export const getFavoriteList = async () => {
         return [];
     }
 }
+
+/**
+ * 获取我的发布商品列表
+ * @param pageNum 页码
+ * @param pageSize 每页条数
+ * @returns 商品列表
+ */
+export const getMyPublishedGoods = (pageNum: number, pageSize: number) => {
+    return request.get('/goods/my-published', { params: { pageNum, pageSize } });
+}
+
+/**
+ * 删除商品
+ * @param id 商品ID
+ * @returns 删除结果
+ */
+export const deleteGoods = (id: number) => {
+    return request.delete(`/goods/${id}`);
+};

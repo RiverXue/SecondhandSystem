@@ -8,6 +8,7 @@ const Publish = () => import('../pages/Publish.vue')
 const UserProfile = () => import('../views/UserProfile.vue')
 const Favorites = () => import('../views/Favorites.vue')
 const OrderList = () => import('../views/OrderList.vue')
+const MyPublished = () => import('../pages/MyPublished.vue')
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', component: Home },
@@ -18,7 +19,8 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/publish', component: Publish },
   { path: '/user/profile', name: 'UserProfile', component: UserProfile, meta: { requiresAuth: true } },
   { path: '/favorites', name: 'Favorites', component: Favorites, meta: { requiresAuth: true } },
-  { path: '/orders', name: 'OrderList', component: OrderList, meta: { requiresAuth: true } }
+  { path: '/orders', name: 'OrderList', component: OrderList, meta: { requiresAuth: true } },
+  { path: '/my-published', name: 'MyPublished', component: MyPublished, meta: { requiresAuth: true } }
 ]
 
 const router = createRouter({

@@ -11,6 +11,7 @@
       <el-menu-item index="/publish">发布商品</el-menu-item>
       <el-menu-item index="/favorites">我的收藏</el-menu-item>
       <el-menu-item index="/orders">我的交易</el-menu-item>
+      <el-menu-item index="/my-published">我的发布</el-menu-item>
     </el-menu>
 
     <div class="theme-switch">

@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import {getGoodsDetail, getGoodsList, searchGoods} from '../api/goods';
+import {getGoodsDetail, getGoodsList, searchGoods, getMyPublishedGoods, deleteGoods} from '../api/goods';
 import {addFavorite, getFavoriteList, removeFavorite} from '../api/favorite';
 
 /**
@@ -11,6 +11,8 @@ interface GoodsState {
     total: number;
     loading: boolean;
     favorites: number[];
+    myPublishedGoods: any[];
+    myPublishedTotal: number;
 }
 
 /**
@@ -27,7 +29,9 @@ export const useGoodsStore = defineStore('goods', {
         currentGoods: null,
         total: 0,
         loading: false,
-        favorites: []
+        favorites: [],
+        myPublishedGoods: [],
+        myPublishedTotal: 0
     }),
 
     actions: {
@@ -133,6 +137,42 @@ export const useGoodsStore = defineStore('goods', {
             } catch (error) {
                 console.error('取消收藏失败:', error);
                 throw error;
+            }
+        },
+
+        /**
+         * 获取我的发布商品列表
+         */
+        async fetchMyPublishedGoods({pageNum = 1, pageSize = 10}: { pageNum?: number; pageSize?: number }) {
+            this.loading = true;
+            try {
+                const res = await getMyPublishedGoods(pageNum, pageSize);
+                if (res.data && res.data.code === 200) {
+                    this.myPublishedGoods = res.data.data.list;
+                    this.myPublishedTotal = res.data.data.total;
+                }
+                return res.data;
+            } catch (error) {
+                console.error('获取我的发布商品列表失败:', error);
+                throw error;
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        /**
+         * 删除我的发布商品
+         */
+        async deleteMyPublishedGoods(goodsId: number) {
+            this.loading = true;
+            try {
+                const res = await deleteGoods(goodsId);
+                return res.data;
+            } catch (error) {
+                console.error('删除商品失败:', error);
+                throw error;
+            } finally {
+                this.loading = false;
             }
         }
     }

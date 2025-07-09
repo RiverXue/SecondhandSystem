@@ -75,7 +75,7 @@
     --warning-bg-color: rgba(245, 158, 11, 0.15);
     --warning-text-color: #2d1c04;
     --primary-gradient-light: rgba(64, 160, 255, 0.199);
-    --overlay-bg-color: rgba(0, 0, 0, 0.5);
+    --overlay-bg-color: rgba(0, 0, 0, 0.2);
     --text-on-primary: #FFFFFF;
     --primary-blue-transparent: rgba(22, 119, 255, 0.8);
 }

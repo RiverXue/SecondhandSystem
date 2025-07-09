@@ -47,4 +47,19 @@ public interface GoodsService extends IService<Goods> {
      * 发布商品（支持图片上传）
      */
     Result publishGoodsWithImages(String title, String description, BigDecimal price, String category, MultipartFile mainImage, MultipartFile[] images);
+
+    /**
+     * 获取用户发布的商品列表
+     * @param pageNum 页码
+     * @param pageSize 每页条数
+     * @return 商品分页列表
+     */
+    Result getMyPublishedGoods(Integer pageNum, Integer pageSize);
+
+    /**
+     * 删除商品
+     * @param id 商品ID
+     * @return 操作结果
+     */
+    Result deleteGoods(Long id);
 }

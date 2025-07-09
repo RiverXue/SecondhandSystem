@@ -6,12 +6,12 @@
       :show-close="true"
       append-to-body
       title="AI智能助手"
-      width="420px"
+      width="720px"
       @update:model-value="(val) => emit('update:visible', val)"
   >
     <div class="chat-container">
       <div class="chat-messages">
-        <el-scrollbar height="400px">
+        <el-scrollbar ref="scrollbarRef" height="400px">
           <div class="message-list">
             <!-- 欢迎消息 -->
             <div v-if="aiStore.messages.length === 0" class="welcome-message">
@@ -22,45 +22,12 @@
             <div v-for="(msg, index) in aiStore.messages" :key="index"
                  :class="['message-item', msg.isUser ? 'user-message' : 'ai-message']"
                  class="message-item">
-              <!--              <div :class="['message-bubble', msg.isUser ? 'user-message' : 'ai-message']">-->
-              <!--                &lt;!&ndash; 用户消息：纯文本 &ndash;&gt;-->
-              <!--                <div v-if="msg.isUser" class="message-content">{{ msg.content }}</div>-->
-
-              <!--                &lt;!&ndash; AI消息：Markdown渲染 &ndash;&gt;-->
-              <!--                <div v-else class="message-content" v-html="renderMarkdown(msg.content)"></div>-->
-
-              <!--                <div class="message-time">{{ formatTime(msg.timestamp) }}</div>-->
-              <!--              </div>-->
-              <!--              <div :class="['message-bubble', msg.isUser ? 'user-message' : 'ai-message']">-->
-              <!--                <div class="message-header">-->
-              <!--                  <span class="message-time">{{ formatTime(msg.timestamp) }}</span>-->
-              <!--                </div>-->
-              <!--                <div class="message-content">-->
-              <!--                  <div v-if="msg.isUser">{{ msg.content }}</div>-->
-              <!--                  <div v-else v-html="renderMarkdown(msg.content)"></div>-->
-              <!--                </div>-->
-              <!--              </div>-->
 
               <div :class="['message-item', msg.isUser ? 'user-message' : 'ai-message']">
                 <div class="message-row">
                   <div class="message-bubble">
                     <div v-if="msg.isUser">{{ msg.content }}</div>
-                    <!--                    <div v-else>-->
-                    <!--                      <div v-html="renderMarkdown(msg.content)"></div>-->
-                    <!--                      &lt;!&ndash; 推荐商品展示 &ndash;&gt;-->
-                    <!--                      <div v-if="!msg.isUser && msg.type === 'recommend'" class="recommended-goods">-->
-                    <!--                        <div class="goods-list">-->
-                    <!--                          <div v-for="goods in msg.content" :key="goods.id" class="goods-item">-->
-                    <!--                            <img :alt="goods.title" :src="getImageUrl(goods.image)" class="goods-image"-->
-                    <!--                                 @error="onImageError"/>-->
-                    <!--                            <div class="goods-info">-->
-                    <!--                              <h4 class="goods-title">{{ goods.title }}</h4>-->
-                    <!--                              <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>-->
-                    <!--                            </div>-->
-                    <!--                          </div>-->
-                    <!--                        </div>-->
-                    <!--                      </div>-->
-                    <!--                    </div>-->
+
                     <div v-else>
                       <!-- 推荐商品消息 -->
                       <template v-if="msg.type === 'recommend'">
@@ -167,10 +134,11 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, watch} from 'vue';
+import {nextTick, ref, watch} from 'vue';
 import {useRouter} from 'vue-router';
 import {useAiStore} from '../store/ai';
 import {useUserStore} from '../store/user';
+import type {ElScrollbar} from 'element-plus';
 import {ElMessage} from 'element-plus';
 import markdownIt from 'markdown-it';
 import defaultGoodsImage from '../assets/codelogo.png';
@@ -180,9 +148,9 @@ const md = new markdownIt();
 const props = defineProps<{ visible: boolean }>();
 const emit = defineEmits<{ (e: 'update:visible', value: boolean): void }>();
 
-// const getImageUrl = (filename?: string) => {
-//   return filename ? `http://localhost:7272/uploads/${filename}` : '/default-goods.jpg';
-// };
+// 用于拿到 el-scrollbar 实例
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar> | null>(null);
+
 const getImageUrl = (filename?: string) => {
   // 如果 filename 为空或是空字符串或为 null，返回默认图
   if (!filename || filename.trim() === '') {
@@ -212,7 +180,6 @@ const handleQuickReply = (item: { question: string, answer: string }) => {
 };
 const aiStore = useAiStore();
 const userStore = useUserStore();
-// const {messages, isLoading, recommendedGoods} = aiStore;
 const router = useRouter();
 
 watch(() => aiStore.recommendedGoods, (val) => {
@@ -249,19 +216,30 @@ const handleSendMessage = async () => {
   try {
     await aiStore.sendMessage(content);
     inputMessage.value = '';
-    setTimeout(() => {
-      const scrollContainer = document.querySelector('.el-scrollbar__wrap');
-      if (scrollContainer) scrollContainer.scrollTop = scrollContainer.scrollHeight;
-    }, 0);
   } catch (error) {
     console.error('发送消息失败:', error);
     ElMessage.error('消息发送失败，请稍后重试');
   }
 };
 
-watch(() => props.visible, (newVal) => {
-  if (!newVal) inputMessage.value = '';
-});
+// 自动滚动到底部
+const scrollToBottom = () => {
+  nextTick(() => {
+    const wrap = scrollbarRef.value?.wrapRef as HTMLElement;
+    if (wrap) {
+      wrap.scrollTop = wrap.scrollHeight;
+    }
+  });
+};
+
+
+// 监听消息数组变化
+watch(
+    () => aiStore.messages.length,
+    () => {
+      scrollToBottom();
+    }
+);
 </script>
 
 <style scoped>

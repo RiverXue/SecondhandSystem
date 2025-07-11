@@ -32,25 +32,54 @@
                       <!-- 推荐商品消息 -->
                       <template v-if="msg.type === 'recommend'">
                         <div class="recommended-goods">
-                          <div class="goods-list">
-                            <div
-                                v-for="goods in JSON.parse(msg.content)"
-                                :key="goods.id"
-                                class="goods-item"
-                                @click="gotoGoodsDetail(goods.id)"
-                            >
-                              <img
-                                  :alt="goods.title"
-                                  :src="getImageUrl(goods.image)"
-                                  class="goods-image"
-                                  @error="onImageError"
-                              />
-                              <div class="goods-info">
-                                <h4 class="goods-name">{{ goods.title }}</h4>
-                                <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>
+                          <!-- 个人数据类消息（我的发布/收藏/购买/卖出） -->
+                          <template v-if="JSON.parse(msg.content).title">
+                            <h3 class="section-title">{{ JSON.parse(msg.content).title }}</h3>
+                            <div class="goods-list" v-if="JSON.parse(msg.content).goods?.length > 0">
+                              <div
+                                  v-for="goods in JSON.parse(msg.content).goods"
+                                  :key="goods.id"
+                                  class="goods-item"
+                                  @click="gotoGoodsDetail(goods.id)"
+                              >
+                                <img
+                                    :alt="goods.title"
+                                    :src="getImageUrl(goods.image)"
+                                    class="goods-image"
+                                    @error="onImageError"
+                                />
+                                <div class="goods-info">
+                                  <h4 class="goods-name">{{ goods.title }}</h4>
+                                  <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>
+                                </div>
                               </div>
                             </div>
-                          </div>
+                            <p v-else class="no-data">{{ JSON.parse(msg.content).noDataMessage }}</p>
+                          </template>
+                          <!-- 推荐商品类消息 -->
+                          <template v-else>
+                            <h3 class="section-title">推荐商品</h3>
+                            <div class="goods-list" v-if="JSON.parse(msg.content).length > 0">
+                              <div
+                                  v-for="goods in JSON.parse(msg.content)"
+                                  :key="goods.id"
+                                  class="goods-item"
+                                  @click="gotoGoodsDetail(goods.id)"
+                              >
+                                <img
+                                    :alt="goods.title"
+                                    :src="getImageUrl(goods.image)"
+                                    class="goods-image"
+                                    @error="onImageError"
+                                />
+                                <div class="goods-info">
+                                  <h4 class="goods-name">{{ goods.title }}</h4>
+                                  <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <p v-else class="no-data">暂无推荐商品</p>
+                          </template>
                         </div>
                       </template>
 
@@ -263,8 +292,14 @@ const handleSendMessage = async () => {
     try {
       await favoriteStore.getFavoriteList();
       const favoriteList = favoriteStore.favorites.length > 0
-        ? JSON.stringify(favoriteStore.favorites)
-        : '[]';
+        ? JSON.stringify({
+            title: "您收藏的商品如下：",
+            goods: favoriteStore.favorites
+          })
+        : JSON.stringify({
+            title: "您暂无收藏商品",
+            goods: []
+          });
       aiStore.messages.push({
         content: favoriteList,
         isUser: false,
@@ -282,8 +317,14 @@ const handleSendMessage = async () => {
     try {
       await orderStore.getMyOrders();
       const orderList = orderStore.buyerOrders.length > 0
-        ? JSON.stringify(orderStore.buyerOrders)
-        : '[]';
+        ? JSON.stringify({
+            title: "您的购买订单如下：",
+            goods: orderStore.buyerOrders
+          })
+        : JSON.stringify({
+            title: "您暂无购买订单",
+            goods: []
+          });
       aiStore.messages.push({
         content: orderList,
         isUser: false,
@@ -301,8 +342,14 @@ const handleSendMessage = async () => {
     try {
       await orderStore.getSellerOrders();
       const sellList = orderStore.sellerOrders.length > 0
-        ? JSON.stringify(orderStore.sellerOrders)
-        : '[]';
+        ? JSON.stringify({
+            title: "您的卖出订单如下：",
+            goods: orderStore.sellerOrders
+          })
+        : JSON.stringify({
+            title: "您暂无卖出订单",
+            goods: []
+          });
       aiStore.messages.push({
         content: sellList,
         isUser: false,
@@ -320,8 +367,14 @@ const handleSendMessage = async () => {
     try {
       await goodsStore.fetchMyPublishedGoods({pageNum: 1, pageSize: 10});
       const publishedList = goodsStore.myPublishedGoods.length > 0
-        ? JSON.stringify(goodsStore.myPublishedGoods)
-        : '[]';
+        ? JSON.stringify({
+            title: "您发布的商品如下：",
+            goods: goodsStore.myPublishedGoods
+          })
+        : JSON.stringify({
+            title: "您暂无发布商品",
+            goods: []
+          });
       aiStore.messages.push({
         content: publishedList,
         isUser: false,

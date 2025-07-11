@@ -230,7 +230,7 @@ const handleDelete = async (goodsId: number) => {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 }
 

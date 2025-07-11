@@ -9,147 +9,178 @@
       width="720px"
       @update:model-value="(val) => emit('update:visible', val)"
   >
-    <div class="chat-container">
-      <div class="chat-messages">
-        <el-scrollbar ref="scrollbarRef" height="400px">
-          <div class="message-list">
-            <!-- 欢迎消息 -->
-            <div v-if="aiStore.messages.length === 0" class="welcome-message">
-              <p>您好！我是您的AI智能助手，有什么可以帮您找到合适的商品吗？</p>
-            </div>
+    <div class="dialog-inner">
+      <!-- 左侧：聊天区 -->
+      <div class="chat-section">
+        <div class="chat-messages">
+          <el-scrollbar ref="scrollbarRef" height="100%">
+            <div class="message-list">
+              <!-- 欢迎消息 -->
+              <div v-if="aiStore.messages.length === 0" class="welcome-message">
+                <p>您好！我是您的AI智能助手，有什么可以帮您找到合适的商品吗？</p>
+              </div>
 
-            <!-- 消息列表 -->
-            <div v-for="(msg, index) in aiStore.messages" :key="index"
-                 :class="['message-item', msg.isUser ? 'user-message' : 'ai-message']"
-                 class="message-item">
+              <!-- 消息列表 -->
+              <div v-for="(msg, index) in aiStore.messages" :key="index"
+                   :class="['message-item', msg.isUser ? 'user-message' : 'ai-message']"
+                   class="message-item">
 
-              <div :class="['message-item', msg.isUser ? 'user-message' : 'ai-message']">
+                <div :class="['message-item', msg.isUser ? 'user-message' : 'ai-message']">
+                  <div class="message-row">
+                    <div class="message-bubble">
+                      <div v-if="msg.isUser">{{ msg.content }}</div>
+
+                      <div v-else>
+                        <!-- 推荐商品消息 -->
+                        <template v-if="msg.type === 'recommend'">
+                          <div class="recommended-goods">
+                            <!-- 个人数据类消息（我的发布/收藏/购买/卖出） -->
+                            <template v-if="JSON.parse(msg.content).title">
+                              <h3 class="section-title">{{ JSON.parse(msg.content).title }}</h3>
+                              <div v-if="JSON.parse(msg.content).goods?.length > 0" class="goods-list">
+                                <div
+                                    v-for="goods in JSON.parse(msg.content).goods"
+                                    :key="goods.id"
+                                    class="goods-item"
+                                    @click="gotoGoodsDetail(goods.id)"
+                                >
+                                  <img
+                                      :alt="goods.title"
+                                      :src="getImageUrl(goods.image)"
+                                      class="goods-image"
+                                      @error="onImageError"
+                                  />
+                                  <div class="goods-info">
+                                    <h4 class="goods-name">{{ goods.title }}</h4>
+                                    <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <p v-else class="no-data">{{ JSON.parse(msg.content).noDataMessage }}</p>
+                            </template>
+                            <!-- 推荐商品类消息 -->
+                            <template v-else>
+                              <h3 class="section-title">推荐商品</h3>
+                              <div v-if="JSON.parse(msg.content).length > 0" class="goods-list">
+                                <div
+                                    v-for="goods in JSON.parse(msg.content)"
+                                    :key="goods.id"
+                                    class="goods-item"
+                                    @click="gotoGoodsDetail(goods.id)"
+                                >
+                                  <img
+                                      :alt="goods.title"
+                                      :src="getImageUrl(goods.image)"
+                                      class="goods-image"
+                                      @error="onImageError"
+                                  />
+                                  <div class="goods-info">
+                                    <h4 class="goods-name">{{ goods.title }}</h4>
+                                    <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>
+                                  </div>
+                                </div>
+                              </div>
+                              <p v-else class="no-data">暂无推荐商品</p>
+                            </template>
+                          </div>
+                        </template>
+
+                        <!-- 普通AI文本消息 -->
+                        <template v-else>
+                          <div v-html="renderMarkdown(msg.content)"></div>
+                        </template>
+                      </div>
+
+                    </div>
+                    <span class="message-time-inline">{{ formatTime(msg.timestamp) }}</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- 加载中的AI消息 -->
+              <div v-if="aiStore.isLoading" class="message-item ai-message">
                 <div class="message-row">
                   <div class="message-bubble">
-                    <div v-if="msg.isUser">{{ msg.content }}</div>
-
-                    <div v-else>
-                      <!-- 推荐商品消息 -->
-                      <template v-if="msg.type === 'recommend'">
-                        <div class="recommended-goods">
-                          <!-- 个人数据类消息（我的发布/收藏/购买/卖出） -->
-                          <template v-if="JSON.parse(msg.content).title">
-                            <h3 class="section-title">{{ JSON.parse(msg.content).title }}</h3>
-                            <div class="goods-list" v-if="JSON.parse(msg.content).goods?.length > 0">
-                              <div
-                                  v-for="goods in JSON.parse(msg.content).goods"
-                                  :key="goods.id"
-                                  class="goods-item"
-                                  @click="gotoGoodsDetail(goods.id)"
-                              >
-                                <img
-                                    :alt="goods.title"
-                                    :src="getImageUrl(goods.image)"
-                                    class="goods-image"
-                                    @error="onImageError"
-                                />
-                                <div class="goods-info">
-                                  <h4 class="goods-name">{{ goods.title }}</h4>
-                                  <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>
-                                </div>
-                              </div>
-                            </div>
-                            <p v-else class="no-data">{{ JSON.parse(msg.content).noDataMessage }}</p>
-                          </template>
-                          <!-- 推荐商品类消息 -->
-                          <template v-else>
-                            <h3 class="section-title">推荐商品</h3>
-                            <div class="goods-list" v-if="JSON.parse(msg.content).length > 0">
-                              <div
-                                  v-for="goods in JSON.parse(msg.content)"
-                                  :key="goods.id"
-                                  class="goods-item"
-                                  @click="gotoGoodsDetail(goods.id)"
-                              >
-                                <img
-                                    :alt="goods.title"
-                                    :src="getImageUrl(goods.image)"
-                                    class="goods-image"
-                                    @error="onImageError"
-                                />
-                                <div class="goods-info">
-                                  <h4 class="goods-name">{{ goods.title }}</h4>
-                                  <p class="goods-price">¥{{ goods.price.toFixed(2) }}</p>
-                                </div>
-                              </div>
-                            </div>
-                            <p v-else class="no-data">暂无推荐商品</p>
-                          </template>
-                        </div>
-                      </template>
-
-                      <!-- 普通AI文本消息 -->
-                      <template v-else>
-                        <div v-html="renderMarkdown(msg.content)"></div>
-                      </template>
+                    <div class="thinking-container">
+                      <span class="thinking-text">AI正在思考中... 🤔</span>
+                      <span class="loading-dots">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                      </span>
                     </div>
-
                   </div>
-                  <span class="message-time-inline">{{ formatTime(msg.timestamp) }}</span>
+                  <span class="message-time-inline">{{ formatTime(new Date()) }}</span>
                 </div>
               </div>
 
-            </div>
-
-            <!-- 加载中的AI消息 -->
-            <div v-if="aiStore.isLoading" class="message-item ai-message">
-              <div class="message-row">
-                <div class="message-bubble">
-                  <div class="thinking-container">
-                    <span class="thinking-text">AI正在思考中... 🤔</span>
-                    <span class="loading-dots">
-                      <span class="dot"></span>
-                      <span class="dot"></span>
-                      <span class="dot"></span>
-                    </span>
-                  </div>
+              <!-- 推荐商品展示区域 -->
+              <template v-if="aiStore.messages.length > 0">
+                <!-- 加载状态下骨架屏 -->
+                <div v-if="aiStore.isLoading" class="recommended-loading">
+                  <el-skeleton :rows="3" width="100%"/>
                 </div>
-                <span class="message-time-inline">{{ formatTime(new Date()) }}</span>
-              </div>
+                <!-- 无推荐商品时的提示 -->
+                <div v-else class="ai-reply">
+                </div>
+              </template>
             </div>
+          </el-scrollbar>
+        </div>
 
-            <!-- 推荐商品展示区域 -->
-            <template v-if="aiStore.messages.length > 0">
-              <!-- 加载状态下骨架屏 -->
-              <div v-if="aiStore.isLoading" class="recommended-loading">
-                <el-skeleton :rows="3" width="100%"/>
-              </div>
-              <!-- 无推荐商品时的提示 -->
-              <div v-else class="ai-reply">
-              </div>
-            </template>
-          </div>
-        </el-scrollbar>
+        <!-- 输入区域 -->
+        <div class="input-area">
+          <el-input
+              v-model="inputMessage"
+              class="message-input"
+              placeholder="请输入您的需求..."
+              @keyup.enter="handleSendMessage"
+          ></el-input>
+          <el-button
+              :loading="aiStore.isLoading"
+              class="send-button"
+              type="primary"
+              @click="handleSendMessage"
+          >
+            发送
+          </el-button>
+        </div>
       </div>
 
-      <!-- 快捷提问按钮区域 -->
-      <div class="quick-reply-buttons">
-        <el-button v-for="(item, index) in quickReplies" :key="index" class="quick-reply-btn" size="small"
+      <!-- 右侧：快捷工具栏 (PC端) -->
+      <div class="sidebar-section">
+        <div class="actions-section">
+          <div class="section-label">快捷功能</div>
+          <el-button v-for="(item, index) in functionReplies" :key="index" class="function-reply-btn" size="small"
+                     @click="handleQuickReply(item)">
+            {{ item.question }}
+          </el-button>
+        </div>
+        <div class="actions-section">
+          <div class="section-label">热门搜索</div>
+          <el-button v-for="(item, index) in quickReplies" :key="index" class="quick-reply-btn" size="small"
+                     @click="handleQuickReply(item)">
+            {{ item.question }}
+          </el-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部工具条 (移动端) -->
+    <div class="bottom-actions">
+      <div class="actions-group">
+        <span class="group-title">快捷功能</span>
+        <el-button v-for="(item, index) in functionReplies" :key="index" class="mini-btn" size="mini"
                    @click="handleQuickReply(item)">
           {{ item.question }}
         </el-button>
       </div>
-
-      <!-- 输入区域 -->
-      <div class="input-area">
-        <el-input
-            v-model="inputMessage"
-            class="message-input"
-            placeholder="请输入您的需求..."
-            @keyup.enter="handleSendMessage"
-        ></el-input>
-        <el-button
-            :loading="aiStore.isLoading"
-            class="send-button"
-            type="primary"
-            @click="handleSendMessage"
-        >
-          发送
+      <div class="actions-group">
+        <span class="group-title">热门搜索</span>
+        <el-button v-for="(item, index) in quickReplies" :key="index" class="mini-btn" size="mini"
+                   @click="handleQuickReply(item)">
+          {{ item.question }}
         </el-button>
       </div>
     </div>
@@ -204,10 +235,20 @@ const onImageError = (e: Event) => {
 
 
 const inputMessage = ref('');
+// 功能型快捷操作
+const functionReplies = [
+  {question: "我的收藏", answer: "我的收藏"},
+  {question: "我的发布", answer: "我的发布"},
+  {question: "我的购买", answer: "我的购买"},
+  {question: "我的卖出", answer: "我的卖出"}
+];
+
+// 商品查询快捷回复
 const quickReplies = [
   {question: "天气很热，我想要买个风扇", answer: "风扇"},
   {question: "有iPhone吗？", answer: "iPhone"},
-  {question: "有下酒菜吗？", answer: "酒鬼花生"}
+  {question: "有下酒菜吗？", answer: "酒鬼花生"},
+  {question: "有鲨鱼夹吗？", answer: "鲨鱼夹"}
 ];
 
 const handleQuickReply = (item: { question: string, answer: string }) => {
@@ -253,50 +294,50 @@ const handleSendMessage = async () => {
   // 处理特定指令
   if (content.includes('我的订单')) {
     try {
-        if (!userStore.accessToken) {
-          ElMessage.warning('请先登录后再查看订单');
-          inputMessage.value = '';
-          return;
-        }
-        // 确保用户信息已加载
-        if (!userStore.userInfo) {
-          await userStore.fetchUserInfo();
-        }
-        console.log('Fetching orders for user role:', userStore.userInfo?.role);
-        let orders = [];
-        if (userStore.userInfo?.role === 'buyer') {
-          await orderStore.getMyOrders();
-          orders = orderStore.buyerOrders;
-        } else {
-          await orderStore.getSellerOrders();
-          orders = orderStore.sellerOrders;
-        }
-        const orderList = orders.length > 0 
-          ? orders.map(order => `• ${order.goodsTitle} - ¥${order.price.toFixed(2)} (${order.status === 0 ? '待付款' : order.status === 1 ? '已付款' : order.status === 2 ? '已发货' : order.status === 3 ? '已完成' : '已取消'})`).join('\n')
-          : '您暂无订单';
-        aiStore.messages.push({
-          content: orderList,
-          isUser: false,
-          timestamp: new Date(),
-          type: 'text'
-        });
-      inputMessage.value = '';
-        return;
-      } catch (error) {
-        console.error('获取订单失败详情:', error);
-        const errorMsg = error instanceof Error ? error.message : '未知错误';
-        ElMessage.error(`获取订单失败: ${errorMsg}`);
+      if (!userStore.accessToken) {
+        ElMessage.warning('请先登录后再查看订单');
+        inputMessage.value = '';
         return;
       }
+      // 确保用户信息已加载
+      if (!userStore.userInfo) {
+        await userStore.fetchUserInfo();
+      }
+      console.log('Fetching orders for user role:', userStore.userInfo?.role);
+      let orders = [];
+      if (userStore.userInfo?.role === 'buyer') {
+        await orderStore.getMyOrders();
+        orders = orderStore.buyerOrders;
+      } else {
+        await orderStore.getSellerOrders();
+        orders = orderStore.sellerOrders;
+      }
+      const orderList = orders.length > 0
+          ? orders.map(order => `• ${order.goodsTitle} - ¥${order.price.toFixed(2)} (${order.status === 0 ? '待付款' : order.status === 1 ? '已付款' : order.status === 2 ? '已发货' : order.status === 3 ? '已完成' : '已取消'})`).join('\n')
+          : '您暂无订单';
+      aiStore.messages.push({
+        content: orderList,
+        isUser: false,
+        timestamp: new Date(),
+        type: 'text'
+      });
+      inputMessage.value = '';
+      return;
+    } catch (error) {
+      console.error('获取订单失败详情:', error);
+      const errorMsg = error instanceof Error ? error.message : '未知错误';
+      ElMessage.error(`获取订单失败: ${errorMsg}`);
+      return;
+    }
   } else if (content.includes('我的收藏')) {
     try {
       await favoriteStore.getFavoriteList();
       const favoriteList = favoriteStore.favorites.length > 0
-        ? JSON.stringify({
+          ? JSON.stringify({
             title: "您收藏的商品如下：",
             goods: favoriteStore.favorites
           })
-        : JSON.stringify({
+          : JSON.stringify({
             title: "您暂无收藏商品",
             goods: []
           });
@@ -317,11 +358,11 @@ const handleSendMessage = async () => {
     try {
       await orderStore.getMyOrders();
       const orderList = orderStore.buyerOrders.length > 0
-        ? JSON.stringify({
+          ? JSON.stringify({
             title: "您的购买订单如下：",
             goods: orderStore.buyerOrders
           })
-        : JSON.stringify({
+          : JSON.stringify({
             title: "您暂无购买订单",
             goods: []
           });
@@ -342,11 +383,11 @@ const handleSendMessage = async () => {
     try {
       await orderStore.getSellerOrders();
       const sellList = orderStore.sellerOrders.length > 0
-        ? JSON.stringify({
+          ? JSON.stringify({
             title: "您的卖出订单如下：",
             goods: orderStore.sellerOrders
           })
-        : JSON.stringify({
+          : JSON.stringify({
             title: "您暂无卖出订单",
             goods: []
           });
@@ -367,11 +408,11 @@ const handleSendMessage = async () => {
     try {
       await goodsStore.fetchMyPublishedGoods({pageNum: 1, pageSize: 10});
       const publishedList = goodsStore.myPublishedGoods.length > 0
-        ? JSON.stringify({
+          ? JSON.stringify({
             title: "您发布的商品如下：",
             goods: goodsStore.myPublishedGoods
           })
-        : JSON.stringify({
+          : JSON.stringify({
             title: "您暂无发布商品",
             goods: []
           });
@@ -421,6 +462,110 @@ watch(
 </script>
 
 <style scoped>
+.dialog-inner {
+  display: flex;
+  gap: 20px;
+  height: 500px;
+  width: 100%;
+}
+
+.chat-section {
+  flex: 3; /* 聊天区占3份 */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-section {
+  flex: 0 0 240px; /* 调整为更窄的宽度 */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 16px 8px; /* 减少左侧内边距 */
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+}
+
+/* 底部工具条样式 */
+.bottom-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-color);
+  background: var(--glass-bg);
+  display: none; /* 默认隐藏，移动端显示 */
+  height: 60px;
+}
+
+.actions-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 6px 8px; /* 添加左右内边距使按钮居中 */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.actions-group::-webkit-scrollbar {
+  display: none;
+}
+
+.section-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  padding-left: 4px;
+  font-weight: 500;
+}
+
+.mini-btn {
+  padding: 6px 10px;
+  font-size: 12px;
+  height: 32px;
+  white-space: nowrap;
+  margin: 0 4px;
+}
+
+/* 响应式布局控制 */
+@media (max-width: 768px) {
+  .dialog-inner {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .sidebar-section {
+    display: none;
+  }
+
+  .bottom-actions {
+    display: flex;
+  }
+
+  .chat-section {
+    height: calc(100vh - 180px);
+  }
+}
+
+@media (min-width: 769px) {
+  .sidebar-section {
+    display: flex;
+  }
+
+  .bottom-actions {
+    display: none;
+  }
+}
+
+/* 快捷操作区域样式 */
+.actions-section {
+  margin-bottom: 15px;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
 .chat-container {
   perspective: 1000px;
   display: flex;
@@ -561,6 +706,47 @@ watch(
   margin-bottom: 10px;
   color: var(--text-primary);
   font-weight: 500;
+}
+
+/* 按钮样式 */
+.function-reply-btn {
+  background-color: var(--primary-light-bg);
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+  width: 100%;
+  height: 42px;
+  margin: 0 0 10px 0;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.function-reply-btn:hover {
+  background-color: var(--primary-blue);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.quick-reply-btn {
+  background-color: var(--glass-bg);
+  border-color: var(--border-color);
+  width: 100%;
+  height: 42px;
+  margin: 0 0 10px 0;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.quick-reply-btn:hover {
+  border-color: var(--primary-blue);
+  transform: translateY(-1px);
 }
 
 .goods-list {

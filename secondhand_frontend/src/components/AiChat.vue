@@ -151,15 +151,15 @@
       <!-- 右侧：快捷工具栏 (PC端) -->
       <div class="sidebar-section">
         <div class="actions-section">
-          <div class="section-label">快捷功能</div>
-          <el-button v-for="(item, index) in functionReplies" :key="index" class="function-reply-btn" size="small"
+          <div class="section-label">热门搜索</div>
+          <el-button v-for="(item, index) in quickReplies" :key="index" class="quick-reply-btn" size="small"
                      @click="handleQuickReply(item)">
             {{ item.question }}
           </el-button>
         </div>
         <div class="actions-section">
-          <div class="section-label">热门搜索</div>
-          <el-button v-for="(item, index) in quickReplies" :key="index" class="quick-reply-btn" size="small"
+          <div class="section-label">快捷功能</div>
+          <el-button v-for="(item, index) in functionReplies" :key="index" class="function-reply-btn" size="small"
                      @click="handleQuickReply(item)">
             {{ item.question }}
           </el-button>
@@ -170,15 +170,15 @@
     <!-- 底部工具条 (移动端) -->
     <div class="bottom-actions">
       <div class="actions-group">
-        <span class="group-title">快捷功能</span>
-        <el-button v-for="(item, index) in functionReplies" :key="index" class="mini-btn" size="mini"
+        <span class="group-title">热门搜索</span>
+        <el-button v-for="(item, index) in quickReplies" :key="index" class="mini-btn" size="mini"
                    @click="handleQuickReply(item)">
           {{ item.question }}
         </el-button>
       </div>
       <div class="actions-group">
-        <span class="group-title">热门搜索</span>
-        <el-button v-for="(item, index) in quickReplies" :key="index" class="mini-btn" size="mini"
+        <span class="group-title">快捷功能</span>
+        <el-button v-for="(item, index) in functionReplies" :key="index" class="mini-btn" size="mini"
                    @click="handleQuickReply(item)">
           {{ item.question }}
         </el-button>
@@ -480,7 +480,7 @@ watch(
   flex: 0 0 240px; /* 调整为更窄的宽度 */
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 14px;
   padding: 16px 8px; /* 减少左侧内边距 */
   border-left: 1px solid var(--border-color);
   overflow-y: auto;

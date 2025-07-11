@@ -138,10 +138,17 @@ import {nextTick, ref, watch} from 'vue';
 import {useRouter} from 'vue-router';
 import {useAiStore} from '../store/ai';
 import {useUserStore} from '../store/user';
+import {useOrderStore} from '../store/order';
+import {useGoodsStore} from '../store/goods';
+import {useFavoriteStore} from '../store/favorite';
 import type {ElScrollbar} from 'element-plus';
 import {ElMessage} from 'element-plus';
 import markdownIt from 'markdown-it';
 import defaultGoodsImage from '../assets/codelogo.png';
+
+const orderStore = useOrderStore();
+const goodsStore = useGoodsStore();
+const favoriteStore = useFavoriteStore();
 
 const md = new markdownIt();
 
@@ -213,6 +220,124 @@ const handleSendMessage = async () => {
     ElMessage.warning('消息长度不能超过500个字符');
     return;
   }
+
+  // 处理特定指令
+  if (content.includes('我的订单')) {
+    try {
+        if (!userStore.accessToken) {
+          ElMessage.warning('请先登录后再查看订单');
+          inputMessage.value = '';
+          return;
+        }
+        // 确保用户信息已加载
+        if (!userStore.userInfo) {
+          await userStore.fetchUserInfo();
+        }
+        console.log('Fetching orders for user role:', userStore.userInfo?.role);
+        let orders = [];
+        if (userStore.userInfo?.role === 'buyer') {
+          await orderStore.getMyOrders();
+          orders = orderStore.buyerOrders;
+        } else {
+          await orderStore.getSellerOrders();
+          orders = orderStore.sellerOrders;
+        }
+        const orderList = orders.length > 0 
+          ? orders.map(order => `• ${order.goodsTitle} - ¥${order.price.toFixed(2)} (${order.status === 0 ? '待付款' : order.status === 1 ? '已付款' : order.status === 2 ? '已发货' : order.status === 3 ? '已完成' : '已取消'})`).join('\n')
+          : '您暂无订单';
+        aiStore.messages.push({
+          content: orderList,
+          isUser: false,
+          timestamp: new Date(),
+          type: 'text'
+        });
+      inputMessage.value = '';
+        return;
+      } catch (error) {
+        console.error('获取订单失败详情:', error);
+        const errorMsg = error instanceof Error ? error.message : '未知错误';
+        ElMessage.error(`获取订单失败: ${errorMsg}`);
+        return;
+      }
+  } else if (content.includes('我的收藏')) {
+    try {
+      await favoriteStore.getFavoriteList();
+      const favoriteList = favoriteStore.favorites.length > 0
+        ? JSON.stringify(favoriteStore.favorites)
+        : '[]';
+      aiStore.messages.push({
+        content: favoriteList,
+        isUser: false,
+        timestamp: new Date(),
+        type: 'recommend'
+      });
+      inputMessage.value = '';
+      return;
+    } catch (error) {
+      console.error('获取收藏失败:', error);
+      ElMessage.error('获取收藏失败，请重试');
+      return;
+    }
+  } else if (content.includes('我的购买')) {
+    try {
+      await orderStore.getMyOrders();
+      const orderList = orderStore.buyerOrders.length > 0
+        ? JSON.stringify(orderStore.buyerOrders)
+        : '[]';
+      aiStore.messages.push({
+        content: orderList,
+        isUser: false,
+        timestamp: new Date(),
+        type: 'recommend'
+      });
+      inputMessage.value = '';
+      return;
+    } catch (error) {
+      console.error('获取购买订单失败:', error);
+      ElMessage.error('获取购买订单失败，请重试');
+      return;
+    }
+  } else if (content.includes('我的卖出')) {
+    try {
+      await orderStore.getSellerOrders();
+      const sellList = orderStore.sellerOrders.length > 0
+        ? JSON.stringify(orderStore.sellerOrders)
+        : '[]';
+      aiStore.messages.push({
+        content: sellList,
+        isUser: false,
+        timestamp: new Date(),
+        type: 'recommend'
+      });
+      inputMessage.value = '';
+      return;
+    } catch (error) {
+      console.error('获取卖出订单失败:', error);
+      ElMessage.error('获取卖出订单失败，请重试');
+      return;
+    }
+  } else if (content.includes('我的发布')) {
+    try {
+      await goodsStore.fetchMyPublishedGoods({pageNum: 1, pageSize: 10});
+      const publishedList = goodsStore.myPublishedGoods.length > 0
+        ? JSON.stringify(goodsStore.myPublishedGoods)
+        : '[]';
+      aiStore.messages.push({
+        content: publishedList,
+        isUser: false,
+        timestamp: new Date(),
+        type: 'recommend'
+      });
+      inputMessage.value = '';
+      return;
+    } catch (error) {
+      console.error('获取发布商品失败:', error);
+      ElMessage.error('获取发布商品失败，请重试');
+      return;
+    }
+  }
+
+  // 普通消息发送到AI
   try {
     await aiStore.sendMessage(content);
     inputMessage.value = '';

@@ -26,7 +26,10 @@
           <el-input
               v-model.number="formData.price"
               placeholder="请输入商品价格"
+              step="0.01"
               suffix="元"
+              type="number"
+              @input="handlePriceInput"
           ></el-input>
         </el-form-item>
 
@@ -41,18 +44,7 @@
         </el-form-item>
 
         <el-form-item label="商品图片" prop="images">
-          <!--          <el-upload-->
-          <!--              ref="uploadRef"-->
-          <!--              v-model:file-list="fileList"-->
-          <!--              :auto-upload="false"-->
-          <!--              :on-change="handleFileChange"-->
-          <!--              :on-error="handleUploadError"-->
-          <!--              :on-exceed="handleExceed"-->
-          <!--              :on-progress="handleUploadProgress"-->
-          <!--              :on-remove="handleRemove"-->
-          <!--              :on-success="handleUploadSuccess"-->
-          <!--              list-type="picture-card"-->
-          <!--          >-->
+
           <el-upload
               ref="uploadRef"
               v-model:file-list="fileList"
@@ -146,7 +138,8 @@ const formRules = reactive({
   ],
   price: [
     {required: true, message: '请输入商品价格', trigger: 'blur'},
-    {type: 'number', min: 0.01, message: '价格必须大于0', trigger: 'blur'}
+    {type: 'number', min: 0.01, message: '价格必须大于0', trigger: 'blur'},
+    {pattern: /^\d+(\.\d{1,2})?$/, message: '价格最多只能有两位小数', trigger: ['blur', 'change']}
   ],
   category: [
     {required: true, message: '请选择商品分类', trigger: 'change'}
@@ -217,6 +210,13 @@ const handleSubmit = async () => {
 // 取消发布
 const handleCancel = () => {
   router.go(-1);
+};
+
+// 处理价格输入，确保最多两位小数
+const handlePriceInput = () => {
+  if (formData.price) {
+    formData.price = Number(formData.price.toFixed(2));
+  }
 };
 
 // 上传成功处理
